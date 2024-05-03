@@ -35,9 +35,11 @@ public class ChessBoard {
 
     /**
      * Sets the board to the default starting board
+     * kind of the jank solution, but if there is built in garbage solution, then it is actually elegant (think about it)
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
         squares = new ChessPiece[8][8];
-    } //kind of the jank solution, but if there is built in garbage solution, then it is actually elegant (think about it)
+        //TODO : configure to have initial piece placement?
+    }
 }
