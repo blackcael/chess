@@ -32,5 +32,9 @@ public class ChessPosition {
         return col;
     }
 
+    public boolean onBoard(){
+        return(row >= 0 && row <= 7 && col >= 0 && col <= 7);
+    }
+
 
 }
