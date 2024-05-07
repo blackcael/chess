@@ -62,6 +62,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()-i, myPosition.getColumn()+i);
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -71,6 +72,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()+i, myPosition.getColumn()+i);
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -81,6 +83,7 @@ public class MoveCalculator {
             //is this move validly on the board?
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -90,6 +93,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()-i, myPosition.getColumn()-i);
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -121,6 +125,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()+i, myPosition.getColumn());
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -130,6 +135,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()-i, myPosition.getColumn());
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -140,6 +146,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn()+i);
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
@@ -150,6 +157,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn()-i);
             if(validMove(potentialPosition)){
                 potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
             }
