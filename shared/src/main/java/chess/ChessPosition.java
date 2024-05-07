@@ -36,5 +36,8 @@ public class ChessPosition {
         return(row >= 0 && row <= 7 && col >= 0 && col <= 7);
     }
 
-
+    @Override
+    public String toString(){
+        return String.format("(%d,%d)", row, col);
+    }
 }
