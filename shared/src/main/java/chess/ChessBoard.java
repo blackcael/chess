@@ -41,9 +41,43 @@ public class ChessBoard {
      * kind of the jank solution, but if there is built in garbage solution, then it is actually elegant (think about it)
      * (How the game of chess normally starts)
      */
+    private void setSpecialRow(ChessGame.TeamColor pieceColor){
+        int rowVal = 0;
+        if(pieceColor == ChessGame.TeamColor.WHITE){
+            rowVal = 1;
+        }
+        if(pieceColor == ChessGame.TeamColor.BLACK){
+            rowVal = 8;
+        }
+        addPiece(new ChessPosition(rowVal,1), new ChessPiece(pieceColor, ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(rowVal,2), new ChessPiece(pieceColor, ChessPiece.PieceType.KNIGHT));
+        addPiece(new ChessPosition(rowVal,3), new ChessPiece(pieceColor, ChessPiece.PieceType.BISHOP));
+        addPiece(new ChessPosition(rowVal,4), new ChessPiece(pieceColor, ChessPiece.PieceType.QUEEN));
+        addPiece(new ChessPosition(rowVal,5), new ChessPiece(pieceColor, ChessPiece.PieceType.KING));
+        addPiece(new ChessPosition(rowVal,6), new ChessPiece(pieceColor, ChessPiece.PieceType.BISHOP));
+        addPiece(new ChessPosition(rowVal,7), new ChessPiece(pieceColor, ChessPiece.PieceType.KNIGHT));
+        addPiece(new ChessPosition(rowVal,8), new ChessPiece(pieceColor, ChessPiece.PieceType.ROOK));
+    }
+    private void setPawnRow(ChessGame.TeamColor pieceColor){
+        int rowVal = 0;
+        if(pieceColor == ChessGame.TeamColor.WHITE){
+            rowVal = 2;
+        }
+        if(pieceColor == ChessGame.TeamColor.BLACK){
+            rowVal = 7;
+        }
+        for(int colVal = 1; colVal <= 8; colVal++){
+            addPiece(new ChessPosition(rowVal,colVal), new ChessPiece(pieceColor, ChessPiece.PieceType.PAWN));
+        }
+    }
+
     public void resetBoard() {
         squares = new ChessPiece[8][8];
-        //TODO : configure to have initial piece placement?
+        //PLACE ROW 1
+        setPawnRow(ChessGame.TeamColor.BLACK);
+        setSpecialRow(ChessGame.TeamColor.BLACK);
+        setPawnRow(ChessGame.TeamColor.WHITE);
+        setSpecialRow(ChessGame.TeamColor.WHITE);
     }
 
     @Override

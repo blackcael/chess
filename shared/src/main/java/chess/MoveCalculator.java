@@ -165,37 +165,73 @@ public class MoveCalculator {
         return potentialMoves;
     }
     //=================================================== PAWN MOVES ===================================================//
+    private boolean canPromote(ChessPosition potentialPosition){
+        if(pieceColor == ChessGame.TeamColor.BLACK){
+            if(potentialPosition.getRow() == 1){
+                return true;
+            }
+        }
+        if(pieceColor == ChessGame.TeamColor.WHITE){
+            if(potentialPosition.getRow() == 8){
+                return true;
+            }
+        }
+        return false;
+    }
+    private Collection<ChessMove> promotePawnMoves(ChessPosition potentialPosition){
+        ArrayList<ChessMove> potentialMoves = new ArrayList<>();
+        if (validMove(potentialPosition)) {
+            if (canPromote(potentialPosition)) {
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.BISHOP));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.KNIGHT));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.QUEEN));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.ROOK));
+            }
+        }
+        return potentialMoves;
+    }
+
+
     public Collection<ChessMove> pawnMoves() {
         ArrayList<ChessMove> potentialMoves = new ArrayList<>();
 
         //white pawn
         if (pieceColor == ChessGame.TeamColor.WHITE) {
             //passiveMoves
-            ChessPosition potentialPosition1 = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
+            ChessPosition potentialPosition1 = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
             if (board.getPiece(potentialPosition1) == null) {
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type)); //puts its own current type into promotion. TODO: problem?
-            }
-            //check to see if we can do a double move by seeing if we are still in the 2nd row:
-            if (myPosition.getRow() == 1) {
-                ChessPosition potentialPosition2 = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn());
-                if ((board.getPiece(potentialPosition1) == null) && (board.getPiece(potentialPosition2) == null)) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type));
+                if(canPromote(potentialPosition1)){
+                    potentialMoves.addAll(promotePawnMoves(potentialPosition1));
+                }else {
+                    potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type));
+                }
+                //check to see if we can do a double move by seeing if we are still in the 2nd row:
+                if (myPosition.getRow() == 2) { //if pawn hasn't moved...
+                    ChessPosition potentialPosition2 = new ChessPosition(myPosition.getRow()+2, myPosition.getColumn());
+                    if (board.getPiece(potentialPosition2) == null) {
+                        potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type));
+                    }
                 }
             }
-
             //attackMoves
             //left stab
-            if (myPosition.getColumn() != 0) {
-                ChessPosition potentialAttackPositionL = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 1);
-                if (board.getPiece(potentialAttackPositionL).getTeamColor() == ChessGame.TeamColor.BLACK) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialAttackPositionL, type));
+            if(myPosition.getColumn() != 1){
+                ChessPosition potentialAttackPosition = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1);
+                if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.BLACK){                    if(canPromote(potentialAttackPosition)){
+                        potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
+                    }else {
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                    }
                 }
             }
             //right stab
-            if (myPosition.getColumn() != 8) {
-                ChessPosition potentialAttackPositionR = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1);
-                if (board.getPiece(potentialAttackPositionR).getTeamColor() == ChessGame.TeamColor.BLACK) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialAttackPositionR, type));
+            if(myPosition.getColumn() != 8){
+                ChessPosition potentialAttackPosition = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
+                if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.BLACK){                    if(canPromote(potentialAttackPosition)){
+                        potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
+                    }else {
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                    }
                 }
             }
         }
@@ -203,31 +239,41 @@ public class MoveCalculator {
         //black pawn
         if (pieceColor == ChessGame.TeamColor.BLACK) {
             //passiveMoves
-            ChessPosition potentialPosition1 = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn());
+            ChessPosition potentialPosition1 = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
             if (board.getPiece(potentialPosition1) == null) {
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type)); //puts its own current type into promotion. TODO: problem?
-            }
-            //check to see if we can do a double move by seeing if we are still in the 2nd row:
-            if (myPosition.getRow() == 6) {
-                ChessPosition potentialPosition2 = new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn());
-                if ((board.getPiece(potentialPosition1) == null) && (board.getPiece(potentialPosition2) == null)) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type));
+                if(canPromote(potentialPosition1)){
+                    potentialMoves.addAll(promotePawnMoves(potentialPosition1));
+                }else {
+                    potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type));
+                }
+                //check to see if we can do a double move by seeing if we are still in the 2nd row:
+                if (myPosition.getRow() == 7) { //if pawn hasn't moved...
+                    ChessPosition potentialPosition2 = new ChessPosition(myPosition.getRow()-2, myPosition.getColumn());
+                    if (validMove(potentialPosition2)) {
+                        potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type));
+                    }
                 }
             }
-
             //attackMoves
             //left stab
-            if (myPosition.getColumn() != 0) {
-                ChessPosition potentialAttackPositionL = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 1);
-                if (board.getPiece(potentialAttackPositionL).getTeamColor() == ChessGame.TeamColor.WHITE) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialAttackPositionL, type));
+            if(myPosition.getColumn() != 1){
+                ChessPosition potentialAttackPosition = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1);
+                if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
+                    if(canPromote(potentialAttackPosition)){
+                        potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
+                    }else {
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                    }
                 }
             }
             //right stab
-            if (myPosition.getColumn() != 8) {
-                ChessPosition potentialAttackPositionR = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 1);
-                if (board.getPiece(potentialAttackPositionR).getTeamColor() == ChessGame.TeamColor.WHITE) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialAttackPositionR, type));
+            if(myPosition.getColumn() != 8){
+                ChessPosition potentialAttackPosition = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
+                if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.WHITE){                    if(canPromote(potentialAttackPosition)){
+                        potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
+                    }else {
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                    }
                 }
             }
         }
