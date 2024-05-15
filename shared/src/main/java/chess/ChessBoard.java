@@ -36,6 +36,21 @@ public class ChessBoard {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
 
+    public ChessPosition getKingPosition(ChessGame.TeamColor COLOR){
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                ChessPosition potentialPosition = new ChessPosition(row+1, col+1);
+                if(getPiece(potentialPosition) != null){
+                    if(getPiece(potentialPosition).getPieceType() == ChessPiece.PieceType.KING){
+                        if(getPiece(potentialPosition).getTeamColor() == COLOR){
+                            return potentialPosition;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Sets the board to the default starting board
      * kind of the jank solution, but if there is built in garbage solution, then it is actually elegant (think about it)
