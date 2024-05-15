@@ -81,6 +81,18 @@ public class ChessBoard {
     }
 
     @Override
+    public ChessBoard clone(){
+        ChessBoard board = new ChessBoard();
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                ChessPiece clonePiece = new ChessPiece(squares[row][col].getTeamColor(), squares[row][col].getPieceType());
+                board.addPiece(new ChessPosition(row, col), clonePiece);
+            }
+        }
+        return board;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

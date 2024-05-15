@@ -51,6 +51,8 @@ public class ChessGame {
             return null;
         }
         return new ArrayList<>(board.getPiece(startPosition).pieceMoves(board, startPosition));
+
+        //incomplete, we need to filter out the moves that leave our king in danger.
     }
 
     /**
@@ -77,7 +79,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //iterate over moves
     }
 
     /**
