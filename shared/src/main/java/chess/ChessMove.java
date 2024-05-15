@@ -12,12 +12,13 @@ public class ChessMove {
     private final ChessPosition startPosition;
     private final ChessPosition endPosition;
     private final ChessPiece.PieceType promotionPiece;
-
+    private final ChessGame.TeamColor teamColor;
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece) {
+                     ChessPiece.PieceType promotionPiece, ChessGame.TeamColor teamColor) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
+        this.teamColor = teamColor;
     }
 
     /**
@@ -25,6 +26,10 @@ public class ChessMove {
      */
     public ChessPosition getStartPosition() {
         return startPosition;
+    }
+
+    public ChessGame.TeamColor getTeamColor(){
+        return teamColor;
     }
 
     /**

@@ -39,7 +39,7 @@ public class MoveCalculator {
                     ChessPosition potentialPosition =
                             new ChessPosition(myPosition.getRow()+rowIterator, myPosition.getColumn()+colIterator);
                     if(validMove(potentialPosition)){
-                        potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                     }
                 }
             }
@@ -61,7 +61,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()-i, myPosition.getColumn()+i);
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -71,7 +71,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()+i, myPosition.getColumn()+i);
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -82,7 +82,7 @@ public class MoveCalculator {
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()+i, myPosition.getColumn()-i);
             //is this move validly on the board?
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -92,7 +92,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()-i, myPosition.getColumn()-i);
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -107,11 +107,11 @@ public class MoveCalculator {
             for (int colFactor = -1; colFactor <= 1; colFactor += 2) {
                 ChessPosition potentialPositionA = new ChessPosition(myPosition.getRow() + (rowFactor), myPosition.getColumn() + (2*colFactor));
                 if (validMove(potentialPositionA)) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialPositionA, type));
+                    potentialMoves.add(new ChessMove(myPosition, potentialPositionA, type, pieceColor));
                 }
                 ChessPosition potentialPositionB = new ChessPosition(myPosition.getRow() + (2*rowFactor), myPosition.getColumn() + (colFactor));
                 if (validMove(potentialPositionB)) {
-                    potentialMoves.add(new ChessMove(myPosition, potentialPositionB, type));
+                    potentialMoves.add(new ChessMove(myPosition, potentialPositionB, type, pieceColor));
                 }
             }
         }
@@ -124,7 +124,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()+i, myPosition.getColumn());
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -134,7 +134,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow()-i, myPosition.getColumn());
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -145,7 +145,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn()+i);
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -156,7 +156,7 @@ public class MoveCalculator {
         for(int i = 1; i < 8; i++){
             ChessPosition potentialPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn()-i);
             if(validMove(potentialPosition)){
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, type, pieceColor));
                 if(board.getPiece(potentialPosition) != null) break;
             } else{
                 break;
@@ -182,10 +182,10 @@ public class MoveCalculator {
         ArrayList<ChessMove> potentialMoves = new ArrayList<>();
         if (validMove(potentialPosition)) {
             if (canPromote(potentialPosition)) {
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.BISHOP));
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.KNIGHT));
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.QUEEN));
-                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.ROOK));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.BISHOP, pieceColor));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.KNIGHT, pieceColor));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.QUEEN, pieceColor));
+                potentialMoves.add(new ChessMove(myPosition, potentialPosition, ChessPiece.PieceType.ROOK, pieceColor));
             }
         }
         return potentialMoves;
@@ -203,13 +203,13 @@ public class MoveCalculator {
                 if(canPromote(potentialPosition1)){
                     potentialMoves.addAll(promotePawnMoves(potentialPosition1));
                 }else {
-                    potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type));
+                    potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type, pieceColor));
                 }
                 //check to see if we can do a double move by seeing if we are still in the 2nd row:
                 if (myPosition.getRow() == 2) { //if pawn hasn't moved...
                     ChessPosition potentialPosition2 = new ChessPosition(myPosition.getRow()+2, myPosition.getColumn());
                     if (board.getPiece(potentialPosition2) == null) {
-                        potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type, pieceColor));
                     }
                 }
             }
@@ -220,7 +220,7 @@ public class MoveCalculator {
                 if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.BLACK){                    if(canPromote(potentialAttackPosition)){
                         potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
                     }else {
-                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type, pieceColor));
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class MoveCalculator {
                 if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.BLACK){                    if(canPromote(potentialAttackPosition)){
                         potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
                     }else {
-                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type, pieceColor));
                     }
                 }
             }
@@ -244,13 +244,13 @@ public class MoveCalculator {
                 if(canPromote(potentialPosition1)){
                     potentialMoves.addAll(promotePawnMoves(potentialPosition1));
                 }else {
-                    potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type));
+                    potentialMoves.add(new ChessMove(myPosition, potentialPosition1, type, pieceColor));
                 }
                 //check to see if we can do a double move by seeing if we are still in the 2nd row:
                 if (myPosition.getRow() == 7) { //if pawn hasn't moved...
                     ChessPosition potentialPosition2 = new ChessPosition(myPosition.getRow()-2, myPosition.getColumn());
                     if (validMove(potentialPosition2)) {
-                        potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialPosition2, type, pieceColor));
                     }
                 }
             }
@@ -262,7 +262,7 @@ public class MoveCalculator {
                     if(canPromote(potentialAttackPosition)){
                         potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
                     }else {
-                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type, pieceColor));
                     }
                 }
             }
@@ -272,7 +272,7 @@ public class MoveCalculator {
                 if(board.getPiece(potentialAttackPosition) != null && board.getPiece(potentialAttackPosition).getTeamColor() == ChessGame.TeamColor.WHITE){                    if(canPromote(potentialAttackPosition)){
                         potentialMoves.addAll(promotePawnMoves(potentialAttackPosition));
                     }else {
-                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type));
+                        potentialMoves.add(new ChessMove(myPosition, potentialAttackPosition, type, pieceColor));
                     }
                 }
             }
