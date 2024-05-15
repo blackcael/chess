@@ -1,5 +1,6 @@
 package chess;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -37,6 +38,13 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    public TeamColor opposingTeamColor(TeamColor Color){
+        if(Color == TeamColor.BLACK){
+            return TeamColor.WHITE;
+        }
+        return TeamColor.BLACK;
     }
 
     /**
@@ -82,8 +90,16 @@ public class ChessGame {
         //step 1: assemble mega list of opponent's moves
         //step 2: find where OUR king is
         //step 3: if the position of our king is included in that list, return true, else, false.
+        ChessGame.TeamColor opposingColor = opposingTeamColor(teamColor);
+        MoveCalculator allCalc = new MoveCalculator(board, new ChessPosition(1,1), opposingColor, null);
+        ArrayList<ChessMove> allMoves = new ArrayList<ChessMove>(allCalc.getAllColorMoves());
+        for(ChessMove move : allMoves){
+            if(move.getEndPosition() == board.getKingPosition(teamColor)){
+                return true;
+            }
+        }
+        return false;
     }
-
     /**
      * Determines if the given team is in checkmate
      *
