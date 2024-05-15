@@ -279,4 +279,31 @@ public class MoveCalculator {
         }
         return potentialMoves;
     }
+    //=================================================== ALL COLOR MOVES ===================================================//
+    public Collection<ChessMove> getAllColorMoves(ChessGame.TeamColor COLOR){
+        ArrayList<ChessMove> potentialMoves = new ArrayList<>();
+        for(int row = 1; row <= 8; row ++){
+            for(int col = 1; col <= 8; col ++){
+                ChessPosition tempPosition = new ChessPosition(row, col);
+                if(board.getPiece(tempPosition) != null){
+                    if(board.getPiece(tempPosition).getTeamColor() == COLOR){
+                         MoveCalculator tempCalc = new MoveCalculator(board, tempPosition, COLOR, null);
+                         potentialMoves.addAll(switch(board.getPiece(tempPosition).getPieceType()){
+                                     case KING -> tempCalc.kingMoves();
+                                     case QUEEN -> tempCalc.queenMoves();
+                                     case BISHOP -> tempCalc.bishopMoves();
+                                     case KNIGHT -> tempCalc.knightMoves();
+                                     case ROOK -> tempCalc.rookMoves();
+                                     case PAWN -> tempCalc.pawnMoves();
+                                 }
+                         );
+                    }
+                }
+            }
+        }
+        return potentialMoves;
+    }
+
+
 }
+

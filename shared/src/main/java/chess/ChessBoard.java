@@ -86,7 +86,7 @@ public class ChessBoard {
         for(int row = 0; row < 8; row++){
             for(int col = 0; col < 8; col++){
                 ChessPiece clonePiece = new ChessPiece(squares[row][col].getTeamColor(), squares[row][col].getPieceType());
-                board.addPiece(new ChessPosition(row, col), clonePiece);
+                board.addPiece(new ChessPosition(row+1, col+1), clonePiece);
             }
         }
         return board;

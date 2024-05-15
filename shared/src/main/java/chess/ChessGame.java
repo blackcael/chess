@@ -51,8 +51,7 @@ public class ChessGame {
             return null;
         }
         return new ArrayList<>(board.getPiece(startPosition).pieceMoves(board, startPosition));
-
-        //incomplete, we need to filter out the moves that leave our king in danger.
+        //TODO: complete, we need to filter out the moves that leave our king in danger.
     }
 
     /**
@@ -79,7 +78,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        //iterate over moves
+        //iterate all of our opponent's pieces, and get their current potential moves. If any of them inlcude the space upon which our king is, we are in check
+        //step 1: assemble mega list of opponent's moves
+        //step 2: find where OUR king is
+        //step 3: if the position of our king is included in that list, return true, else, false.
     }
 
     /**
