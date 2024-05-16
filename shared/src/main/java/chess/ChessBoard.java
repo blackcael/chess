@@ -36,6 +36,8 @@ public class ChessBoard {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
 
+    public C
+
     public ChessPosition getKingPosition(ChessGame.TeamColor COLOR){
         for(int row = 0; row < 8; row++){
             for(int col = 0; col < 8; col++){
