@@ -72,7 +72,7 @@ public class ChessGame {
             testGame.setTeamTurn(teamTurn);
             boolean success = false;
             try{
-                testGame.makeMove(move);
+                testGame.hypotheticalMakeMove(move);
                 success = true;
             } catch (InvalidMoveException _) {
             }
@@ -92,6 +92,11 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         //if (not my turn || is not in the list of possible moves|| willBeInCheck) >> throw exception
+        //0. If there is no piece
+        if(board.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException();
+        }
+
         //1. If it is not our turn, throw exception.
         if(move.getTeamColor(board) != teamTurn){
             throw new InvalidMoveException();
@@ -116,6 +121,31 @@ public class ChessGame {
 
         changeTeamTurn();
     }
+
+    public void hypotheticalMakeMove(ChessMove move) throws InvalidMoveException {
+        //if (not my turn || is not in the list of possible moves|| willBeInCheck) >> throw exception
+        //0. If there is no piece
+        if(board.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException();
+        }
+
+        //2. If the move is not within the list of our potential moves, throw exception.
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        ArrayList<ChessMove> potentialMoves = new ArrayList<>(piece.pieceMoves(board, move.getStartPosition()));
+        if (!potentialMoves.contains(move)){
+            throw new InvalidMoveException();
+        }
+        //3. Make the Move; If we are in check after the move is made, throw exception.
+        if(move.getPromotionPiece() != null){  //passing the correct piece (promotion or normal piece) logic
+            piece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+        }
+        board.movePiece(move.getStartPosition(), move.getEndPosition(), piece);
+        if(isInCheck(piece.getTeamColor())){
+            throw new InvalidMoveException();
+        }
+        changeTeamTurn();
+    }
+
 
     /**
      * Determines if the given team is in check
