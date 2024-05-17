@@ -19,8 +19,6 @@ public class ChessMove {
         this.promotionPiece = promotionPiece;
     }
 
-    //TODO: eliminate color from the class, find a solution
-
     /**
      * @return ChessPosition of starting location
      */

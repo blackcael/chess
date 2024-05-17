@@ -32,8 +32,8 @@ public class ChessBoard {
     }
 
     public void movePiece(ChessPosition startPosition, ChessPosition endPosition, ChessPiece piece){
-        addPiece(startPosition, piece);
-        removePiece(endPosition);
+        addPiece(endPosition, piece);
+        removePiece(startPosition);
     }
 
     /**
@@ -48,9 +48,9 @@ public class ChessBoard {
     }
 
     public ChessPosition getKingPosition(ChessGame.TeamColor COLOR){
-        for(int row = 0; row < 8; row++){
-            for(int col = 0; col < 8; col++){
-                ChessPosition potentialPosition = new ChessPosition(row+1, col+1);
+        for(int row = 1; row <= 8; row++){
+            for(int col = 1; col <= 8; col++){
+                ChessPosition potentialPosition = new ChessPosition(row, col);
                 if(getPiece(potentialPosition) != null){
                     if(getPiece(potentialPosition).getPieceType() == ChessPiece.PieceType.KING){
                         if(getPiece(potentialPosition).getTeamColor() == COLOR){
@@ -131,14 +131,16 @@ public class ChessBoard {
 
     @Override
     public ChessBoard clone(){
-        ChessBoard board = new ChessBoard();
+        ChessBoard cloneBoard = new ChessBoard();
         for(int row = 0; row < 8; row++){
             for(int col = 0; col < 8; col++){
-                ChessPiece clonePiece = new ChessPiece(squares[row][col].getTeamColor(), squares[row][col].getPieceType());
-                board.addPiece(new ChessPosition(row+1, col+1), clonePiece);
+                if(squares[row][col] != null) {
+                    ChessPiece clonePiece = new ChessPiece(squares[row][col].getTeamColor(), squares[row][col].getPieceType());
+                    cloneBoard.addPiece(new ChessPosition(row + 1, col + 1), clonePiece);
+                }
             }
         }
-        return board;
+        return cloneBoard;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package chess;
 
+import javax.lang.model.type.ArrayType;
 import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +15,7 @@ public class ChessGame {
     private ChessBoard board = new ChessBoard();
     private TeamColor teamTurn = TeamColor.WHITE;
     public ChessGame() {
+        board.resetBoard();
     }
 
     /**
@@ -30,6 +32,10 @@ public class ChessGame {
      */
     public void setTeamTurn(TeamColor team) {
         teamTurn = team;
+    }
+
+    private void changeTeamTurn(){
+        setTeamTurn(opposingTeamColor(teamTurn));
     }
 
     /**
@@ -63,10 +69,17 @@ public class ChessGame {
         for(ChessMove move : potentialMoveList){
             ChessGame testGame = new ChessGame();
             testGame.setBoard(board.clone());
+            testGame.setTeamTurn(teamTurn);
+            boolean success = false;
             try{
                 testGame.makeMove(move);
+                success = true;
             } catch (InvalidMoveException _) {
             }
+            if(success){
+                validMoveList.add(move);
+            }
+
         }
         return validMoveList;
     }
@@ -78,24 +91,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        //if move: (not my turn || is not in the list of possible moves|| isInCheck) >> throw exception
+        //if (not my turn || is not in the list of possible moves|| willBeInCheck) >> throw exception
+        //1. If it is not our turn, throw exception.
         if(move.getTeamColor(board) != teamTurn){
             throw new InvalidMoveException();
         }
+
+        //2. If the move is not within the list of our potential moves, throw exception.
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        MoveCalculator allCalc = new MoveCalculator(move.getStartPosition(), board);
-        ArrayList<ChessMove> potentialMoves = new ArrayList<ChessMove>(allCalc.getAllColorMoves());
+
+        ArrayList<ChessMove> potentialMoves = new ArrayList<>(piece.pieceMoves(board, move.getStartPosition()));
         if (!potentialMoves.contains(move)){
             throw new InvalidMoveException();
         }
-        //create a board where this theoretical move has been made. if we are still in check, throwError
-        if(board.getPiece(move.getStartPosition()).getPieceType() != null){  //passing the correct piece (promotion or normal piece) logic
+
+        //3. Make the Move; If we are in check after the move is made, throw exception.
+        if(move.getPromotionPiece() != null){  //passing the correct piece (promotion or normal piece) logic
             piece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
         }
         board.movePiece(move.getStartPosition(), move.getEndPosition(), piece);
         if(isInCheck(piece.getTeamColor())){
             throw new InvalidMoveException();
         }
+
+        changeTeamTurn();
     }
 
     /**
@@ -109,10 +128,11 @@ public class ChessGame {
         //step 1: assemble mega list of opponent's moves
         //step 2: find where OUR king is
         //step 3: if the position of our king is included in that list, return true, else, false.
-        ChessGame.TeamColor opposingColor = opposingTeamColor(teamColor);
-        ArrayList<ChessMove> allMoves = new ArrayList<>(board.getAllMovesOfColor(teamColor));
+        ArrayList<ChessMove> allMoves = new ArrayList<>(board.getAllMovesOfColor(opposingTeamColor(teamColor)));
+        ChessPosition kingPosition = board.getKingPosition(teamColor);
         for(ChessMove move : allMoves){
-            if(move.getEndPosition() == board.getKingPosition(teamColor)){
+            ChessPosition endPosition = move.getEndPosition();
+            if(endPosition.equals(kingPosition)){
                 return true;
             }
         }
@@ -125,11 +145,16 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     private boolean hasMoves(TeamColor teamColor){
+        ChessGame.TeamColor realTurn = teamTurn;
+        teamTurn = teamColor; //SIMULATE!
         for(ChessPosition position : board.getAllPiecePositionsOfColor(teamColor)){
-            if(!validMoves(position).isEmpty()){
+            ArrayList<ChessMove> validMoveList = new ArrayList<>(validMoves(position));
+            if(!validMoveList.isEmpty()){
+                teamTurn = realTurn;
                 return true;
             }
         }
+        teamTurn = realTurn;
         return false;
     }
 
