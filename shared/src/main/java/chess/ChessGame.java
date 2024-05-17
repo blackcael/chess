@@ -1,7 +1,5 @@
 package chess;
 
-import javax.lang.model.type.ArrayType;
-import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -74,8 +72,7 @@ public class ChessGame {
             try{
                 testGame.hypotheticalMakeMove(move);
                 success = true;
-            } catch (InvalidMoveException _) {
-            }
+            } catch (InvalidMoveException _){}
             if(success){
                 validMoveList.add(move);
             }
