@@ -25,6 +25,15 @@ public class ChessBoard {
         squares[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
+    public void removePiece(ChessPosition position){
+        squares[position.getRow()-1][position.getColumn()-1] = null;
+    }
+
+    public void movePiece(ChessPosition startPosition, ChessPosition endPosition, ChessPiece piece){
+        addPiece(startPosition, piece);
+        removePiece(endPosition);
+    }
+
     /**
      * Gets a chess piece on the chessboard
      *
@@ -35,8 +44,6 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
-
-    public C
 
     public ChessPosition getKingPosition(ChessGame.TeamColor COLOR){
         for(int row = 0; row < 8; row++){

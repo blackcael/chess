@@ -55,11 +55,19 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        ArrayList<ChessMove> validMoveList = new ArrayList<>();
         if(board.getPiece(startPosition) == null){
             return null;
         }
-        return new ArrayList<>(board.getPiece(startPosition).pieceMoves(board, startPosition));
-        //TODO: complete, we need to filter out the moves that leave our king in danger.
+        ArrayList<ChessMove> potentialMoveList = new ArrayList<>(board.getPiece(startPosition).pieceMoves(board, startPosition));
+        for(ChessMove move : potentialMoveList){
+            ChessGame testGame = new ChessGame();
+            testGame.setBoard(board.clone());
+            if (!(testGame.makeMove(move) throws InvalidMOveException)){
+                validMoveList.add(move);
+            }
+        }
+        return validMoveList;
     }
 
     /**
@@ -77,6 +85,7 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
         //create a board where this theoretical move has been made. if we are still in check, throwError
+        board.movePiece()
     }
 
     /**
