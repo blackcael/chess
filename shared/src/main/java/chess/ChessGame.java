@@ -63,8 +63,10 @@ public class ChessGame {
         for(ChessMove move : potentialMoveList){
             ChessGame testGame = new ChessGame();
             testGame.setBoard(board.clone());
-            if (!(testGame.makeMove(move) throws InvalidMOveException)){
-                validMoveList.add(move);
+            try{
+                testGame.makeMove(move);
+            } catch (InvalidMoveException e) {
+                return null;
             }
         }
         return validMoveList;
@@ -77,15 +79,24 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        //if move not in validMoves || isInCheck || not my turn
+        //if move: (not my turn || is not in the list of possible moves|| isInCheck) >> throw exception
         if(move.getTeamColor() != teamTurn){
             throw new InvalidMoveException();
         }
-        if(!validMoves(move.getStartPosition()).contains(move)){
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        MoveCalculator allCalc = new MoveCalculator(board, move.getStartPosition(), piece.getTeamColor(), null);
+        ArrayList<ChessMove> potentialMoves = new ArrayList<ChessMove>(allCalc.getAllColorMoves());
+        if (!potentialMoves.contains(move)){
             throw new InvalidMoveException();
         }
         //create a board where this theoretical move has been made. if we are still in check, throwError
-        board.movePiece()
+        if(board.getPiece(move.getStartPosition()).getPieceType() != null){  //passing the correct piece (promotion or normal piece) logic
+            piece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+        }
+        board.movePiece(move.getStartPosition(), move.getEndPosition(), piece);
+        if(isInCheck(piece.getTeamColor())){
+            throw new InvalidMoveException();
+        }
     }
 
     /**
