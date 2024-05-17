@@ -79,11 +79,11 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         //if move: (not my turn || is not in the list of possible moves|| isInCheck) >> throw exception
-        if(move.getTeamColor() != teamTurn){
+        if(move.getTeamColor(board) != teamTurn){
             throw new InvalidMoveException();
         }
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        MoveCalculator allCalc = new MoveCalculator(board, move.getStartPosition(), piece.getTeamColor(), null);
+        MoveCalculator allCalc = new MoveCalculator(move.getStartPosition(), board);
         ArrayList<ChessMove> potentialMoves = new ArrayList<ChessMove>(allCalc.getAllColorMoves());
         if (!potentialMoves.contains(move)){
             throw new InvalidMoveException();
@@ -110,8 +110,7 @@ public class ChessGame {
         //step 2: find where OUR king is
         //step 3: if the position of our king is included in that list, return true, else, false.
         ChessGame.TeamColor opposingColor = opposingTeamColor(teamColor);
-        MoveCalculator allCalc = new MoveCalculator(board, new ChessPosition(1,1), opposingColor, null);
-        ArrayList<ChessMove> allMoves = new ArrayList<ChessMove>(allCalc.getAllColorMoves());
+        ArrayList<ChessMove> allMoves = new ArrayList<>(board.getAllMovesOfColor(teamColor));
         for(ChessMove move : allMoves){
             if(move.getEndPosition() == board.getKingPosition(teamColor)){
                 return true;

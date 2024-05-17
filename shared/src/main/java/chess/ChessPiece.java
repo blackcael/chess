@@ -54,7 +54,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        MoveCalculator moveCalculator = new MoveCalculator(board, myPosition, pieceColor, null);
+        MoveCalculator moveCalculator = new MoveCalculator(myPosition, board);
         return switch (type) {
             case KING -> moveCalculator.kingMoves();
             case QUEEN -> moveCalculator.queenMoves();

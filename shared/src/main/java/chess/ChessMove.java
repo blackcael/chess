@@ -12,14 +12,14 @@ public class ChessMove {
     private final ChessPosition startPosition;
     private final ChessPosition endPosition;
     private final ChessPiece.PieceType promotionPiece;
-    private final ChessGame.TeamColor teamColor;
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece, ChessGame.TeamColor teamColor) {
+                     ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
-        this.teamColor = teamColor;
     }
+
+    //TODO: eliminate color from the class, find a solution
 
     /**
      * @return ChessPosition of starting location
@@ -28,8 +28,8 @@ public class ChessMove {
         return startPosition;
     }
 
-    public ChessGame.TeamColor getTeamColor(){
-        return teamColor;
+    public ChessGame.TeamColor getTeamColor(ChessBoard board){
+        return board.getPiece(startPosition).getTeamColor();
     }
 
     /**

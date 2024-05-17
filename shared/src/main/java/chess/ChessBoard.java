@@ -77,6 +77,14 @@ public class ChessBoard {
         }
         return positionList;
     }
+
+    public Collection<ChessMove> getAllMovesOfColor(ChessGame.TeamColor Color){
+        ArrayList<ChessMove> moveList = new ArrayList<>();
+        for(ChessPosition position : getAllPiecePositionsOfColor(Color)){
+            moveList.addAll(getPiece(position).pieceMoves(this, position));
+        }
+        return moveList;
+    }
     /**
      * Sets the board to the default starting board
      * kind of the jank solution, but if there is built in garbage solution, then it is actually elegant (think about it)
