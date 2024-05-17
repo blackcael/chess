@@ -72,7 +72,9 @@ public class ChessGame {
             try{
                 testGame.hypotheticalMakeMove(move);
                 success = true;
-            } catch (InvalidMoveException _){}
+            } catch (InvalidMoveException e){
+                System.out.println("Error:" + e.getMessage());
+            }
             if(success){
                 validMoveList.add(move);
             }
