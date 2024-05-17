@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -61,6 +63,20 @@ public class ChessBoard {
         return null;
     }
 
+    public Collection<ChessPosition> getAllPiecePositionsOfColor(ChessGame.TeamColor Color){
+        ArrayList<ChessPosition> positionList = new ArrayList<>();
+        for(int row = 1; row <= 8; row ++){
+            for(int col = 1; col <= 8; col ++){
+                ChessPosition testPosition = new ChessPosition(row, col);
+                if(getPiece(testPosition) != null){
+                    if(getPiece(testPosition).getTeamColor() == Color){
+                        positionList.add(testPosition);
+                    }
+                }
+            }
+        }
+        return positionList;
+    }
     /**
      * Sets the board to the default starting board
      * kind of the jank solution, but if there is built in garbage solution, then it is actually elegant (think about it)

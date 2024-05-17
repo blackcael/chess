@@ -65,8 +65,7 @@ public class ChessGame {
             testGame.setBoard(board.clone());
             try{
                 testGame.makeMove(move);
-            } catch (InvalidMoveException e) {
-                return null;
+            } catch (InvalidMoveException _) {
             }
         }
         return validMoveList;
@@ -126,11 +125,17 @@ public class ChessGame {
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-    public boolean isInCheckmate(TeamColor teamColor) {
-        if(isInCheck(teamColor) && validMoves(board.getKingPosition(teamColor)) == null){
-            return true;
+    private boolean hasMoves(TeamColor teamColor){
+        for(ChessPosition position : board.getAllPiecePositionsOfColor(teamColor)){
+            if(!validMoves(position).isEmpty()){
+                return true;
+            }
         }
         return false;
+    }
+
+    public boolean isInCheckmate(TeamColor teamColor) {
+        return(isInCheck(teamColor) && !hasMoves(teamColor));
     }
 
     /**
@@ -141,10 +146,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if(!isInCheck(teamColor) && validMoves(board.getKingPosition(teamColor))==null){
-            return true;
-        }
-        return false;
+        return(!isInCheck(teamColor) && !hasMoves(teamColor));
     }
 
     /**
