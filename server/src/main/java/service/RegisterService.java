@@ -1,7 +1,7 @@
 package service;
 
-import Intermediary.RegisterRequest;
-import Intermediary.RegisterResponse;
+import intermediary.RegisterRequest;
+import intermediary.RegisterResponse;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;

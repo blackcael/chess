@@ -1,7 +1,5 @@
 package server;
 
-import Intermediary.RegisterRequest;
-import Intermediary.RegisterResponse;
 import dataaccess.*;
 import handler.*;
 import spark.*;
@@ -23,9 +21,11 @@ public class Server {
 
         //Initialize Handlers
         RegisterHandler registerHandler = new RegisterHandler(database);
+        ClearHandler clearHandler = new ClearHandler(database);
 
         //switch case to handle all the different requests?
-        Spark.post("/session", registerHandler::<RegisterRequest, RegisterResponse> handleRequest);
+        Spark.post("/session", registerHandler::handleRequest);
+        Spark.delete("/db", clearHandler::handleRequest);
 
         Spark.awaitInitialization();
         return Spark.port();
