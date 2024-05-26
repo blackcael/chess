@@ -27,7 +27,6 @@ public class RegisterTests {
         System.out.println(registerResponse.authToken());
     }
 
-
     @Test
     public void registerDuplicateUserNameTest() throws DataAccessException {
         RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);

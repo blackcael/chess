@@ -18,7 +18,7 @@ public class RegisterHandler extends BaseHandler{
         return new Gson().fromJson(String.valueOf(request), RegisterRequest.class);
     }
     //2.
-    private RegisterResponse service(RegisterRequest registerRequest) throws DataAccessException {
+    private RegisterResponse service(RegisterRequest registerRequest) throws Exception {
         RegisterService registerService = new RegisterService(database);
         return registerService.register(registerRequest);
     }

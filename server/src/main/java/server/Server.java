@@ -21,10 +21,12 @@ public class Server {
 
         //Initialize Handlers
         RegisterHandler registerHandler = new RegisterHandler(database);
+        LoginHandler loginHandler = new LoginHandler(database);
         ClearHandler clearHandler = new ClearHandler(database);
 
         //switch case to handle all the different requests?
-        Spark.post("/session", registerHandler::handleRequest);
+        Spark.post("/user", registerHandler::handleRequest);
+        Spark.post("/session", loginHandler::handleRequest);
         Spark.delete("/db", clearHandler::handleRequest);
 
         Spark.awaitInitialization();
