@@ -14,10 +14,6 @@ public class LoginHandler extends BaseHandler{
         super(database);
     }
 
-    //1.
-    private LoginRequest jsonToClass(Request request){
-        return new Gson().fromJson(String.valueOf(request), LoginRequest.class);
-    }
     //2.
     private LoginResponse service(LoginRequest loginRequest) throws Exception {
         LoginService loginService = new LoginService(database);
@@ -26,7 +22,7 @@ public class LoginHandler extends BaseHandler{
 
     //4.
     public Object handleRequest(Request request, Response response) throws Exception {
-        LoginRequest loginRequest = jsonToClass(request);
+        LoginRequest loginRequest = jsonToClass(request, LoginRequest.class);
         return classToJson(response, service(loginRequest));
     }
 

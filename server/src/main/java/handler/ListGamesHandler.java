@@ -12,10 +12,6 @@ public class ListGamesHandler extends BaseHandler{
     public ListGamesHandler(Database database) {
         super(database);
     }
-    //1.
-    private String jsonToClass(Request request) {
-        return new Gson().fromJson(String.valueOf(request), String.class);
-    }
     //2.
     private ListGamesResponse service(String authToken) throws Exception {
         ListGamesService listGamesService = new ListGamesService(database);
@@ -23,7 +19,7 @@ public class ListGamesHandler extends BaseHandler{
     }
     //4.
     public Object handleRequest(Request request, Response response) throws Exception {
-        String authToken = jsonToClass(request);
-        return classToJson(response, service(authToken) );
+        String authToken = parseOutAuthToken(request);
+        return classToJson(response, service(authToken));
     }
 }

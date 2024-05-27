@@ -10,7 +10,6 @@ public class ClearHandler extends BaseHandler{
         super(database);
     }
     public Object handleRequest(Request request, Response response){
-        response.type("application/json");
-        return new Gson().toJson(null);
+        return classToJson(response, null);
     }
 }

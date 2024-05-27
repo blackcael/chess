@@ -14,10 +14,6 @@ public class RegisterHandler extends BaseHandler{
         super(database);
     }
 
-    //1.
-    private RegisterRequest jsonToClass(Request request){
-        return new Gson().fromJson(String.valueOf(request), RegisterRequest.class);
-    }
     //2.
     private RegisterResponse service(RegisterRequest registerRequest) throws Exception {
         RegisterService registerService = new RegisterService(database);
@@ -26,7 +22,7 @@ public class RegisterHandler extends BaseHandler{
 
     //4.
     public Object handleRequest(Request request, Response response) throws Exception {
-        RegisterRequest registerRequest = jsonToClass(request);
+        RegisterRequest registerRequest = jsonToClass(request, RegisterRequest.class);
         return classToJson(response, service(registerRequest));
     }
 

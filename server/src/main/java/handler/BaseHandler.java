@@ -5,6 +5,7 @@ import dataaccess.*;
 import intermediary.RegisterRequest;
 import intermediary.RegisterResponse;
 import service.RegisterService;
+import spark.Request;
 import spark.Response;
 
 import java.lang.reflect.Type;
@@ -15,11 +16,22 @@ public abstract class BaseHandler {
     protected BaseHandler(Database database) {
         this.database = database;
     }
+    //1.
+    protected <clazz> clazz jsonToClass(Request request, Type clazz) {
+        return new Gson().fromJson(request.body(), clazz);
+    }
 
+    protected String parseOutAuthToken(Request request){
+        return new Gson().fromJson(request.headers("authentication"), String.class);
+    }
+
+    //3.
     protected <clazz> Object classToJson(Response response, clazz serviceOutput){
         response.type("application/json");
         return new Gson().toJson(serviceOutput);
     }
+
+
 
     //HANDLERS WILL ALSO HANDLE ERROR HANDLING THROWN BY SERVICE
 
