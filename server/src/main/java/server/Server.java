@@ -25,6 +25,7 @@ public class Server {
         LogoutHandler logoutHandler = new LogoutHandler(database);
         ListGamesHandler listGamesHandler = new ListGamesHandler(database);
         CreateGameHandler createGameHandler = new CreateGameHandler(database);
+        JoinGameHandler joinGameHandler = new JoinGameHandler(database);
         ClearHandler clearHandler = new ClearHandler(database);
 
         //switch case to handle all the different requests?
@@ -33,6 +34,7 @@ public class Server {
         Spark.delete("/session", logoutHandler::handleRequest);
         Spark.get("/game", listGamesHandler::handleRequest);
         Spark.post("/game", createGameHandler::handleRequest);
+        Spark.put("/game", joinGameHandler::handleRequest);
         Spark.delete("/db", clearHandler::handleRequest);
 
         Spark.awaitInitialization();
