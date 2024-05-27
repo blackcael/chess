@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
-    //CRUD operations
     private Map<Integer, GameData> gameDataDB = new HashMap<>();
     public MemoryGameDAO(){}
 
@@ -38,4 +37,6 @@ public class MemoryGameDAO implements GameDAO{
             throw new DataAccessException("Cannot Update Non-Existent Game");
         }
     }
+
+
 }

@@ -2,9 +2,6 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.*;
-import intermediary.RegisterRequest;
-import intermediary.RegisterResponse;
-import service.RegisterService;
 import spark.Request;
 import spark.Response;
 
