@@ -19,16 +19,18 @@ public class Server {
         UserDAO userDataBase = new MemoryUserDAO();
         Database database = new Database(authDataBase, gameDataBase, userDataBase);
 
-        //Initialize Handlers
+        //Initialize Handlers (potential idea: make the handlers static? eliminate need for instantiation)
         RegisterHandler registerHandler = new RegisterHandler(database);
         LoginHandler loginHandler = new LoginHandler(database);
         LogoutHandler logoutHandler = new LogoutHandler(database);
+        ListGamesHandler listGamesHandler = new ListGamesHandler(database);
         ClearHandler clearHandler = new ClearHandler(database);
 
         //switch case to handle all the different requests?
         Spark.post("/user", registerHandler::handleRequest);
         Spark.post("/session", loginHandler::handleRequest);
         Spark.delete("/session", logoutHandler::handleRequest);
+        Spark.get("/get", listGamesHandler::handleRequest);
         Spark.delete("/db", clearHandler::handleRequest);
 
         Spark.awaitInitialization();

@@ -8,7 +8,8 @@ public class ListGamesService extends BaseService{
     public ListGamesService(Database database) {
         super(database);
     }
-    public ListGamesResponse listGames(String authData) throws InvalidAuthException{
-
+    public ListGamesResponse listGames(String authToken) throws InvalidAuthException{
+        validateAuthToken(authToken);
+        return new ListGamesResponse(gameDataBase.getGameList());
     }
 }

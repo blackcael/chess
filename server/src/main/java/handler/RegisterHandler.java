@@ -27,8 +27,7 @@ public class RegisterHandler extends BaseHandler{
     //4.
     public Object handleRequest(Request request, Response response) throws Exception {
         RegisterRequest registerRequest = jsonToClass(request);
-        RegisterResponse registerResponse = service(registerRequest);
-        return classToJson(response, registerResponse);
+        return classToJson(response, service(registerRequest));
     }
 
 

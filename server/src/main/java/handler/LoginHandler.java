@@ -27,8 +27,7 @@ public class LoginHandler extends BaseHandler{
     //4.
     public Object handleRequest(Request request, Response response) throws Exception {
         LoginRequest loginRequest = jsonToClass(request);
-        LoginResponse loginResponse = service(loginRequest);
-        return classToJson(response, loginResponse);
+        return classToJson(response, service(loginRequest));
     }
 
 }
