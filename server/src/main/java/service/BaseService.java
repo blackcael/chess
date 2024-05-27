@@ -4,6 +4,7 @@ import dataaccess.AuthDAO;
 import dataaccess.Database;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
+import intermediary.InvalidAuthException;
 import model.AuthData;
 
 public class BaseService {
@@ -16,7 +17,9 @@ public class BaseService {
         this.userDataBase = database.userDataBase;
     }
 
-    protected boolean validateAuthToken(String authToken){
-        return(authDataBase.getAuth(authToken) != null); //TODO: is this the right kind of equals?
+    protected void validateAuthToken(String authToken) throws InvalidAuthException {
+        if(authDataBase.getAuth(authToken) == null) { //TODO: is this the right kind of equals?
+            throw new InvalidAuthException("Error: unauthorized");
+        }
     }
 }

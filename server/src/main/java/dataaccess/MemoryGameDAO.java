@@ -22,8 +22,14 @@ public class MemoryGameDAO implements GameDAO{
         gameDataDB.put(gameData.gameID(), gameData);
     }
 
-    public ArrayList<GameData> getGameList(){
-        return new ArrayList<>(gameDataDB.values());
+    public ArrayList<ListGamesSubData> getGameList(){
+        ArrayList<GameData> tempList = new ArrayList<>(gameDataDB.values());
+        ArrayList<ListGamesSubData> retList= new ArrayList<>();
+        for(GameData set : tempList){
+            ListGamesSubData subData = new ListGamesSubData(set.gameID(), set.whiteUsername(), set.blackUsername(), set.gameName());
+            retList.add(subData);
+        }
+        return retList;
     }
 
     public void updateGame(GameData updatedGameData) throws DataAccessException {

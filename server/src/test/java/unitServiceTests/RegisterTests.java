@@ -30,6 +30,8 @@ public class RegisterTests {
     @Test
     public void registerDuplicateUserNameTest() throws DataAccessException {
         RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
-        assertThrows(DataAccessException.class, () -> {RegisterResponse duplicateRegisterResponse = registerService.register(newUserRegisterRequest);});
+        assertThrows(DataAccessException.class, () -> {
+            RegisterResponse duplicateRegisterResponse = registerService.register(newUserRegisterRequest);
+        });
     }
 }

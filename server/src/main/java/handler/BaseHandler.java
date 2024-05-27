@@ -1,6 +1,11 @@
 package handler;
 
+import com.google.gson.Gson;
 import dataaccess.*;
+import intermediary.RegisterRequest;
+import intermediary.RegisterResponse;
+import service.RegisterService;
+import spark.Response;
 
 import java.lang.reflect.Type;
 
@@ -10,6 +15,12 @@ public abstract class BaseHandler {
     protected BaseHandler(Database database) {
         this.database = database;
     }
+
+    protected <clazz> Object classToJson(Response response, clazz serviceOutput){
+        response.type("application/json");
+        return new Gson().toJson(serviceOutput);
+    }
+
     //HANDLERS WILL ALSO HANDLE ERROR HANDLING THROWN BY SERVICE
 
 

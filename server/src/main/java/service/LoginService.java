@@ -1,14 +1,10 @@
 package service;
 
-import dataaccess.AuthDAO;
 import dataaccess.Database;
-import dataaccess.GameDAO;
-import dataaccess.UserDAO;
+import intermediary.BadRequestException;
 import intermediary.LoginResponse;
 import intermediary.LoginRequest;
-import intermediary.RegisterResponse;
 import model.AuthData;
-import model.UserData;
 
 import java.util.UUID;
 

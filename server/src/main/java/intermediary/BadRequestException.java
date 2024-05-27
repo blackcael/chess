@@ -1,4 +1,4 @@
-package service;
+package intermediary;
 
 /**
  * Indicates there was an error connecting to the database
