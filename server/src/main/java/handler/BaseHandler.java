@@ -7,7 +7,7 @@ import spark.Response;
 
 import java.lang.reflect.Type;
 
-public abstract class BaseHandler {
+public class BaseHandler {
     Database database;
     Type Clazz;
     protected BaseHandler(Database database) {

@@ -1,5 +1,40 @@
 package unitServiceTests;
 
+import dataaccess.*;
+import intermediary.*;
+import model.UserData;
+import org.junit.jupiter.api.Test;
+import service.CreateGameService;
+import service.ListGamesService;
+import service.LogoutService;
+import service.RegisterService;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class ListGamesTests {
-    //this should probably wait for join game?
+    //setup
+    // (initialize user with valid auth token)
+    Database database = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
+    RegisterService registerService = new RegisterService(database);
+    RegisterRequest newUserRegisterRequest = new RegisterRequest("turboSHID", "p@ssw0rd", "cblack1@byu.edu");
+    UserData newUserData = new UserData("turboSHID", "p@ssw0rd", "cblack1@byu.edu");
+    RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
+    String authToken = registerResponse.authToken();
+
+    public ListGamesTests() throws DataAccessException {
+    }
+
+    @Test
+    public void simpleListGamesTest() throws Exception {
+        CreateGameService createGameService = new CreateGameService(database);
+        createGameService.createGame(authToken, "ThePhantomMenace");
+        createGameService.createGame(authToken, "AttackOfTheClones");
+        createGameService.createGame(authToken, "RevengeOfTheSith");
+        ListGamesService listGamesService = new ListGamesService(database);
+        ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);
+        for(GameDAO.ListGamesSubData game : listGamesResponse.games()){
+            System.out.println(game.gameName() +" "+ game.gameID());
+        }
+    }
 }
