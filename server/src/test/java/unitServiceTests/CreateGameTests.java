@@ -27,18 +27,18 @@ public class CreateGameTests {
     @Test
     public void simpleCreateGameTest() throws Exception {
         CreateGameService createGameService = new CreateGameService(database);
-        String sampleGameName = "FPS_CHESS";
-        CreateGameResponse createGameResponse = (createGameService.createGame(authToken, sampleGameName));
-        assertEquals(createGameResponse.gameName(), sampleGameName);
+        CreateGameRequest createGameRequest = new CreateGameRequest("FPS_CHESS");
+        CreateGameResponse createGameResponse = (createGameService.createGame(authToken, createGameRequest));
+        assertEquals(database.gameDataBase.getGame(createGameResponse.gameID()).gameName(), createGameRequest.gameName());
     }
 
     @Test
     public void duplicateGameNameTest() throws Exception {
         CreateGameService createGameService = new CreateGameService(database);
-        String sampleGameName = "FPS_CHESS";
-        CreateGameResponse createGameResponse = (createGameService.createGame(authToken, sampleGameName));
+        CreateGameRequest createGameRequest = new CreateGameRequest("FPS_CHESS");
+        CreateGameResponse createGameResponse = (createGameService.createGame(authToken, createGameRequest));
         assertThrows(BadRequestException.class, () -> {
-            createGameService.createGame(authToken, sampleGameName);
+            createGameService.createGame(authToken, createGameRequest);
         });
     }
 
@@ -47,9 +47,9 @@ public class CreateGameTests {
         LogoutService logoutService = new LogoutService(database);
         logoutService.logout(authToken);
         CreateGameService createGameService = new CreateGameService(database);
-        String sampleGameName = "FPS_CHESS";
+        CreateGameRequest createGameRequest = new CreateGameRequest("FPS_CHESS");
         assertThrows(InvalidAuthException.class, () -> {
-            createGameService.createGame(authToken, sampleGameName);
+            createGameService.createGame(authToken, createGameRequest);
         });
 
     }

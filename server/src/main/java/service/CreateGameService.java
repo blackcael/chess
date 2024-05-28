@@ -4,6 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.Database;
 import dataaccess.GameDAO;
 import intermediary.BadRequestException;
+import intermediary.CreateGameRequest;
 import intermediary.CreateGameResponse;
 import intermediary.InvalidAuthException;
 import model.GameData;
@@ -14,14 +15,15 @@ public class CreateGameService extends BaseService{
         super(database);
     }
 
-    public CreateGameResponse createGame(String authToken, String gameName) throws InvalidAuthException, DataAccessException, BadRequestException {
+    public CreateGameResponse createGame(String authToken, CreateGameRequest createGameRequest) throws InvalidAuthException, DataAccessException, BadRequestException {
+        String gameName = createGameRequest.gameName();
         validateAuthToken(authToken);
         if(isDuplicateName(gameName)){
             throw new BadRequestException();
         }
         GameData gameData = new GameData(database.getGameGenID(), null, null, gameName, new ChessGame());
         gameDataBase.createGame(gameData);
-        return new CreateGameResponse(gameName);
+        return new CreateGameResponse(gameData.gameID());
     }
 
     private boolean isDuplicateName(String gameName){

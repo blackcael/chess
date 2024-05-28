@@ -28,9 +28,9 @@ public class ListGamesTests {
     @Test
     public void simpleListGamesTest() throws Exception {
         CreateGameService createGameService = new CreateGameService(database);
-        createGameService.createGame(authToken, "ThePhantomMenace");
-        createGameService.createGame(authToken, "AttackOfTheClones");
-        createGameService.createGame(authToken, "RevengeOfTheSith");
+        createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
+        createGameService.createGame(authToken, new CreateGameRequest("AttackOfTheClones"));
+        createGameService.createGame(authToken, new CreateGameRequest("RevengeOfTheSith"));
         ListGamesService listGamesService = new ListGamesService(database);
         ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);
         for(GameDAO.ListGamesSubData game : listGamesResponse.games()){

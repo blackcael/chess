@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.*;
 import handler.*;
+import intermediary.CreateGameRequest;
 import intermediary.JoinGameRequest;
 import intermediary.LoginRequest;
 import intermediary.RegisterRequest;
@@ -37,7 +38,7 @@ public class Server {
         Spark.post("/session", (req, res) -> loginHandler.handleRequest(req, res, LoginRequest.class));
         Spark.delete("/session", (req, res) -> logoutHandler.handleRequest(req, res, Object.class));
         Spark.get("/game", (req, res) -> listGamesHandler.handleRequest(req, res, String.class));
-        Spark.post("/game", (req, res) -> createGameHandler.handleRequest(req, res, String.class));
+        Spark.post("/game", (req, res) -> createGameHandler.handleRequest(req, res, CreateGameRequest.class));
         Spark.put("/game", (req, res) -> joinGameHandler.handleRequest(req, res, JoinGameRequest.class));
         Spark.delete("/db", clearHandler::handleRequest);
 

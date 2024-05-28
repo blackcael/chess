@@ -4,7 +4,7 @@ public class Database {
     public AuthDAO authDataBase;
     public GameDAO gameDataBase;
     public UserDAO userDataBase;
-    private int gameIDCounter = 0;
+    private int gameIDCounter = 1;
     public Database(AuthDAO authDataBase, GameDAO gameDataBase, UserDAO userDataBase){
         this.authDataBase = authDataBase;
         this.gameDataBase = gameDataBase;

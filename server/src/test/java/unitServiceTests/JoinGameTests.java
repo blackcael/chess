@@ -26,7 +26,7 @@ public class JoinGameTests {
     @Test
     public void simpleJoinGamesTest() throws Exception {
         CreateGameService createGameService = new CreateGameService(database);
-        createGameService.createGame(authToken, "ThePhantomMenace");
+        createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
         JoinGameService joinGameService = new JoinGameService(database);
         ListGamesService listGamesService = new ListGamesService(database);
         ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);
@@ -49,7 +49,7 @@ public class JoinGameTests {
     @Test
     public void joinInvalidColor() throws Exception {
         CreateGameService createGameService = new CreateGameService(database);
-        createGameService.createGame(authToken, "ThePhantomMenace");
+        createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
         JoinGameService joinGameService = new JoinGameService(database);
         ListGamesService listGamesService = new ListGamesService(database);
         ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);

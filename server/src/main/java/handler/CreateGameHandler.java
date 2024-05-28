@@ -1,6 +1,7 @@
 package handler;
 
 import dataaccess.Database;
+import intermediary.CreateGameRequest;
 import service.CreateGameService;
 
 public class CreateGameHandler extends BaseHandler{
@@ -11,6 +12,6 @@ public class CreateGameHandler extends BaseHandler{
     @Override
     protected Object service(String authToken, Object gameName) throws Exception {
         CreateGameService createGameService = new CreateGameService(database);
-        return createGameService.createGame(authToken, (String) gameName);
+        return createGameService.createGame(authToken, (CreateGameRequest) gameName);
     }
 }

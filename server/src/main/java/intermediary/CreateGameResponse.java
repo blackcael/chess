@@ -1,4 +1,4 @@
 package intermediary;
 
-public record CreateGameResponse (String gameName){
+public record CreateGameResponse (int gameID){
 }

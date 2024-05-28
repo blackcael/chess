@@ -17,7 +17,7 @@ public abstract class BaseHandler {
 
     //1.
     protected String parseOutAuthToken(Request request) {
-        return new Gson().fromJson(request.headers("authentication"), String.class);
+        return request.headers("Authorization");
     }
 
     //2.

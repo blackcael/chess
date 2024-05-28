@@ -8,8 +8,7 @@ import service.LoginService;
 import service.LogoutService;
 import service.RegisterService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LogoutTests {
     Database database = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
@@ -28,7 +27,7 @@ public class LogoutTests {
         LogoutService logoutService = new LogoutService(database);
         String testAuthToken = registerResponse.authToken();
         logoutService.logout(testAuthToken);
-        assertEquals(database.authDataBase.getAuth(testAuthToken), null);
+        assertNull(database.authDataBase.getAuth(testAuthToken));
     }
 
     @Test
