@@ -20,7 +20,7 @@ public class BaseService {
     }
 
     protected void validateAuthToken(String authToken) throws InvalidAuthException {
-        if(authDataBase.getAuth(authToken) == null) { //TODO: is this the right kind of equals?
+        if(authDataBase.getAuth(authToken) == null) {
             throw new InvalidAuthException();
         }
     }

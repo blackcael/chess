@@ -1,4 +1,4 @@
-package unitServiceTests;
+package unittests.service;
 
 import dataaccess.Database;
 import dataaccess.MemoryAuthDAO;
@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ClearTests {
     //setup
     Database testdatabase = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
-    Database defEmptydatabase = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
-
 
     @Test
     public void clearTest(){

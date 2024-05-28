@@ -1,4 +1,4 @@
-package unitServiceTests;
+package unittests.service;
 import dataaccess.*;
 import intermediary.AlreadyTakenException;
 import intermediary.RegisterRequest;

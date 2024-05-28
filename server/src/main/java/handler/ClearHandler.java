@@ -14,7 +14,7 @@ public class ClearHandler extends BaseHandler{
     public Object handleRequest(Request request, Response response){
         ClearService clearService = new ClearService(database);
         clearService.clear();
-        return classToJson(response, null); //TODO, RETURN SUCCESS
+        return classToJson(response, null);
     }
 
     @Override

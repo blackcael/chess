@@ -20,7 +20,7 @@ public class RegisterService extends BaseService{
             throw new BadRequestException();
         }
 
-        if(userDataBase.getUser(registerRequest.username()) != null){ //TODO is this the wrong kind of equals?
+        if(userDataBase.getUser(registerRequest.username()) != null){
             throw new AlreadyTakenException();
         }
         UserData userData = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());

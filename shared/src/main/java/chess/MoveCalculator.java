@@ -13,20 +13,20 @@ public class MoveCalculator {
         this.pieceColor = board.getPiece(position).getTeamColor();
     }
 
-    private enum moveType{
+    private enum MoveType {
         VALID, INVALID, CAPTURE
     }
 
-    private moveType getMoveType(ChessPosition position) {
+    private MoveType getMoveType(ChessPosition position) {
         if (position.onBoard()) {
             if (board.getPiece(position) == null) {
-                return moveType.VALID;
+                return MoveType.VALID;
             }
             if (board.getPiece(position).getTeamColor() != pieceColor) {
-                return moveType.CAPTURE;
+                return MoveType.CAPTURE;
             }
         }
-        return moveType.INVALID;
+        return MoveType.INVALID;
     }
 
 
@@ -36,7 +36,7 @@ public class MoveCalculator {
             for(int colIter = -1; colIter <=1; colIter++){
                 if(!(rowIter == 0 && colIter == 0)){
                     ChessPosition potentialPosition = new ChessPosition(position.getRow()+rowIter, position.getColumn()+colIter);
-                    if(getMoveType(potentialPosition) == moveType.VALID || getMoveType(potentialPosition) == moveType.CAPTURE){
+                    if(getMoveType(potentialPosition) == MoveType.VALID || getMoveType(potentialPosition) == MoveType.CAPTURE){
                         potentialMoves.add(new ChessMove(position, potentialPosition, null));
                     }
                 }
@@ -51,7 +51,7 @@ public class MoveCalculator {
             for(int colIter = -2; colIter <=2; colIter++){
                 if(!(rowIter == 0 || colIter == 0 || rowIter == colIter || rowIter == (-1 * colIter))){
                     ChessPosition potentialPosition = new ChessPosition(position.getRow()+rowIter, position.getColumn()+colIter);
-                    if(getMoveType(potentialPosition) == moveType.VALID || getMoveType(potentialPosition) == moveType.CAPTURE){
+                    if(getMoveType(potentialPosition) == MoveType.VALID || getMoveType(potentialPosition) == MoveType.CAPTURE){
                         potentialMoves.add(new ChessMove(position, potentialPosition, null));
                     }
                 }
@@ -69,14 +69,14 @@ public class MoveCalculator {
                             position.getRow()+(rowIter * moveMag),
                             position.getColumn()+(colIter * moveMag)
                     );
-                    if(getMoveType(potentialPosition) == moveType.VALID ){
+                    if(getMoveType(potentialPosition) == MoveType.VALID ){
                         potentialMoves.add(new ChessMove(position, potentialPosition, null));
                     }
-                    if(getMoveType(potentialPosition) == moveType.CAPTURE){
+                    if(getMoveType(potentialPosition) == MoveType.CAPTURE){
                         potentialMoves.add(new ChessMove(position, potentialPosition, null));
                         break;
                     }
-                    if(getMoveType(potentialPosition) == moveType.INVALID){
+                    if(getMoveType(potentialPosition) == MoveType.INVALID){
                         break;
                     }
                 }
@@ -93,14 +93,14 @@ public class MoveCalculator {
                         position.getRow()+(rowIter * moveMag),
                         position.getColumn()
                 );
-                if(getMoveType(potentialPosition) == moveType.VALID ){
+                if(getMoveType(potentialPosition) == MoveType.VALID ){
                     potentialMoves.add(new ChessMove(position, potentialPosition, null));
                 }
-                if(getMoveType(potentialPosition) == moveType.CAPTURE){
+                if(getMoveType(potentialPosition) == MoveType.CAPTURE){
                     potentialMoves.add(new ChessMove(position, potentialPosition, null));
                     break;
                 }
-                if(getMoveType(potentialPosition) == moveType.INVALID){
+                if(getMoveType(potentialPosition) == MoveType.INVALID){
                     break;
                 }
             }
@@ -111,14 +111,14 @@ public class MoveCalculator {
                         position.getRow(),
                         position.getColumn()+(colIter * moveMag)
                 );
-                if(getMoveType(potentialPosition) == moveType.VALID ){
+                if(getMoveType(potentialPosition) == MoveType.VALID ){
                     potentialMoves.add(new ChessMove(position, potentialPosition, null));
                 }
-                if(getMoveType(potentialPosition) == moveType.CAPTURE){
+                if(getMoveType(potentialPosition) == MoveType.CAPTURE){
                     potentialMoves.add(new ChessMove(position, potentialPosition, null));
                     break;
                 }
-                if(getMoveType(potentialPosition) == moveType.INVALID){
+                if(getMoveType(potentialPosition) == MoveType.INVALID){
                     break;
                 }
             }
@@ -166,14 +166,14 @@ public class MoveCalculator {
             initialPos = 7;
         }
         ChessPosition potPosition1 = new ChessPosition(position.getRow()+moveDir, position.getColumn());
-        if(getMoveType(potPosition1) == moveType.VALID){
+        if(getMoveType(potPosition1) == MoveType.VALID){
             if(canPromote(potPosition1)){
                 potentialMoves.addAll(promotionMoves(potPosition1));
             }else{
                 potentialMoves.add(new ChessMove(position, potPosition1, null));
                 if(position.getRow() == initialPos){
                     ChessPosition potPosition2 = new ChessPosition(position.getRow()+(2*moveDir), position.getColumn());
-                    if(getMoveType(potPosition2) == moveType.VALID){
+                    if(getMoveType(potPosition2) == MoveType.VALID){
                         potentialMoves.add(new ChessMove(position, potPosition2, null));
                     }
                 }
@@ -184,7 +184,7 @@ public class MoveCalculator {
         //left attack
         if(position.getColumn() != 1){
             ChessPosition attackPosL = new ChessPosition(position.getRow()+moveDir, position.getColumn()-1);
-            if(getMoveType(attackPosL) == moveType.CAPTURE){
+            if(getMoveType(attackPosL) == MoveType.CAPTURE){
                 if(canPromote(attackPosL)){
                     potentialMoves.addAll(promotionMoves(attackPosL));
                 }else{
@@ -195,7 +195,7 @@ public class MoveCalculator {
         //right attack
         if(position.getColumn() != 8){
             ChessPosition attackPosR = new ChessPosition(position.getRow()+moveDir, position.getColumn()+1);
-            if(getMoveType(attackPosR) == moveType.CAPTURE){
+            if(getMoveType(attackPosR) == MoveType.CAPTURE){
                 if(canPromote(attackPosR)){
                     potentialMoves.addAll(promotionMoves(attackPosR));
                 }else{

@@ -47,13 +47,13 @@ public class ChessBoard {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
 
-    public ChessPosition getKingPosition(ChessGame.TeamColor COLOR){
+    public ChessPosition getKingPosition(ChessGame.TeamColor color){
         for(int row = 1; row <= 8; row++){
             for(int col = 1; col <= 8; col++){
                 ChessPosition potentialPosition = new ChessPosition(row, col);
                 if(getPiece(potentialPosition) != null){
                     if(getPiece(potentialPosition).getPieceType() == ChessPiece.PieceType.KING){
-                        if(getPiece(potentialPosition).getTeamColor() == COLOR){
+                        if(getPiece(potentialPosition).getTeamColor() == color){
                             return potentialPosition;
                         }
                     }
@@ -63,13 +63,13 @@ public class ChessBoard {
         return null;
     }
 
-    public Collection<ChessPosition> getAllPiecePositionsOfColor(ChessGame.TeamColor Color){
+    public Collection<ChessPosition> getAllPiecePositionsOfColor(ChessGame.TeamColor color){
         ArrayList<ChessPosition> positionList = new ArrayList<>();
         for(int row = 1; row <= 8; row ++){
             for(int col = 1; col <= 8; col ++){
                 ChessPosition testPosition = new ChessPosition(row, col);
                 if(getPiece(testPosition) != null){
-                    if(getPiece(testPosition).getTeamColor() == Color){
+                    if(getPiece(testPosition).getTeamColor() == color){
                         positionList.add(testPosition);
                     }
                 }
@@ -78,9 +78,9 @@ public class ChessBoard {
         return positionList;
     }
 
-    public Collection<ChessMove> getAllMovesOfColor(ChessGame.TeamColor Color){
+    public Collection<ChessMove> getAllMovesOfColor(ChessGame.TeamColor color){
         ArrayList<ChessMove> moveList = new ArrayList<>();
-        for(ChessPosition position : getAllPiecePositionsOfColor(Color)){
+        for(ChessPosition position : getAllPiecePositionsOfColor(color)){
             moveList.addAll(getPiece(position).pieceMoves(this, position));
         }
         return moveList;
