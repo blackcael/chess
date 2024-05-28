@@ -19,4 +19,8 @@ public class MemoryUserDAO implements UserDAO {
     public UserData getUser(String username){
         return userDataDB.get(username);
     }
+
+    public boolean isEmpty(){
+        return userDataDB.isEmpty();
+    }
 }

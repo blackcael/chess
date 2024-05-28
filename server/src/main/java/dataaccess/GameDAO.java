@@ -17,7 +17,7 @@ public interface GameDAO {
 
     void updateGame(GameData updatedGameData) throws DataAccessException;
 
-    public static record ListGamesSubData(int gameID, String whiteUsername, String blackUsername, String gameName) {
+    boolean isEmpty();
 
-    }
+    public static record ListGamesSubData(int gameID, String whiteUsername, String blackUsername, String gameName) {}
 }

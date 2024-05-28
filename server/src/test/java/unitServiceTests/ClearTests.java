@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import service.ClearService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ClearTests {
     //setup
@@ -19,6 +20,6 @@ public class ClearTests {
     public void clearTest(){
         ClearService clearService = new ClearService(testdatabase);
         clearService.clear();
-        assertEquals(testdatabase, defEmptydatabase);
+        assertTrue(testdatabase.isEmpty());
     }
 }

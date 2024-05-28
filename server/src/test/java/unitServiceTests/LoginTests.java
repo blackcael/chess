@@ -21,7 +21,7 @@ public class LoginTests {
     UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
     RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
 
-    public LoginTests() throws DataAccessException {
+    public LoginTests() throws Exception {
     }
 
     @Test

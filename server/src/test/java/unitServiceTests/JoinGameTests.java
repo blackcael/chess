@@ -56,7 +56,7 @@ public class JoinGameTests {
         int testID = listGamesResponse.games().getFirst().gameID();
         JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", testID);
         joinGameService.joinGame(authToken, joinGameRequest);
-        assertThrows(BadRequestException.class, () -> {
+        assertThrows(AlreadyTakenException.class, () -> {
             joinGameService.joinGame(authToken, new JoinGameRequest("BLACK", testID));
         });
     }

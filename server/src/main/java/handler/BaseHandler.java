@@ -6,6 +6,7 @@ import intermediary.BadRequestException;
 import intermediary.CaelsHandyCompilationError;
 import intermediary.InvalidAuthException;
 import intermediary.ResponseCodeAndObject;
+import intermediary.AlreadyTakenException;
 import spark.Request;
 import spark.Response;
 
@@ -35,16 +36,18 @@ public abstract class BaseHandler {
 
     //4.
     public ResponseCodeAndObject sensitiveService(String authToken, Object inputObject) throws Exception {
-        int responseCode = 0;
+        int responseCode = 200;
         Object responseObj = null;
         try {
-            responseCode = 200;
             responseObj = service(authToken, inputObject);
         } catch (BadRequestException e) {
             responseCode = 400;
             responseObj = e;
         } catch (InvalidAuthException e) {
             responseCode = 401;
+            responseObj = e;
+        } catch (AlreadyTakenException e) {
+            responseCode = 403;
             responseObj = e;
         }
         return new ResponseCodeAndObject(responseCode, responseObj);
@@ -64,4 +67,4 @@ public abstract class BaseHandler {
         return classToJson(response, sensitiveService(authToken, joinGameRequest));
     }
 
-}    
+}

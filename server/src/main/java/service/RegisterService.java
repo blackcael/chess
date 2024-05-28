@@ -1,5 +1,6 @@
 package service;
 
+import intermediary.AlreadyTakenException;
 import intermediary.RegisterRequest;
 import intermediary.RegisterResponse;
 import dataaccess.*;
@@ -13,9 +14,9 @@ public class RegisterService extends BaseService{
         super(database);
     }
 
-    public RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException{
+    public RegisterResponse register(RegisterRequest registerRequest) throws AlreadyTakenException {
         if(userDataBase.getUser(registerRequest.username()) != null){ //TODO is this the wrong kind of equals?
-            throw new DataAccessException("UserName Already Taken");
+            throw new AlreadyTakenException("Error: already taken");
         }
         UserData userData = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
         userDataBase.createUser(userData);

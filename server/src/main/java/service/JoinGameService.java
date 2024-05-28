@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.Database;
+import intermediary.AlreadyTakenException;
 import intermediary.BadRequestException;
 import intermediary.InvalidAuthException;
 import intermediary.JoinGameRequest;
@@ -29,7 +30,7 @@ public class JoinGameService extends BaseService{
 
     private void joinAsWhite(String authToken, GameData gameData) throws Exception{
         if(gameData.whiteUsername() != null){
-            throw new BadRequestException("Error: already taken");
+            throw new AlreadyTakenException("Error: already taken");
         }
         GameData newGameData = new GameData(gameData.gameID(), authDataBase.getAuth(authToken).username(), gameData.blackUsername(), gameData.gameName(), gameData.game());
         gameDataBase.updateGame(newGameData);
@@ -37,7 +38,7 @@ public class JoinGameService extends BaseService{
 
     private void joinAsBlack(String authToken, GameData gameData) throws Exception{
         if(gameData.blackUsername() != null){
-            throw new BadRequestException("Error: already taken");
+            throw new AlreadyTakenException("Error: already taken");
         }
         GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(),authDataBase.getAuth(authToken).username(), gameData.gameName(), gameData.game());
         gameDataBase.updateGame(newGameData);

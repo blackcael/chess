@@ -24,4 +24,8 @@ public class MemoryAuthDAO implements AuthDAO {
         authDataDB.remove(authToken);
     }
 
+    public boolean isEmpty(){
+        return authDataDB.isEmpty();
+    }
+
 }

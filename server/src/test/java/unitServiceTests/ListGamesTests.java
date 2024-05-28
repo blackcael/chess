@@ -22,7 +22,7 @@ public class ListGamesTests {
     RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
     String authToken = registerResponse.authToken();
 
-    public ListGamesTests() throws DataAccessException {
+    public ListGamesTests() throws Exception {
     }
 
     @Test

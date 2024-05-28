@@ -38,5 +38,9 @@ public class MemoryGameDAO implements GameDAO{
         }
     }
 
+    public boolean isEmpty(){
+        return gameDataDB.isEmpty();
+    }
+
 
 }

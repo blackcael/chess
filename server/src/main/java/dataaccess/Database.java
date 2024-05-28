@@ -13,4 +13,8 @@ public class Database {
     public int getGameGenID(){
         return gameIDCounter++;
     }
+
+    public boolean isEmpty(){
+        return(authDataBase.isEmpty() && gameDataBase.isEmpty() && userDataBase.isEmpty());
+    }
 }

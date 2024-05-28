@@ -21,7 +21,7 @@ public class CreateGameTests {
     RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
     String authToken = registerResponse.authToken();
 
-    public CreateGameTests() throws DataAccessException {
+    public CreateGameTests() throws DataAccessException, AlreadyTakenException {
     }
 
     @Test
