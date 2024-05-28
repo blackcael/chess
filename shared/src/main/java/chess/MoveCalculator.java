@@ -35,14 +35,18 @@ public class MoveCalculator {
         for(int rowIter = -1; rowIter <=1; rowIter++){
             for(int colIter = -1; colIter <=1; colIter++){
                 if(!(rowIter == 0 && colIter == 0)){
-                    ChessPosition potentialPosition = new ChessPosition(position.getRow()+rowIter, position.getColumn()+colIter);
-                    if(getMoveType(potentialPosition) == MoveType.VALID || getMoveType(potentialPosition) == MoveType.CAPTURE){
-                        potentialMoves.add(new ChessMove(position, potentialPosition, null));
-                    }
+                    processPositionAlgorithm(potentialMoves, rowIter, colIter);
                 }
             }
         }
         return potentialMoves;
+    }
+
+    private void processPositionAlgorithm(ArrayList<ChessMove> potentialMoves, int rowIter, int colIter){
+        ChessPosition potentialPosition = new ChessPosition(position.getRow()+rowIter, position.getColumn()+colIter);
+        if(getMoveType(potentialPosition) == MoveType.VALID || getMoveType(potentialPosition) == MoveType.CAPTURE){
+            potentialMoves.add(new ChessMove(position, potentialPosition, null));
+        }
     }
 
     public Collection<ChessMove> knightMoves(){
@@ -50,10 +54,7 @@ public class MoveCalculator {
         for(int rowIter = -2; rowIter <=2; rowIter++){
             for(int colIter = -2; colIter <=2; colIter++){
                 if(!(rowIter == 0 || colIter == 0 || rowIter == colIter || rowIter == (-1 * colIter))){
-                    ChessPosition potentialPosition = new ChessPosition(position.getRow()+rowIter, position.getColumn()+colIter);
-                    if(getMoveType(potentialPosition) == MoveType.VALID || getMoveType(potentialPosition) == MoveType.CAPTURE){
-                        potentialMoves.add(new ChessMove(position, potentialPosition, null));
-                    }
+                    processPositionAlgorithm(potentialMoves, rowIter, colIter);
                 }
             }
         }

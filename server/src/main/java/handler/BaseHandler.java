@@ -21,8 +21,8 @@ public abstract class BaseHandler {
     }
 
     //2.
-    protected <Clazz> Clazz jsonToClass(Request request, Type Clazz) {
-        return new Gson().fromJson(request.body(), Clazz);
+    protected <C> C jsonToClass(Request request, Type clazz) {
+        return new Gson().fromJson(request.body(), clazz);
     }
 
     //3.
@@ -57,9 +57,9 @@ public abstract class BaseHandler {
     }
 
     //6.
-    public <Clazz> Object handleRequest(Request request, Response response, Type Clazz) throws Exception {
+    public <C> Object handleRequest(Request request, Response response, Type clazz) throws Exception {
         String authToken = parseOutAuthToken(request);
-        Clazz joinGameRequest = jsonToClass(request, Clazz);
+        C joinGameRequest = jsonToClass(request, clazz);
         return classToJson(response, sensitiveService(authToken, joinGameRequest));
     }
 
