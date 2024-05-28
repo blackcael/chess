@@ -1,11 +1,10 @@
-package unittests.service;
+package service;
 import dataaccess.*;
 import intermediary.AlreadyTakenException;
 import intermediary.RegisterRequest;
 import intermediary.RegisterResponse;
 import model.UserData;
 import org.junit.jupiter.api.Test;
-import service.RegisterService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

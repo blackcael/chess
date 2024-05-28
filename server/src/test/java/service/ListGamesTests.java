@@ -1,13 +1,9 @@
-package unittests.service;
+package service;
 
 import dataaccess.*;
 import intermediary.*;
 import model.UserData;
 import org.junit.jupiter.api.Test;
-import service.CreateGameService;
-import service.ListGamesService;
-import service.LogoutService;
-import service.RegisterService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
