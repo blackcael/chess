@@ -28,6 +28,8 @@ public class BaseHandler {
         return new Gson().toJson(serviceOutput);
     }
 
+    protected Object service()
+
 
 
     //HANDLERS WILL ALSO HANDLE ERROR HANDLING THROWN BY SERVICE

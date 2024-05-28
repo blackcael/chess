@@ -3,6 +3,7 @@ package handler;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
+import intermediary.BadRequestException;
 import intermediary.LoginRequest;
 import intermediary.LoginResponse;
 import service.LoginService;
@@ -23,7 +24,16 @@ public class LoginHandler extends BaseHandler{
     //4.
     public Object handleRequest(Request request, Response response) throws Exception {
         LoginRequest loginRequest = jsonToClass(request, LoginRequest.class);
-        return classToJson(response, service(loginRequest));
+        Object responseObj;
+        try {
+            response.status(200);
+            responseObj = service(loginRequest);
+        }
+        catch(BadRequestException e){
+            response.status(401);
+            responseObj = e;
+        }
+        return classToJson(response, responseObj);
     }
 
 }
