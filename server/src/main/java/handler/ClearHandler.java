@@ -1,7 +1,7 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.Database;
+import service.ClearService;
 import spark.*;
 
 
@@ -10,6 +10,8 @@ public class ClearHandler extends BaseHandler{
         super(database);
     }
     public Object handleRequest(Request request, Response response){
-        return classToJson(response, null);
+        ClearService clearService = new ClearService(database);
+        clearService.clear();
+        return classToJson(response, null); //TODO, RETURN SUCCESS
     }
 }

@@ -1,30 +1,21 @@
 package handler;
 
-import com.google.gson.Gson;
-import dataaccess.DataAccessException;
 import dataaccess.Database;
-
 import service.RegisterService;
 import intermediary.RegisterRequest;
-import intermediary.RegisterResponse;
-import spark.*;
 
 public class RegisterHandler extends BaseHandler{
     public RegisterHandler(Database database) {
         super(database);
     }
 
-    //2.
-    private RegisterResponse service(RegisterRequest registerRequest) throws Exception {
+    @Override
+    protected Object service(String authToken, Object registerRequest) throws Exception {
         RegisterService registerService = new RegisterService(database);
-        return registerService.register(registerRequest);
+        return registerService.register((RegisterRequest) registerRequest);
     }
 
-    //4.
-    public Object handleRequest(Request request, Response response) throws Exception {
-        RegisterRequest registerRequest = jsonToClass(request, RegisterRequest.class);
-        return classToJson(response, service(registerRequest));
-    }
+
 
 
 

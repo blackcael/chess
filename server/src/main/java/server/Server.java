@@ -2,6 +2,9 @@ package server;
 
 import dataaccess.*;
 import handler.*;
+import intermediary.JoinGameRequest;
+import intermediary.LoginRequest;
+import intermediary.RegisterRequest;
 import spark.*;
 
 public class Server {
@@ -28,13 +31,14 @@ public class Server {
         JoinGameHandler joinGameHandler = new JoinGameHandler(database);
         ClearHandler clearHandler = new ClearHandler(database);
 
-        //switch case to handle all the different requests?
-        Spark.post("/user", registerHandler::handleRequest);
-        Spark.post("/session", loginHandler::handleRequest);
-        Spark.delete("/session", logoutHandler::handleRequest);
-        Spark.get("/game", listGamesHandler::handleRequest);
-        Spark.post("/game", createGameHandler::handleRequest);
-        Spark.put("/game", joinGameHandler::handleRequest);
+        //Spark -> handleRequest?  ***Note, is run always looping? If so, that will create a problem with database...
+        //note, i believe this initializes the "routes".
+        Spark.post("/user", (req, res) -> registerHandler.handleRequest(req, res, RegisterRequest.class));
+        Spark.post("/session", (req, res) -> loginHandler.handleRequest(req, res, LoginRequest.class));
+        Spark.delete("/session", (req, res) -> logoutHandler.handleRequest(req, res, Object.class));
+        Spark.get("/game", (req, res) -> listGamesHandler.handleRequest(req, res, String.class));
+        Spark.post("/game", (req, res) -> createGameHandler.handleRequest(req, res, String.class));
+        Spark.put("/game", (req, res) -> joinGameHandler.handleRequest(req, res, JoinGameRequest.class));
         Spark.delete("/db", clearHandler::handleRequest);
 
         Spark.awaitInitialization();

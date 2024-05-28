@@ -1,29 +1,17 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.Database;
-import intermediary.RegisterRequest;
-import intermediary.RegisterResponse;
 import service.LogoutService;
-import service.RegisterService;
-import spark.Request;
-import spark.Response;
-
-import java.lang.reflect.Type;
 
 public class LogoutHandler extends BaseHandler{
     public LogoutHandler(Database database) {
         super(database);
     }
-    //2.
-    private void service(String authToken) throws Exception {
+
+    @Override
+    protected Object service(String authToken, Object nullObject) throws Exception {
         LogoutService logoutService = new LogoutService(database);
         logoutService.logout(authToken);
-    }
-    //4.
-    public Object handleRequest(Request request, Response response) throws Exception {
-        String authToken = parseOutAuthToken(request);
-        service(authToken);
-        return classToJson(response, null);
+        return null;
     }
 }

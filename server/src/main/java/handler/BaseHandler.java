@@ -2,67 +2,66 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.*;
+import intermediary.BadRequestException;
+import intermediary.CaelsHandyCompilationError;
+import intermediary.InvalidAuthException;
+import intermediary.ResponseCodeAndObject;
 import spark.Request;
 import spark.Response;
 
 import java.lang.reflect.Type;
 
-public class BaseHandler {
+public abstract class BaseHandler {
     Database database;
     Type Clazz;
     protected BaseHandler(Database database) {
         this.database = database;
     }
+
     //1.
+    protected String parseOutAuthToken(Request request) {
+        return new Gson().fromJson(request.headers("authentication"), String.class);
+    }
+
+    //2.
     protected <clazz> clazz jsonToClass(Request request, Type clazz) {
         return new Gson().fromJson(request.body(), clazz);
     }
 
-    protected String parseOutAuthToken(Request request){
-        return new Gson().fromJson(request.headers("authentication"), String.class);
-    }
-
     //3.
-    protected <clazz> Object classToJson(Response response, clazz serviceOutput){
-        response.type("application/json");
-        return new Gson().toJson(serviceOutput);
+    protected Object service(String authToken, Object inputObject) throws Exception {
+        throw new CaelsHandyCompilationError("ERROR: MUST OVERRIDE SERVICE");
     }
 
-    protected Object service()
+    //4.
+    public ResponseCodeAndObject sensitiveService(String authToken, Object inputObject) throws Exception {
+        int responseCode = 0;
+        Object responseObj = null;
+        try {
+            responseCode = 200;
+            responseObj = service(authToken, inputObject);
+        } catch (BadRequestException e) {
+            responseCode = 400;
+            responseObj = e;
+        } catch (InvalidAuthException e) {
+            responseCode = 401;
+            responseObj = e;
+        }
+        return new ResponseCodeAndObject(responseCode, responseObj);
+    }
 
+    //5.
+    protected Object classToJson(Response response, ResponseCodeAndObject rcao) {
+        response.type("application/json");
+        response.status(rcao.responseCode());
+        return new Gson().toJson(rcao.responseObject());
+    }
 
+    //6.
+    public <clazz> Object handleRequest(Request request, Response response, Type clazz) throws Exception {
+        String authToken = parseOutAuthToken(request);
+        clazz joinGameRequest = jsonToClass(request, clazz);
+        return classToJson(response, sensitiveService(authToken, joinGameRequest));
+    }
 
-    //HANDLERS WILL ALSO HANDLE ERROR HANDLING THROWN BY SERVICE
-
-
-    //PLAN FOR STRUCTURE: 4 functions
-    //1. jsonToClass : converts the received Json to class
-    //2. service : constructs and calls a service function (does the meat!)
-    //3. classToJson : converts the class type that the service function returns back into meat
-    //4. serviceHandler : executes the three above statements, taking in Json, and returning Json.
-
-
-    //0.
-//    //1.
-//    protected <GenObjectIn> GenObjectIn jsonToClass(Request request, Type clazz){
-//        return new Gson().fromJson(String.valueOf(request), clazz);
-//    }
-//    //2.
-//    protected <GenObjectIn, GenObjectOut> GenObjectOut service(GenObjectIn genObjectIn) throws Exception {
-//        throw new Exception("Service Must be Overwritten!");
-//    }
-//
-//    //3.
-//    private <GenObjectOut> Object classToJson(Response response, GenObjectOut genObjectOut){
-//        response.type("application/json");
-//        return new Gson().toJson(genObjectOut);
-//    }
-//
-//    //4.
-//    public <GenObjectIn, GenObjectOut>  Object handleRequest(Request request, Response response) throws Exception {
-//        GenObjectIn genObjectIn = jsonToClass(request, GenObjectIn.class);
-//        GenObjectOut genObjectOut = service (genObjectIn);
-//        return classToJson(response, genObjectOut);
-//    }
-    //LOTS OF ISSUES HERE
-}
+}    
