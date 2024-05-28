@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class LogoutTests {
     Database database = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
     RegisterService registerService = new RegisterService(database);
-    RegisterRequest newUserRegisterRequest = new RegisterRequest("turboSHID", "p@ssw0rd", "cblack1@byu.edu");
-    UserData newUserData = new UserData("turboSHID", "p@ssw0rd", "cblack1@byu.edu");
+    RegisterRequest newUserRegisterRequest = new RegisterRequest("cblack1", "p@ssw0rd", "cblack1@byu.edu");
+    UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
     RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
     LoginService loginService = new LoginService(database);
     LoginRequest loginRequest = new LoginRequest(newUserRegisterRequest.username(), newUserRegisterRequest.password());

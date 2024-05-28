@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RegisterTests {
     Database database = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
     RegisterService registerService = new RegisterService(database);
-    RegisterRequest newUserRegisterRequest = new RegisterRequest("turboSHID", "p@ssw0rd", "cblack1@byu.edu");
-    UserData newUserData = new UserData("turboSHID", "p@ssw0rd", "cblack1@byu.edu");
+    RegisterRequest newUserRegisterRequest = new RegisterRequest("cblack1", "p@ssw0rd", "cblack1@byu.edu");
+    UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
 
     @Test
     public void registerNewUserTest() throws DataAccessException {
         RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
-        assertEquals(database.userDataBase.getUser("turboSHID"), newUserData);
+        assertEquals(database.userDataBase.getUser("cblack1"), newUserData);
     }
 
     @Test
