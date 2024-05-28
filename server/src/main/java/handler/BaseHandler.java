@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 
 public abstract class BaseHandler {
     Database database;
-    Type Clazz;
     protected BaseHandler(Database database) {
         this.database = database;
     }

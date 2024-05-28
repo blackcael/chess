@@ -44,8 +44,8 @@ public class ChessGame {
         BLACK
     }
 
-    public TeamColor opposingTeamColor(TeamColor Color){
-        if(Color == TeamColor.BLACK){
+    public TeamColor opposingTeamColor(TeamColor color){
+        if(color == TeamColor.BLACK){
             return TeamColor.WHITE;
         }
         return TeamColor.BLACK;
