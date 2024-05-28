@@ -9,8 +9,7 @@ import service.ListGamesService;
 import service.LogoutService;
 import service.RegisterService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ListGamesTests {
     //setup
@@ -36,5 +35,18 @@ public class ListGamesTests {
         for(GameDAO.ListGamesSubData game : listGamesResponse.games()){
             System.out.println(game.gameName() +" "+ game.gameID());
         }
+        assertNotNull(listGamesResponse);
+    }
+
+    @Test
+    public void invalidAuthTokenTest() throws Exception{
+        CreateGameService createGameService = new CreateGameService(database);
+        createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
+        createGameService.createGame(authToken, new CreateGameRequest("AttackOfTheClones"));
+        createGameService.createGame(authToken, new CreateGameRequest("RevengeOfTheSith"));
+        ListGamesService listGamesService = new ListGamesService(database);
+        assertThrows(InvalidAuthException.class, () -> {
+            ListGamesResponse listGamesResponse = listGamesService.listGames("66");
+        });
     }
 }

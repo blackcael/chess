@@ -19,6 +19,9 @@ public class JoinGameService extends BaseService{
             throw new BadRequestException();
         }
         String playerColor = joinGameRequest.playerColor();
+        if(playerColor == null){
+            throw new BadRequestException();
+        }
         if(playerColor.equals("WHITE")){
             joinAsWhite(authToken, gameData);
         } else if (playerColor.equals("BLACK")){
