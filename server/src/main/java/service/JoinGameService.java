@@ -16,7 +16,7 @@ public class JoinGameService extends BaseService{
         validateAuthToken(authToken);
         GameData gameData = gameDataBase.getGame(joinGameRequest.gameID());
         if(gameData == null){
-            throw new BadRequestException("Game does not exist!");
+            throw new BadRequestException();
         }
         String playerColor = joinGameRequest.playerColor();
         if(playerColor.equals("WHITE")){
@@ -24,13 +24,13 @@ public class JoinGameService extends BaseService{
         } else if (playerColor.equals("BLACK")){
             joinAsBlack(authToken, gameData);
         } else{
-            throw new BadRequestException("Error: bad request");
+            throw new BadRequestException();
         }
     }
 
     private void joinAsWhite(String authToken, GameData gameData) throws Exception{
         if(gameData.whiteUsername() != null){
-            throw new AlreadyTakenException("Error: already taken");
+            throw new AlreadyTakenException();
         }
         GameData newGameData = new GameData(gameData.gameID(), authDataBase.getAuth(authToken).username(), gameData.blackUsername(), gameData.gameName(), gameData.game());
         gameDataBase.updateGame(newGameData);
@@ -38,7 +38,7 @@ public class JoinGameService extends BaseService{
 
     private void joinAsBlack(String authToken, GameData gameData) throws Exception{
         if(gameData.blackUsername() != null){
-            throw new AlreadyTakenException("Error: already taken");
+            throw new AlreadyTakenException();
         }
         GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(),authDataBase.getAuth(authToken).username(), gameData.gameName(), gameData.game());
         gameDataBase.updateGame(newGameData);

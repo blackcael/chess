@@ -17,7 +17,7 @@ public class CreateGameService extends BaseService{
     public CreateGameResponse createGame(String authToken, String gameName) throws InvalidAuthException, DataAccessException, BadRequestException {
         validateAuthToken(authToken);
         if(isDuplicateName(gameName)){
-            throw new BadRequestException("Error: bad request");
+            throw new BadRequestException();
         }
         GameData gameData = new GameData(database.getGameGenID(), null, null, gameName, new ChessGame());
         gameDataBase.createGame(gameData);

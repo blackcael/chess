@@ -21,7 +21,7 @@ public class BaseService {
 
     protected void validateAuthToken(String authToken) throws InvalidAuthException {
         if(authDataBase.getAuth(authToken) == null) { //TODO: is this the right kind of equals?
-            throw new InvalidAuthException("Error: unauthorized");
+            throw new InvalidAuthException();
         }
     }
 }

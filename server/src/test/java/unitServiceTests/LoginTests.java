@@ -1,13 +1,9 @@
 package unitServiceTests;
 
 import dataaccess.*;
-import intermediary.LoginRequest;
-import intermediary.LoginResponse;
-import intermediary.RegisterRequest;
-import intermediary.RegisterResponse;
+import intermediary.*;
 import model.UserData;
 import org.junit.jupiter.api.Test;
-import intermediary.BadRequestException;
 import service.LoginService;
 import service.RegisterService;
 
@@ -35,8 +31,8 @@ public class LoginTests {
     @Test
     public void invalidLoginDataTest() throws Exception{
         LoginService loginService = new LoginService(database);
-        LoginRequest loginRequest = new LoginRequest("WrongUser", "BadPass");
-        assertThrows(BadRequestException.class, () -> {
+        LoginRequest loginRequest = new LoginRequest("cblack1", "BadPass");
+        assertThrows(InvalidAuthException.class, () -> {
             LoginResponse loginResponse = loginService.login(loginRequest);
         });
     }

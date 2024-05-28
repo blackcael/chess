@@ -2,9 +2,11 @@ package service;
 
 import dataaccess.Database;
 import intermediary.BadRequestException;
+import intermediary.InvalidAuthException;
 import intermediary.LoginResponse;
 import intermediary.LoginRequest;
 import model.AuthData;
+import model.UserData;
 
 import java.util.UUID;
 
@@ -13,9 +15,13 @@ public class LoginService extends BaseService{
         super(database);
     }
 
-    public LoginResponse login(LoginRequest loginRequest) throws BadRequestException {
+    public LoginResponse login(LoginRequest loginRequest) throws Exception {
         if(userDataBase.getUser(loginRequest.username()) == null){
-            throw new BadRequestException("Invalid UserName/Password");
+            throw new InvalidAuthException();
+        }
+        UserData userData = userDataBase.getUser(loginRequest.username());
+        if(!userData.password().equals(loginRequest.password())){
+            throw new InvalidAuthException();
         }
         AuthData authData = new AuthData(loginRequest.username(), UUID.randomUUID().toString());
         authDataBase.createAuth(authData);

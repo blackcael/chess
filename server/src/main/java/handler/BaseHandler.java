@@ -2,11 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.*;
-import intermediary.BadRequestException;
-import intermediary.CaelsHandyCompilationError;
-import intermediary.InvalidAuthException;
-import intermediary.ResponseCodeAndObject;
-import intermediary.AlreadyTakenException;
+import intermediary.*;
 import spark.Request;
 import spark.Response;
 
@@ -42,13 +38,13 @@ public abstract class BaseHandler {
             responseObj = service(authToken, inputObject);
         } catch (BadRequestException e) {
             responseCode = 400;
-            responseObj = e;
+            responseObj = new ErrorResponse(e.toString());
         } catch (InvalidAuthException e) {
             responseCode = 401;
-            responseObj = e;
+            responseObj = new ErrorResponse(e.toString());
         } catch (AlreadyTakenException e) {
             responseCode = 403;
-            responseObj = e;
+            responseObj = new ErrorResponse(e.toString());
         }
         return new ResponseCodeAndObject(responseCode, responseObj);
     }
