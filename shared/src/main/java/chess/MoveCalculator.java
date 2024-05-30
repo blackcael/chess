@@ -87,7 +87,7 @@ public class MoveCalculator {
     }
 
     public Collection<ChessMove> rookMoves(){
-        ArrayList<ChessMove> potentialMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> potentialMoves = new ArrayList<>();
         for(int rowIter = -1; rowIter <=1; rowIter += 2){
             for(int moveMag = 1; moveMag <= 7; moveMag++){
                 ChessPosition potentialPosition = new ChessPosition(
