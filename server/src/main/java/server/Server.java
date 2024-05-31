@@ -18,9 +18,6 @@ public class Server {
         // Register your endpoints and handle exceptions here.
 
         //Initialize Databases
-        AuthDAO authDataBase = new MemoryAuthDAO();
-        GameDAO gameDataBase = new MemoryGameDAO();
-        UserDAO userDataBase = new MemoryUserDAO();
         Database database = new Database(authDataBase, gameDataBase, userDataBase);
 
         //Initialize Handlers (potential idea: make the handlers static? eliminate need for instantiation)

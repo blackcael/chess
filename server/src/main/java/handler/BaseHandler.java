@@ -44,6 +44,9 @@ public abstract class BaseHandler {
         } catch (AlreadyTakenException e) {
             responseCode = 403;
             responseObj = new ErrorResponse(e.toString());
+        } catch (DataAccessException e){
+            responseCode = 500;
+            responseObj = new ErrorResponse(e.toString());
         }
         return new ResponseCodeAndObject(responseCode, responseObj);
     }
