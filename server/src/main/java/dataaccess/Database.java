@@ -14,10 +14,14 @@ public class Database {
             this.userDataBase = new MemoryUserDAO();
         }
         else{
-            Connection connection = DatabaseManager.getConnection();
-            this.authDataBase = new SqlAuthDAO(connection);
-            this.gameDataBase = new SqlGameDAO(connection);
-            this.userDataBase = new SqlUserDAO(connection);
+            try {
+                Connection connection = DatabaseManager.getConnection();
+                this.authDataBase = new SqlAuthDAO(connection);
+                this.gameDataBase = new SqlGameDAO(connection);
+                this.userDataBase = new SqlUserDAO(connection);
+            } catch (DataAccessException e){
+                //oops
+            }
         }
 
 
