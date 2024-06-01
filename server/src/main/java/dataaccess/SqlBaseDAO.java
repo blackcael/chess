@@ -6,6 +6,7 @@ import javax.lang.model.type.ArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.lang.reflect.Type;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,19 +28,30 @@ public class SqlBaseDAO {
     }
 
     protected void insertIntoTable(String sql, Object record) throws DataAccessException {
-        try (PreparedStatement stmt = connection.prepareStatement(sql);){
-            ArrayList<RecordComponent> componentList = new ArrayList<>(List.of(record.getClass().getRecordComponents()));
-            for(int i = 0; i < componentList.size(); i++) {
-                var accessor = componentList.get(i).getAccessor();
-                String value = (String) accessor.invoke(record);
-                stmt.setString(i+1, value);
+        try (PreparedStatement stmt = connection.prepareStatement(sql);) {
+            ArrayList<String> componentList = recordToStringArray(record);
+            for (int i = 0; i < componentList.size(); i++) {
+                stmt.setString(i + 1, componentList.get(i));
             }
             stmt.executeUpdate();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             throw new DataAccessException(e.toString());
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
         }
+    }
+
+    private ArrayList<String> recordToStringArray(Object record) throws DataAccessException {
+        ArrayList<RecordComponent> componentList = new ArrayList<>(List.of(record.getClass().getRecordComponents()));
+        ArrayList<String> returnList = new ArrayList<>();
+        for (RecordComponent recordComponent : componentList) {
+            var accessor = recordComponent.getAccessor();
+            try {
+                Object value = accessor.invoke(record);
+                returnList.add(value != null ? value.toString() : "null");
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                throw new DataAccessException(e.toString());
+            }
+        }
+        return returnList;
     }
 
 }

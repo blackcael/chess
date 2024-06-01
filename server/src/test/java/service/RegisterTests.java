@@ -9,10 +9,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RegisterTests {
-    Database database = new Database(new MemoryAuthDAO(), new MemoryGameDAO(), new MemoryUserDAO());
+    Database database = new Database();
     RegisterService registerService = new RegisterService(database);
     RegisterRequest newUserRegisterRequest = new RegisterRequest("cblack1", "p@ssw0rd", "cblack1@byu.edu");
     UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
+
+    public RegisterTests() throws DataAccessException {
+    }
 
     @Test
     public void registerNewUserTest() throws Exception {

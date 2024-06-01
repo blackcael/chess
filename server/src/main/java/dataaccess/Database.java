@@ -7,7 +7,7 @@ public class Database {
     public UserDAO userDataBase;
     private int gameIDCounter = 1;
     boolean dataBaseSimulation = false;
-    public Database() throws DataAccessException {
+    public Database(){
         if(dataBaseSimulation){
             this.authDataBase = new MemoryAuthDAO();
             this.gameDataBase = new MemoryGameDAO();

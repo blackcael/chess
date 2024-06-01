@@ -1,9 +1,6 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.Database;
-import dataaccess.GameDAO;
-import dataaccess.UserDAO;
+import dataaccess.*;
 import intermediary.InvalidAuthException;
 import model.AuthData;
 
@@ -19,7 +16,7 @@ public class BaseService {
         this.userDataBase = database.userDataBase;
     }
 
-    protected void validateAuthToken(String authToken) throws InvalidAuthException {
+    protected void validateAuthToken(String authToken) throws InvalidAuthException, DataAccessException {
         if(authDataBase.getAuth(authToken) == null) {
             throw new InvalidAuthException();
         }

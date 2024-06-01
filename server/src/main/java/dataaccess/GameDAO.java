@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 public interface GameDAO {
 
-    void clear();
+    void clear() throws DataAccessException;
 
-    GameData getGame(Integer gameID);
+    GameData getGame(Integer gameID) throws DataAccessException;
 
     void createGame(GameData gameData) throws DataAccessException;
 

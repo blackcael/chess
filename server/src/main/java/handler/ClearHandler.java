@@ -1,6 +1,7 @@
 package handler;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.Database;
 import intermediary.ResponseCodeAndObject;
 import service.ClearService;
@@ -11,7 +12,7 @@ public class ClearHandler extends BaseHandler{
     public ClearHandler(Database database) {
         super(database);
     }
-    public Object handleRequest(Request request, Response response){
+    public Object handleRequest(Request request, Response response) throws DataAccessException {
         ClearService clearService = new ClearService(database);
         clearService.clear();
         return classToJson(response, null);

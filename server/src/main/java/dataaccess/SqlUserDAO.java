@@ -29,7 +29,7 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
     }
 
     public UserData getUser(String username) throws DataAccessException{
-        String sql = "SELECT * FROM user WHERE username = " + username;
+        String sql = "SELECT * FROM user WHERE username = \"" + username + "\"";
         UserData resultUser = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql);  //TODO ADD A CONNECTION TO OUR DATABASE CLASS
              ResultSet rs = stmt.executeQuery()) {
