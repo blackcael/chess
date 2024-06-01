@@ -39,19 +39,19 @@ public class SqlUserDAO implements UserDAO {
 
     public UserData getUser(String username) throws DataAccessException{
         String sql = "SELECT * FROM user WHERE username = " + username;
-        UserData newUser = null;
+        UserData resultUser = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql);  //TODO ADD A CONNECTION TO OUR DATABASE CLASS
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                String newUserName = rs.getString(1);
-                String newPassword = rs.getString(2);
-                String newEmail = rs.getString(3);
-                newUser = new UserData(newUserName, newPassword, newEmail);
+                String resultUserName = rs.getString(1);
+                String resultPassword = rs.getString(2);
+                String resultEmail = rs.getString(3);
+                resultUser = new UserData(resultUserName, resultPassword, resultEmail);
             }
         } catch (SQLException ex) {
             throw new DataAccessException("e");
         }
-        return newUser;
+        return resultUser;
     }
 
     public boolean isEmpty(){
