@@ -9,10 +9,9 @@ import model.UserData;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class SqlUserDAO implements UserDAO {
-    Connection connection;
-    SqlUserDAO(Connection connection){
-        this.connection = connection;
+public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
+    public SqlUserDAO(Connection connection){
+        super(connection);
     }
 
     public void clear() throws DataAccessException {
