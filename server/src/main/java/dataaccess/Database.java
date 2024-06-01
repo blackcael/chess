@@ -14,7 +14,7 @@ public class Database {
             this.userDataBase = new MemoryUserDAO();
         }
         else{
-            try {
+            try{
                 //initiate the database / tables if they don't already exist!
                 Connection connection = DatabaseManager.getConnection();
                 this.authDataBase = new SqlAuthDAO(connection);

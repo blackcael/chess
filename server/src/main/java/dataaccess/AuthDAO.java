@@ -7,9 +7,9 @@ import java.util.Map;
 
 public interface AuthDAO {
 
-    void clear();
+    void clear() throws DataAccessException;
 
-    void createAuth(AuthData authData);
+    void createAuth(AuthData authData) throws DataAccessException;
 
     AuthData getAuth(String authToken);
 
