@@ -12,8 +12,7 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
     }
 
     public void clear() throws DataAccessException {
-        String sql = "TRUNCATE user";
-        executeSingleLineSQL(sql);
+        executeSingleLineSQL("TRUNCATE user");
     }
 
     public void createUser(UserData user) throws DataAccessException {

@@ -13,7 +13,7 @@ public interface GameDAO {
 
     void createGame(GameData gameData) throws DataAccessException;
 
-    ArrayList<ListGamesSubData> getGameList();
+    ArrayList<ListGamesSubData> getGameList() throws DataAccessException;
 
     void updateGame(GameData updatedGameData) throws DataAccessException;
 

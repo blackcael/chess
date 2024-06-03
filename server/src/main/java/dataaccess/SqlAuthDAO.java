@@ -14,8 +14,7 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
     }
 
     public void clear() throws DataAccessException {
-        String sql = "TRUNCATE auth";
-        executeSingleLineSQL(sql);
+        executeSingleLineSQL("TRUNCATE auth");
     }
 
     public void createAuth(AuthData authData) throws DataAccessException {

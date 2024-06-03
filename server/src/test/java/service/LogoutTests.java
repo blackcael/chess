@@ -3,6 +3,7 @@ package service;
 import dataaccess.*;
 import intermediary.*;
 import model.UserData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +18,11 @@ public class LogoutTests {
     LoginRequest loginRequest = new LoginRequest(newUserRegisterRequest.username(), newUserRegisterRequest.password());
 
     public LogoutTests() throws Exception {
+    }
+    @AfterEach
+    public void clearAll() throws Exception{
+        ClearService clearService = new ClearService(database);
+        clearService.clear();
     }
 
     @Test

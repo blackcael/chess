@@ -26,7 +26,7 @@ public class CreateGameService extends BaseService{
         return new CreateGameResponse(gameData.gameID());
     }
 
-    private boolean isDuplicateName(String gameName){
+    private boolean isDuplicateName(String gameName) throws DataAccessException {
         for(GameDAO.ListGamesSubData game: gameDataBase.getGameList()){
             String testName = game.gameName();
             if(testName.equals(gameName)){

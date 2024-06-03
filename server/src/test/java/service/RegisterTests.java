@@ -4,6 +4,7 @@ import intermediary.AlreadyTakenException;
 import intermediary.RegisterRequest;
 import intermediary.RegisterResponse;
 import model.UserData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +16,11 @@ public class RegisterTests {
     UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
 
     public RegisterTests() throws DataAccessException {
+    }
+    @AfterEach
+    public void clearAll() throws Exception{
+        ClearService clearService = new ClearService(database);
+        clearService.clear();
     }
 
     @Test
