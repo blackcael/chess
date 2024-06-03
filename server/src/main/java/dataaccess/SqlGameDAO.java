@@ -62,8 +62,7 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
                 gameData.whiteUsername(),
                 gameData.blackUsername(),
                 gameData.gameName(),
-               // gameToJson(gameData.game()));
-                "gameJson");
+                gameToJson(gameData.game()));
         String sql = "INSERT INTO game values (?,?,?,?,?)";
         insertIntoTable(sql, gameDataStrings);
     }
@@ -92,7 +91,7 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
                 "UPDATE game SET whiteUsername = \"" +  updatedGameData.whiteUsername()
                         + "\", blackUsername = \"" +  updatedGameData.blackUsername()
                         + "\", gameName = \"" +  updatedGameData.gameName()
-                        + "\", gameJson = \"" +  gameToJson(updatedGameData.game())
+                       // + "\", gameJson = \"" +  gameToJson(updatedGameData.game())
                         + "\" WHERE gameID = " +  updatedGameData.gameID();
         executeSingleLineSQL(sql);
     }

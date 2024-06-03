@@ -66,7 +66,8 @@ public class SqlGameDAOTests extends TestBase{
 
     @Test
     public void negativeUpdateGameTest() throws DataAccessException{
-
+        //trying to update a game that DNE (doesn't break system, no error is thrown)
+        database.gameDataBase.updateGame(invalidGameData);
     }
 
     @Test
