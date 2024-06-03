@@ -35,6 +35,9 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
         } catch (SQLException ex) {
             throw new DataAccessException("e");
         }
+        if(resultAuth == null){
+            throw new DataAccessException("500, authToken DNE in database");
+        }
         return resultAuth;
     }
 

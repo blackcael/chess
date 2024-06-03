@@ -1,15 +1,25 @@
 package dataaccess;
 
+import intermediary.InvalidAuthException;
+import intermediary.LoginResponse;
 import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.ClearService;
+import spark.utils.Assert;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SqlUserDAOTests extends TestBase{
 
+    @BeforeEach
+    public void clearAll() throws Exception{
+        ClearService clearService = new ClearService(database);
+        clearService.clear();
+    }
+
     @Test
-    public void positiveTestCreateUser() throws DataAccessException {
+    public void positiveCreateUserTest() throws DataAccessException {
         database.userDataBase.createUser(sampleUser);
         UserData returnData = database.userDataBase.getUser(sampleUser.username());
         assertEquals(sampleUser.username(), returnData.username());
@@ -17,7 +27,7 @@ public class SqlUserDAOTests extends TestBase{
     }
 
     @Test
-    public void negativeTestCreateUser() throws DataAccessException {
+    public void negativeCreateUserTest() throws DataAccessException {
         //not sure what to do for this...
     }
 
@@ -31,7 +41,9 @@ public class SqlUserDAOTests extends TestBase{
 
     @Test
     public void negativeGetUserTest() throws DataAccessException{
-        //cry
+        assertThrows(DataAccessException.class, () -> {
+            database.userDataBase.getUser(unRegisteredUser.username());
+        });
     }
 
     @Test

@@ -17,7 +17,7 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
     }
 
     public void clear() throws DataAccessException {
-        executeSingleLineSQL("TRUNCATE user");
+        executeSingleLineSQL("TRUNCATE game");
     }
 
     private String gameToJson(ChessGame game) {
@@ -30,21 +30,29 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
 
     public GameData getGame(Integer gameID) throws DataAccessException {
         String sql = "SELECT * FROM game WHERE gameID = \"" + gameID.toString() + "\"";
+        GameData resultGame = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-            return readGame(rs);
+            resultGame = readGame(rs);
         } catch (SQLException ex) {
-            throw new DataAccessException("error is getGame");
+            throw new DataAccessException(ex.toString());
         }
+        if(resultGame == null){
+            throw new DataAccessException("gameID DNE in database");
+        }
+        return resultGame;
     }
 
     private GameData readGame(ResultSet rs) throws SQLException {
-        int resultGameID = rs.getInt(1);
-        String resultWhiteUsername = rs.getString(2);
-        String resultBlackUsername = rs.getString(3);
-        String resultGameName = rs.getString(4);
-        ChessGame resultGame = jsonToGame(rs.getString(5));
-        return new GameData(resultGameID, resultWhiteUsername, resultBlackUsername, resultGameName, resultGame);
+        while (rs.next()) {
+            int resultGameID = rs.getInt("gameID");
+            var resultWhiteUsername = rs.getString("whiteUsername");
+            var resultBlackUsername = rs.getString("blackUsername");
+            var resultGameName = rs.getString("gameName");
+            var resultGame = jsonToGame(rs.getString("gameJson"));
+            return new GameData(resultGameID, resultWhiteUsername, resultBlackUsername, resultGameName, resultGame);
+        }
+        return null;
     }
 
     private record GameDataStrings(int ID, String whiteUsername, String blackUsername, String gameName, String game) { }
@@ -55,7 +63,8 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
                 gameData.blackUsername(),
                 gameData.gameName(),
                 gameToJson(gameData.game()));
-        String sql = "INSERT INTO auth values (?,?,?,?,?)";
+                //"gameJson");
+        String sql = "INSERT INTO game values (?,?,?,?,?)";
         insertIntoTable(sql, gameDataStrings);
     }
 

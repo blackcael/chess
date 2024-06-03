@@ -30,16 +30,20 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
     public UserData getUser(String username) throws DataAccessException{
         String sql = "SELECT * FROM user WHERE username = \"" + username + "\"";
         UserData resultUser = null;
-        try (PreparedStatement stmt = connection.prepareStatement(sql);  //TODO ADD A CONNECTION TO OUR DATABASE CLASS
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 String resultUserName = rs.getString(1);
                 String resultPassword = rs.getString(2);
                 String resultEmail = rs.getString(3);
                 resultUser = new UserData(resultUserName, resultPassword, resultEmail);
+                System.out.print(resultUser.toString());
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("e");
+            throw new DataAccessException(ex.toString());
+        }
+        if (resultUser == null){
+            throw new DataAccessException("500, username not is system");
         }
         return resultUser;
     }
