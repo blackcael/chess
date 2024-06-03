@@ -58,7 +58,10 @@ public class SqlGameDAOTests extends TestBase{
 
     @Test
     public void positiveUpdateGameTest() throws DataAccessException{
-
+        database.gameDataBase.createGame(sampleGameData);
+        database.gameDataBase.updateGame(updatedGameData);
+        GameData resultGameData = database.gameDataBase.getGame(sampleGameData.gameID());
+        assertEquals(resultGameData.whiteUsername(), updatedGameData.whiteUsername());
     }
 
     @Test
