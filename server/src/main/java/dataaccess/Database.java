@@ -15,13 +15,13 @@ public class Database {
         }
         else{
             try{
-                //initiate the database / tables if they don't already exist!
+                DatabaseManager.createDatabase();
                 Connection connection = DatabaseManager.getConnection();
                 this.authDataBase = new SqlAuthDAO(connection);
                 this.gameDataBase = new SqlGameDAO(connection);
                 this.userDataBase = new SqlUserDAO(connection);
             } catch (DataAccessException e){
-                //oops
+                System.out.println("Error:" + e.toString());
             }
         }
 

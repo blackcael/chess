@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.AuthData;
-import model.UserData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +18,7 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
 
     public void createAuth(AuthData authData) throws DataAccessException {
         String sql = "INSERT INTO auth values (?,?)";
-        insertIntoTable(sql, authData);
+        executeSQLStatement(sql, authData);
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {

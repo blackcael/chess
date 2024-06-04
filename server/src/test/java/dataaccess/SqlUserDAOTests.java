@@ -1,12 +1,9 @@
 package dataaccess;
 
-import intermediary.InvalidAuthException;
-import intermediary.LoginResponse;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.ClearService;
-import spark.utils.Assert;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +39,7 @@ public class SqlUserDAOTests extends TestBase{
     @Test
     public void negativeGetUserTest() throws DataAccessException{
         assertThrows(DataAccessException.class, () -> {
-            database.userDataBase.getUser(unRegisteredUser.username());
+            database.userDataBase.getUser(unregisteredUser.username());
         });
     }
 

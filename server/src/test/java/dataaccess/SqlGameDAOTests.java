@@ -8,6 +8,8 @@ import service.ClearService;
 
 import javax.xml.crypto.Data;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SqlGameDAOTests extends TestBase{
@@ -48,12 +50,19 @@ public class SqlGameDAOTests extends TestBase{
 
     @Test
     public void positiveGetGameListTest() throws DataAccessException{
-
+        gameList.add(lgsd1);
+        gameList.add(lgsd2);
+        gameList.add(lgsd3);
+        database.gameDataBase.createGame(sampleGameData);
+        database.gameDataBase.createGame(sampleGameData2);
+        database.gameDataBase.createGame(sampleGameData3);
+        ArrayList<GameDAO.ListGamesSubData> resultList = database.gameDataBase.getGameList();
+        System.out.println(resultList.toString());
     }
 
     @Test
     public void negativeGetGameListTest() throws DataAccessException{
-
+        //? this cant really fail, it returns null or nothing?
     }
 
     @Test
@@ -73,6 +82,6 @@ public class SqlGameDAOTests extends TestBase{
     @Test
     public void clearTest() throws DataAccessException{
         database.gameDataBase.clear();
-        //assertTrue(database.authDataBase.isEmpty());
+    //if system is cleared, no errors are thrown
     }
 }

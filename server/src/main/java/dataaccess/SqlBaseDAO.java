@@ -1,14 +1,10 @@
 package dataaccess;
 
-import model.UserData;
-
-import javax.lang.model.type.ArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
-import java.lang.reflect.Type;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +23,8 @@ public class SqlBaseDAO {
         }
     }
 
-    protected void insertIntoTable(String sql, Object record) throws DataAccessException {
-        try (PreparedStatement stmt = connection.prepareStatement(sql);) {
+    protected void executeSQLStatement(String sql, Object record) throws DataAccessException {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             ArrayList<String> componentList = recordToStringArray(record);
             for (int i = 0; i < componentList.size(); i++) {
                 stmt.setString(i + 1, componentList.get(i));
@@ -39,7 +35,7 @@ public class SqlBaseDAO {
         }
     }
 
-    private ArrayList<String> recordToStringArray(Object record) throws DataAccessException {
+    protected ArrayList<String> recordToStringArray(Object record) throws DataAccessException {
         ArrayList<RecordComponent> componentList = new ArrayList<>(List.of(record.getClass().getRecordComponents()));
         ArrayList<String> returnList = new ArrayList<>();
         for (RecordComponent recordComponent : componentList) {

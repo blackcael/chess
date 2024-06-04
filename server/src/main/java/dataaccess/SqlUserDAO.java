@@ -16,7 +16,7 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
     }
 
     public void createUser(UserData user) throws DataAccessException {
-        String sql = "INSERT INTO user values (?,?,?)";
+        String sql = "INSERT INTO user VALUES (?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);){
             stmt.setString(1, user.username());
             stmt.setString(2, user.password());
