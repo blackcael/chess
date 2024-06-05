@@ -60,7 +60,7 @@ public class DatabaseManager {
     }
 
 
-    static private final String createUserTableStatements =
+    static private final String USER_TABLE_CREATE_STATEMENTS =
         "CREATE TABLE IF NOT EXISTS "+
                 DatabaseManager.USER_TABLE +
                 " (" +
@@ -70,7 +70,7 @@ public class DatabaseManager {
                 "INDEX (username)" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci";
 
-    static private final String createAuthTableStatements =
+    static private final String AUTH_TABLE_CREATE_STATEMENTS =
             "CREATE TABLE IF NOT EXISTS "+
                     DatabaseManager.AUTH_TABLE +
                     " (" +
@@ -80,7 +80,7 @@ public class DatabaseManager {
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci" ;
 
 
-    static private final String createGameTableStatements =
+    static private final String GAME_TABLE_CREATE_STATEMENTS =
             "CREATE TABLE IF NOT EXISTS " +
                     DatabaseManager.GAME_TABLE +
                     " (" +
@@ -107,9 +107,9 @@ public class DatabaseManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        createTable(connection, createUserTableStatements);
-        createTable(connection, createGameTableStatements);
-        createTable(connection, createAuthTableStatements);
+        createTable(connection, USER_TABLE_CREATE_STATEMENTS);
+        createTable(connection, GAME_TABLE_CREATE_STATEMENTS);
+        createTable(connection, AUTH_TABLE_CREATE_STATEMENTS);
     }
 
         /**
