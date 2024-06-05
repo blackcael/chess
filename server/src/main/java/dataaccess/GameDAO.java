@@ -3,7 +3,6 @@ package dataaccess;
 import model.GameData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public interface GameDAO {
 
@@ -11,7 +10,7 @@ public interface GameDAO {
 
     GameData getGame(Integer gameID) throws DataAccessException;
 
-    void createGame(GameData gameData) throws DataAccessException;
+    int createGame(GameData gameData) throws DataAccessException;
 
     ArrayList<ListGamesSubData> getGameList() throws DataAccessException;
 

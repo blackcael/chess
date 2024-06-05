@@ -15,9 +15,9 @@ public class TestBase {
     protected final AuthData sampleAuthData = new AuthData(sampleUser.username(), "superSecretAuthToken");
     protected final AuthData invalidAuthData = new AuthData("hackerman69", "hackingAttempt#1");
 
-    protected final GameData sampleGameData = new GameData(1, "Dr. Phil", "Steve Harvey", "FPSChess1", new ChessGame());
-    protected final GameData sampleGameData2 = new GameData(2, "Dr. Phil", "Steve Harvey", "FPSChess2", new ChessGame());
-    protected final GameData sampleGameData3 = new GameData(3, "Dr. Phil", "Steve Harvey", "FPSChess3", new ChessGame());
+    protected final GameData sampleGameData = new GameData(99, "Dr. Phil", "Steve Harvey", "FPSChess1", new ChessGame());
+    protected final GameData sampleGameData2 = new GameData(99, "Dr. Phil", "Steve Harvey", "FPSChess2", new ChessGame());
+    protected final GameData sampleGameData3 = new GameData(99, "Dr. Phil", "Steve Harvey", "FPSChess3", new ChessGame());
 
     protected final GameData invalidGameData = new GameData(9, "tim", "tom", "invalidGame", new ChessGame());
     protected final GameData updatedGameData = new GameData(1, "newWhite", "newBlack", "updatedGameName", new ChessGame());

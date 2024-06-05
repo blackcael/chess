@@ -17,8 +17,9 @@ public class MemoryGameDAO implements GameDAO{
         return gameDataDB.get(gameID);
     }
 
-    public void createGame(GameData gameData){
+    public int createGame(GameData gameData){
         gameDataDB.put(gameData.gameID(), gameData);
+        return gameData.gameID();
     }
 
     public ArrayList<ListGamesSubData> getGameList(){

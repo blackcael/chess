@@ -22,8 +22,8 @@ public class SqlGameDAOTests extends TestBase{
 
     @Test
     public void positiveCreateGameTest() throws DataAccessException{
-        database.gameDataBase.createGame(sampleGameData);
-        GameData returnData = database.gameDataBase.getGame(sampleGameData.gameID());
+        int id = database.gameDataBase.createGame(sampleGameData);
+        GameData returnData = database.gameDataBase.getGame(id);
         assertEquals(returnData.whiteUsername(), sampleGameData.whiteUsername());
     }
 
@@ -34,10 +34,9 @@ public class SqlGameDAOTests extends TestBase{
 
     @Test
     public void positiveGetGameTest() throws DataAccessException{
-        database.gameDataBase.createGame(sampleGameData);
-        GameData resultData = database.gameDataBase.getGame(sampleGameData.gameID());
+        int id = database.gameDataBase.createGame(sampleGameData);
+        GameData resultData = database.gameDataBase.getGame(id);
         assertEquals(resultData.whiteUsername(), sampleGameData.whiteUsername());
-        assertEquals(resultData.gameID(), sampleGameData.gameID());
     }
 
     @Test
@@ -69,7 +68,7 @@ public class SqlGameDAOTests extends TestBase{
     public void positiveUpdateGameTest() throws DataAccessException{
         database.gameDataBase.createGame(sampleGameData);
         database.gameDataBase.updateGame(updatedGameData);
-        GameData resultGameData = database.gameDataBase.getGame(sampleGameData.gameID());
+        GameData resultGameData = database.gameDataBase.getGame(updatedGameData.gameID());
         assertEquals(resultGameData.whiteUsername(), updatedGameData.whiteUsername());
     }
 

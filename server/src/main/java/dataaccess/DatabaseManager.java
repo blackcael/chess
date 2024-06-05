@@ -9,9 +9,17 @@ public class DatabaseManager {
     private static final String USER;
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
-    static final String GAME_TABLE;
-    static final String USER_TABLE;
-    static final String AUTH_TABLE;
+    static final String GAME_TABLE = "game";
+    static final String GAME_ID = "gameID";
+    static final String GAME_NAME = "gameName";
+    static final String WHITE_USERNAME = "whiteUsername";
+    static final String BLACK_USERNAME = "blackUsername";
+    static final String GAME_JSON = "gameJson";
+    static final String USER_TABLE = "user";
+    static final String USERNAME = "username";
+    static final String USER_PASSWORD = "password";
+    static final String AUTH_TOKEN = "authToken";
+    static final String AUTH_TABLE = "auth";
 
     /*
      * Load the database information for the db.properties file.
@@ -25,9 +33,6 @@ public class DatabaseManager {
                 DATABASE_NAME = props.getProperty("db.name");
                 USER = props.getProperty("db.user");
                 PASSWORD = props.getProperty("db.password");
-                GAME_TABLE = props.getProperty("db.gameTable");
-                USER_TABLE = props.getProperty("db.userTable");
-                AUTH_TABLE = props.getProperty("db.authTable");
 
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
@@ -79,12 +84,12 @@ public class DatabaseManager {
             "CREATE TABLE IF NOT EXISTS " +
                     DatabaseManager.GAME_TABLE +
                     " (" +
-                    "`id` int NOT NULL AUTO_INCREMENT,"+
                     "`whiteUsername` VARCHAR(256),"+
                     "`blackUsername` VARCHAR(256),"+
                     "`gameName` VARCHAR(256),"+
                     "`gameJson` LONGTEXT DEFAULT NULL,"+
-                    "PRIMARY KEY (`id`)"+
+                    "`gameID` int NOT NULL AUTO_INCREMENT,"+
+                    "PRIMARY KEY (`gameID`)"+
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"
     ;
 

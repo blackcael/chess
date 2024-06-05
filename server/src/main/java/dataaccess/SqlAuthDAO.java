@@ -13,16 +13,16 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
     }
 
     public void clear() throws DataAccessException {
-        executeSingleLineSQL("TRUNCATE auth");
+        executeSingleLineSQL("TRUNCATE " + DatabaseManager.AUTH_TABLE);
     }
 
     public void createAuth(AuthData authData) throws DataAccessException {
-        String sql = "INSERT INTO auth values (?,?)";
+        String sql = "INSERT INTO " + DatabaseManager.AUTH_TABLE + " VALUES (?,?)";
         executeSQLStatement(sql, authData);
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {
-        String sql = "SELECT * FROM auth WHERE authKey = \"" + authToken + "\"";
+        String sql = "SELECT * FROM " + DatabaseManager.AUTH_TABLE + " WHERE authToken = \"" + authToken + "\"";
         AuthData resultAuth = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql);  //TODO ADD A CONNECTION TO OUR DATABASE CLASS
              ResultSet rs = stmt.executeQuery()) {
@@ -32,7 +32,7 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
                 resultAuth = new AuthData(resultUserName, resultAuthToken);
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("e");
+            throw new DataAccessException(ex.toString());
         }
         if(resultAuth == null){
             throw new DataAccessException("500, authToken DNE in database");
@@ -41,7 +41,7 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
     }
 
     public void deleteAuth(String authToken) throws DataAccessException {
-        String sql = "DELETE FROM auth WHERE authKey = \"" + authToken + "\"";
+        String sql = "DELETE FROM " + DatabaseManager.AUTH_TABLE + " WHERE authToken = \"" + authToken + "\"";
         executeSingleLineSQL(sql);
     }
 

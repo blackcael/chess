@@ -52,15 +52,14 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
         return new GameData(resultGameID, resultWhiteUsername, resultBlackUsername, resultGameName, resultGame);
     }
 
-    private record GameDataStrings(int ID, String whiteUsername, String blackUsername, String gameName, String game) { }
-    public void createGame(GameData gameData) throws DataAccessException {
+    private record GameDataStrings(String whiteUsername, String blackUsername, String gameName, String game) { }
+    public int createGame(GameData gameData) throws DataAccessException {
         GameDataStrings gameDataStrings = new GameDataStrings(
-                gameData.gameID(),
                 gameData.whiteUsername(),
                 gameData.blackUsername(),
                 gameData.gameName(),
                 gameToJson(gameData.game()));
-        String sql = "INSERT INTO "+ DatabaseManager.GAME_TABLE +" VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO " + DatabaseManager.GAME_TABLE + " (whiteUsername, blackUsername, gameName, gameJson) VALUES (?,?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ArrayList<String> componentList = recordToStringArray(gameDataStrings);
             for (int i = 0; i < componentList.size(); i++) {
@@ -70,7 +69,7 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
             try(ResultSet generatedKeys = stmt.getGeneratedKeys()){
                 generatedKeys.next();
                 int id = generatedKeys.getInt(1);
-
+                return id;
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.toString());

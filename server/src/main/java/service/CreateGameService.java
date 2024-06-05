@@ -22,8 +22,8 @@ public class CreateGameService extends BaseService{
             throw new BadRequestException();
         }
         GameData gameData = new GameData(database.getGameGenID(), null, null, gameName, new ChessGame());
-        gameDataBase.createGame(gameData);
-        return new CreateGameResponse(gameData.gameID());
+        GameData resultGameData= new GameData (gameDataBase.createGame(gameData), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
+        return new CreateGameResponse(resultGameData.gameID());
     }
 
     private boolean isDuplicateName(String gameName) throws DataAccessException {
