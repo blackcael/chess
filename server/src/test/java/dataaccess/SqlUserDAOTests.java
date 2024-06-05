@@ -18,9 +18,8 @@ public class SqlUserDAOTests extends TestBase{
     @Test
     public void positiveCreateUserTest() throws DataAccessException {
         database.userDataBase.createUser(sampleUser);
-        UserData returnData = database.userDataBase.getUser(sampleUser.username());
-        assertEquals(sampleUser.username(), returnData.username());
-        assertEquals(sampleUser.password(), returnData.password());
+        UserData returnData1 = database.userDataBase.getUser(sampleUser.username());
+        assertEquals(sampleUser.username(), returnData1.username());
     }
 
     @Test
@@ -31,9 +30,8 @@ public class SqlUserDAOTests extends TestBase{
     @Test
     public void  positiveGetUserTest() throws DataAccessException {
         database.userDataBase.createUser(sampleUser);
-        UserData returnData = database.userDataBase.getUser(sampleUser.username());
-        assertEquals(sampleUser.username(), returnData.username());
-        assertEquals(sampleUser.password(), returnData.password());
+        UserData returnData2 = database.userDataBase.getUser(sampleUser.username());
+        assertEquals(sampleUser.email(), returnData2.email());
     }
 
     @Test

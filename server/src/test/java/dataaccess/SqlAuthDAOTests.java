@@ -18,9 +18,9 @@ public class SqlAuthDAOTests extends TestBase{
     @Test
     public void positiveCreateAuthTest() throws DataAccessException {
         database.authDataBase.createAuth(sampleAuthData);
-        AuthData resultAuthData = database.authDataBase.getAuth(sampleAuthData.authToken());
-        System.out.println(resultAuthData.username());
-        assertEquals(resultAuthData.username(), sampleAuthData.username());
+        AuthData resultAuthData1 = database.authDataBase.getAuth(sampleAuthData.authToken());
+        System.out.println(resultAuthData1.username());
+        assertEquals(resultAuthData1.username(), sampleAuthData.username());
     }
 
     @Test
@@ -31,9 +31,9 @@ public class SqlAuthDAOTests extends TestBase{
     @Test
     public void positiveGetAuthTest() throws DataAccessException{
         database.authDataBase.createAuth(sampleAuthData);
-        AuthData resultAuthData = database.authDataBase.getAuth(sampleAuthData.authToken());
-        System.out.println(resultAuthData.username());
-        assertEquals(resultAuthData.username(), sampleAuthData.username());
+        AuthData resultAuthData2 = database.authDataBase.getAuth(sampleAuthData.authToken());
+        System.out.println(resultAuthData2.username());
+        assertEquals(resultAuthData2.username(), sampleAuthData.username());
     }
 
     @Test

@@ -24,7 +24,7 @@ public class SqlAuthDAO extends SqlBaseDAO implements AuthDAO{
     public AuthData getAuth(String authToken) throws DataAccessException {
         String sql = "SELECT * FROM " + DatabaseManager.AUTH_TABLE + " WHERE authToken = \"" + authToken + "\"";
         AuthData resultAuth = null;
-        try (PreparedStatement stmt = connection.prepareStatement(sql);  //TODO ADD A CONNECTION TO OUR DATABASE CLASS
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 String resultUserName = rs.getString(1);
