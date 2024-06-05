@@ -1,5 +1,7 @@
 package dataaccess;
 
+import model.UserData;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.sql.Connection;
@@ -48,6 +50,19 @@ public class SqlBaseDAO {
             }
         }
         return returnList;
+    }
+
+    protected boolean isEmptyInputTableName(String tableName){
+        String sql = "SELECT COUNT(*) AS row_count FROM " + tableName;
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            rs.next();
+            int rowCount = rs.getInt("row_count");
+            return(rowCount == 0);
+            } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

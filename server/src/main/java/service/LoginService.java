@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.Database;
 import intermediary.BadRequestException;
 import intermediary.InvalidAuthException;
@@ -7,6 +8,7 @@ import intermediary.LoginResponse;
 import intermediary.LoginRequest;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -19,12 +21,17 @@ public class LoginService extends BaseService{
         if(userDataBase.getUser(loginRequest.username()) == null){
             throw new InvalidAuthException();
         }
-        UserData userData = userDataBase.getUser(loginRequest.username());
-        if(!userData.password().equals(loginRequest.password())){
+
+        if(!hasValidPassword(loginRequest)){
             throw new InvalidAuthException();
         }
         AuthData authData = new AuthData(loginRequest.username(), UUID.randomUUID().toString());
         authDataBase.createAuth(authData);
         return new LoginResponse(loginRequest.username(), authData.authToken());
+    }
+
+    private boolean hasValidPassword(LoginRequest loginRequest) throws DataAccessException {
+        var hashedPassword = userDataBase.getUser(loginRequest.username()).password();
+        return BCrypt.checkpw(loginRequest.password(), hashedPassword);
     }
 }

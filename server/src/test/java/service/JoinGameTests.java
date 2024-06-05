@@ -4,24 +4,20 @@ import dataaccess.*;
 import intermediary.*;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JoinGameTests {
+public class JoinGameTests extends ServiceTestBase{
     //setup
     // (initialize user with valid auth token)
-    Database database = new Database();
-    RegisterService registerService = new RegisterService(database);
-    RegisterRequest newUserRegisterRequest = new RegisterRequest("cblack1", "p@ssw0rd", "cblack1@byu.edu");
-    UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
-    RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
-    String authToken = registerResponse.authToken();
 
     public JoinGameTests() throws Exception {
     }
-    @AfterEach
+
+    @BeforeEach @AfterEach
     public void clearAll() throws Exception{
         ClearService clearService = new ClearService(database);
         clearService.clear();
@@ -30,10 +26,8 @@ public class JoinGameTests {
 
     @Test
     public void simpleJoinGamesTest() throws Exception {
-        CreateGameService createGameService = new CreateGameService(database);
+        String authToken = generateValidAuthToken();
         createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
-        JoinGameService joinGameService = new JoinGameService(database);
-        ListGamesService listGamesService = new ListGamesService(database);
         ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);
         int testID = listGamesResponse.games().getFirst().gameID();
         JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", testID);
@@ -45,7 +39,7 @@ public class JoinGameTests {
 
     @Test
     public void joinInvalidGame() throws Exception {
-        JoinGameService joinGameService = new JoinGameService(database);
+        String authToken = generateValidAuthToken();
         assertThrows(BadRequestException.class, () -> {
             joinGameService.joinGame(authToken, new JoinGameRequest("WHITE", 66));
         });
@@ -53,10 +47,8 @@ public class JoinGameTests {
 
     @Test
     public void joinInvalidColor() throws Exception {
-        CreateGameService createGameService = new CreateGameService(database);
+        String authToken = generateValidAuthToken();
         createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
-        JoinGameService joinGameService = new JoinGameService(database);
-        ListGamesService listGamesService = new ListGamesService(database);
         ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);
         int testID = listGamesResponse.games().getFirst().gameID();
         JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", testID);

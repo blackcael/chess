@@ -38,14 +38,13 @@ public class SqlUserDAOTests extends TestBase{
 
     @Test
     public void negativeGetUserTest() throws DataAccessException{
-        assertThrows(DataAccessException.class, () -> {
-            database.userDataBase.getUser(unregisteredUser.username());
-        });
+        assertNull(database.userDataBase.getUser(unregisteredUser.username()));
     }
 
     @Test
     public void positiveClearTest() throws DataAccessException{
         database.userDataBase.clear();
+        assertTrue(database.userDataBase.isEmpty());
     }
 
 }

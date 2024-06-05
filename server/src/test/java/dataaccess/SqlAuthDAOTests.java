@@ -38,19 +38,14 @@ public class SqlAuthDAOTests extends TestBase{
 
     @Test
     public void negativeGetAuthTest() throws DataAccessException{
-        assertThrows(DataAccessException.class, () -> {
-            AuthData resultAuthData = database.authDataBase.getAuth(invalidAuthData.authToken());
-            System.out.println(resultAuthData.toString());
-        });
+        assertNull(database.authDataBase.getAuth(invalidAuthData.authToken()));
     }
 
     @Test
     public void positiveDeleteAuthTest() throws DataAccessException{
         database.authDataBase.createAuth(sampleAuthData);
         database.authDataBase.deleteAuth(sampleAuthData.authToken());
-        assertThrows(DataAccessException.class, () -> {
-            AuthData resultAuthData = database.authDataBase.getAuth(sampleAuthData.authToken());
-        });
+        assertNull(database.authDataBase.getAuth(invalidAuthData.authToken()));
     }
 
     @Test
@@ -63,5 +58,6 @@ public class SqlAuthDAOTests extends TestBase{
     @Test
     public void clearTest() throws DataAccessException {
         database.authDataBase.clear();
+        assertTrue(database.authDataBase.isEmpty());
     }
 }

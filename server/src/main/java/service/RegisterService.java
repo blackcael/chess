@@ -7,6 +7,7 @@ import intermediary.RegisterResponse;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -23,10 +24,14 @@ public class RegisterService extends BaseService{
         if(userDataBase.getUser(registerRequest.username()) != null){
             throw new AlreadyTakenException();
         }
-        UserData userData = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
+        UserData userData = new UserData(registerRequest.username(), hashPassword(registerRequest.password()), registerRequest.email());
         userDataBase.createUser(userData);
         AuthData authData = new AuthData(userData.username(), UUID.randomUUID().toString());
         authDataBase.createAuth(authData);
         return new RegisterResponse(registerRequest.username(), authData.authToken());
+    }
+
+    private String hashPassword(String password){
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

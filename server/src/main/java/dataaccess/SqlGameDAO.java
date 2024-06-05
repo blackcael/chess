@@ -32,14 +32,13 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
         GameData resultGame = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-            rs.next();
-            resultGame = readGame(rs);
+            while(rs.next()) {
+                resultGame = readGame(rs);
+            }
         } catch (SQLException ex) {
             throw new DataAccessException(ex.toString());
         }
-        if(resultGame == null){
-            throw new DataAccessException("gameID DNE in database");
-        }
+
         return resultGame;
     }
 
@@ -49,6 +48,12 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
         var resultBlackUsername = rs.getString("blackUsername");
         var resultGameName = rs.getString("gameName");
         var resultGame = jsonToGame(rs.getString("gameJson"));
+        if (resultWhiteUsername != null && resultWhiteUsername.equals("null")){
+            resultWhiteUsername = null;
+        }
+        if(resultBlackUsername != null && resultBlackUsername.equals("null")){
+            resultBlackUsername = null;
+        }
         return new GameData(resultGameID, resultWhiteUsername, resultBlackUsername, resultGameName, resultGame);
     }
 
@@ -111,6 +116,6 @@ public class SqlGameDAO extends SqlBaseDAO implements GameDAO {
 
 
     public boolean isEmpty() {
-        return false;
+        return isEmptyInputTableName(DatabaseManager.GAME_TABLE);
     }
 }

@@ -4,22 +4,20 @@ import dataaccess.*;
 import intermediary.*;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.security.Provider;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ListGamesTests {
+public class ListGamesTests extends ServiceTestBase {
     //setup
     // (initialize user with valid auth token)
-    Database database = new Database();
-    RegisterService registerService = new RegisterService(database);
-    RegisterRequest newUserRegisterRequest = new RegisterRequest("cblack1", "p@ssw0rd", "cblack1@byu.edu");
-    UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
-    RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
-    String authToken = registerResponse.authToken();
 
     public ListGamesTests() throws Exception {
     }
+    @BeforeEach
     @AfterEach
     public void clearAll() throws Exception{
         ClearService clearService = new ClearService(database);
@@ -28,7 +26,7 @@ public class ListGamesTests {
 
     @Test
     public void simpleListGamesTest() throws Exception {
-        CreateGameService createGameService = new CreateGameService(database);
+        String authToken = generateValidAuthToken();
         createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
         createGameService.createGame(authToken, new CreateGameRequest("AttackOfTheClones"));
         createGameService.createGame(authToken, new CreateGameRequest("RevengeOfTheSith"));
@@ -42,7 +40,7 @@ public class ListGamesTests {
 
     @Test
     public void invalidAuthTokenTest() throws Exception{
-        CreateGameService createGameService = new CreateGameService(database);
+        String authToken = generateValidAuthToken();
         createGameService.createGame(authToken, new CreateGameRequest("ThePhantomMenace"));
         createGameService.createGame(authToken, new CreateGameRequest("AttackOfTheClones"));
         createGameService.createGame(authToken, new CreateGameRequest("RevengeOfTheSith"));

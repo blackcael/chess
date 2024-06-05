@@ -4,22 +4,17 @@ import dataaccess.*;
 import intermediary.*;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LogoutTests {
-    Database database = new Database();
-    RegisterService registerService = new RegisterService(database);
-    RegisterRequest newUserRegisterRequest = new RegisterRequest("cblack1", "p@ssw0rd", "cblack1@byu.edu");
-    UserData newUserData = new UserData("cblack1", "p@ssw0rd", "cblack1@byu.edu");
-    RegisterResponse registerResponse = registerService.register(newUserRegisterRequest);
-    LoginService loginService = new LoginService(database);
-    LoginRequest loginRequest = new LoginRequest(newUserRegisterRequest.username(), newUserRegisterRequest.password());
+public class LogoutTests extends ServiceTestBase {
 
     public LogoutTests() throws Exception {
     }
-    @AfterEach
+
+    @AfterEach @BeforeEach
     public void clearAll() throws Exception{
         ClearService clearService = new ClearService(database);
         clearService.clear();
@@ -28,7 +23,7 @@ public class LogoutTests {
     @Test
     public void basicLogoutTest() throws Exception{
         LogoutService logoutService = new LogoutService(database);
-        String testAuthToken = registerResponse.authToken();
+        String testAuthToken = generateValidAuthToken();
         logoutService.logout(testAuthToken);
         assertNull(database.authDataBase.getAuth(testAuthToken));
     }
@@ -36,7 +31,7 @@ public class LogoutTests {
     @Test
     public void invalidLogoutTest() throws Exception{
         LogoutService logoutService = new LogoutService(database);
-        String testAuthToken = registerResponse.authToken();
+        String testAuthToken = generateValidAuthToken();
         logoutService.logout(testAuthToken);
         assertThrows(InvalidAuthException.class, () -> {
             logoutService.logout(testAuthToken);

@@ -41,10 +41,7 @@ public class SqlGameDAOTests extends TestBase{
 
     @Test
     public void negativeGetGameTest() throws DataAccessException{
-        assertThrows(DataAccessException.class, () -> {
-            GameData resultGameData = database.gameDataBase.getGame(invalidGameData.gameID());
-            System.out.println(resultGameData.toString());
-        });
+        assertNull(database.gameDataBase.getGame(invalidGameData.gameID()));
     }
 
     @Test
@@ -81,6 +78,7 @@ public class SqlGameDAOTests extends TestBase{
     @Test
     public void clearTest() throws DataAccessException{
         database.gameDataBase.clear();
-    //if system is cleared, no errors are thrown
+        assertTrue(database.gameDataBase.isEmpty());
+
     }
 }

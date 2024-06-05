@@ -3,6 +3,8 @@ package dataaccess;
 import java.sql.*;
 import model.UserData;
 
+import javax.xml.crypto.Data;
+
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -12,11 +14,11 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
     }
 
     public void clear() throws DataAccessException {
-        executeSingleLineSQL("TRUNCATE user");
+        executeSingleLineSQL("TRUNCATE " + DatabaseManager.USER_TABLE);
     }
 
     public void createUser(UserData user) throws DataAccessException {
-        String sql = "INSERT INTO user VALUES (?,?,?)";
+        String sql = "INSERT INTO " + DatabaseManager.USER_TABLE + " VALUES (?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);){
             stmt.setString(1, user.username());
             stmt.setString(2, user.password());
@@ -28,7 +30,7 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
     }
 
     public UserData getUser(String username) throws DataAccessException{
-        String sql = "SELECT * FROM user WHERE username = \"" + username + "\"";
+        String sql = "SELECT * FROM " + DatabaseManager.USER_TABLE + " WHERE username = \"" + username + "\"";
         UserData resultUser = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -37,19 +39,15 @@ public class SqlUserDAO extends SqlBaseDAO implements UserDAO {
                 String resultPassword = rs.getString(2);
                 String resultEmail = rs.getString(3);
                 resultUser = new UserData(resultUserName, resultPassword, resultEmail);
-                System.out.print(resultUser.toString());
             }
         } catch (SQLException ex) {
             throw new DataAccessException(ex.toString());
-        }
-        if (resultUser == null){
-            throw new DataAccessException("500, username not is system");
         }
         return resultUser;
     }
 
     public boolean isEmpty(){
-        return false;
+        return isEmptyInputTableName(DatabaseManager.USER_TABLE);
     }
 
 }

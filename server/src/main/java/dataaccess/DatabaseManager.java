@@ -88,7 +88,7 @@ public class DatabaseManager {
                     "`blackUsername` VARCHAR(256),"+
                     "`gameName` VARCHAR(256),"+
                     "`gameJson` LONGTEXT DEFAULT NULL,"+
-                    "`gameID` int NOT NULL AUTO_INCREMENT,"+
+                    "`gameID` INT NOT NULL AUTO_INCREMENT,"+
                     "PRIMARY KEY (`gameID`)"+
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"
     ;
