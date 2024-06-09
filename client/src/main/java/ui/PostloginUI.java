@@ -2,7 +2,9 @@ package ui;
 
 public class PostloginUI extends BaseUI{
 
-    static void help(){
+    public PostloginUI(ServerFacade serverFacade){};
+
+    public void help(){
         printHelpStatement("create <NAME>", "creates a game");
         printHelpStatement("list", "lists all games");
         printHelpStatement("join <ID> [WHITE|BLACK]", "join a game");
@@ -12,24 +14,24 @@ public class PostloginUI extends BaseUI{
         printHelpStatement("help", "list commands and their descriptions");
     }
 
-    static void logout(){
+    public void logout(){
         //TODO
     }
 
-    static void createGame(){
+    public void createGame(String[] params){
+        String gameName = params[0];
+    }
+
+    public void listGames(){
         //TODO
     }
 
-    static void listGames(){
-        //TODO
+    public void joinGame(String[] params){
+        String gameID = params[0];
     }
 
-    static void playGame(){
-        //TODO
-    }
-
-    static void observeGame(){
-        //Functionality to be added in phase 6
+    public void observeGame(String[] params){
+        String gameID = params[0];
     }
 
 }

@@ -1,25 +1,23 @@
 package ui;
 
-import java.util.Scanner;
-
 public class PreloginUI extends BaseUI{
 
-    static void help(){
+    public PreloginUI(ServerFacade serverFacade){};
+    public void help(){
         printHelpStatement("register, <USERNAME> <PASSWORD> <EMAIL>", "to create an new user");
         printHelpStatement("login <USERNAME> <PASSWORD>", "login a registered user");
         printHelpStatement("quit", "exits the program");
         printHelpStatement("help", "list commands and their descriptions");
     }
 
-    static void quit(){
-        //TODO
+    public void login(String [] parameters){
+        String username = parameters[0];
+        String password = parameters[1];
     }
 
-    static void login(String [] arguments){
-
-    }
-
-    static void register(){
-        //TODO
+    public void register(String[] parameters){
+        String username = parameters[0];
+        String password = parameters[1];
+        String email = parameters[2];
     }
 }
