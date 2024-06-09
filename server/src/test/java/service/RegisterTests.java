@@ -1,14 +1,10 @@
 package service;
 import dataaccess.*;
 import intermediary.AlreadyTakenException;
-import intermediary.RegisterRequest;
 import intermediary.RegisterResponse;
-import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.security.Provider;
 
 import static org.junit.jupiter.api.Assertions.*;
 

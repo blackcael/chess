@@ -14,10 +14,12 @@ public class PreloginUI extends BaseUI{
     public void login(String [] parameters){
         //verify that we have 2 strings?
         String response = serverFacade.login(parameters);
+        System.out.println(response);
     }
 
     public void register(String[] parameters){
         //verify that we have 3 strings?
         String response = serverFacade.register(parameters);
+        System.out.println(response);
     }
 }

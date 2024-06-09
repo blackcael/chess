@@ -1,6 +1,7 @@
 package ui;
 
 import com.google.gson.Gson;
+import intermediary.*;
 
 import java.lang.reflect.Type;
 
@@ -10,31 +11,40 @@ public class ServerFacade {
     public ServerFacade(){
     }
 
-    private record registerRequest(String username, String password, String email){}
     public String register(String[] parameters){
-        String msg = new Gson().toJson(new registerRequest(parameters[0], parameters[1], parameters[2]));
-        var response =  HTTPCalls.executeHTTP("GET", msg, authToken);
-        return response;
+        String body = new Gson().toJson(new RegisterRequest(parameters[0], parameters[1], parameters[2]));
+        String response = HTTPCalls.executeHTTP("POST", "/user", body, null);
+        RegisterResponse registerResponse = new Gson().fromJson(response, RegisterResponse.class);
+        authToken = registerResponse.authToken();
+        return "good job ur registered dawg";
     }
 
-    private record loginRequest(String username, String password){}
     public String login(String[] parameters){
-
+        String body = new Gson().toJson(new LoginRequest(parameters[0], parameters[2]));
+        String response = HTTPCalls.executeHTTP("POST", "/session", body, null);
+        LoginResponse loginResponse = new Gson().fromJson(response, LoginResponse.class);
+        authToken = loginResponse.authToken();
+        return "logged in dawg";
     }
+
 
     public String logout(){
-
+        String response = HTTPCalls.executeHTTP("DELETE", "/session", null, authToken);
+        return "if no errors, we ballin";
     }
 
-    public String createGame(){
-
+    public String createGame(String[] parameters){
+        String body = new Gson().toJson(new CreateGameRequest(parameters[0]));
+        return null;
     }
 
-    public String joinGame(){
-
+    public String joinGame(String[] parameters){
+        return null;
     }
 
     public String listGames(){
-
+        return null;
     }
+
+
 }

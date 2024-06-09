@@ -3,7 +3,6 @@ package service;
 import dataaccess.Database;
 import intermediary.AlreadyTakenException;
 import intermediary.BadRequestException;
-import intermediary.InvalidAuthException;
 import intermediary.JoinGameRequest;
 import model.GameData;
 

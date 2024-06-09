@@ -3,7 +3,6 @@ package service;
 import dataaccess.Database;
 import intermediary.LoginRequest;
 import intermediary.RegisterRequest;
-import intermediary.RegisterResponse;
 import model.UserData;
 
 public class ServiceTestBase {
