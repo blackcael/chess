@@ -30,20 +30,26 @@ public class ServerFacade {
 
     public String logout(){
         String response = HTTPCalls.executeHTTP("DELETE", "/session", null, authToken);
-        return "if no errors, we ballin";
+        return "if no errors, we ballin out, dawg";
     }
 
     public String createGame(String[] parameters){
         String body = new Gson().toJson(new CreateGameRequest(parameters[0]));
-        return null;
+        String response = HTTPCalls.executeHTTP("POST", "/game", body, authToken);
+        CreateGameResponse createGameResponse = new Gson().fromJson(response, CreateGameResponse.class);
+        return "gameCreated dawg";
     }
 
     public String joinGame(String[] parameters){
-        return null;
+        String body = new Gson().toJson(new JoinGameRequest(parameters[0], Integer.valueOf(parameters[1])));
+        String response = HTTPCalls.executeHTTP("PUT", "/game", body, authToken);
+        return "if no errors, we playin chess, dawg";
     }
 
     public String listGames(){
-        return null;
+        String response = HTTPCalls.executeHTTP("GET", "/game", null, authToken);
+        ListGamesResponse listGamesResponse = new Gson().fromJson(response, ListGamesResponse.class);
+        return "list of games:";
     }
 
 
