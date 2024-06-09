@@ -1,8 +1,9 @@
 package ui;
 
 public class PostloginUI extends BaseUI{
-
-    public PostloginUI(ServerFacade serverFacade){};
+    public PostloginUI(ServerFacade serverFacade){
+        super(serverFacade);
+    };
 
     public void help(){
         printHelpStatement("create <NAME>", "creates a game");

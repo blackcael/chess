@@ -1,8 +1,9 @@
 package ui;
 
 public class PreloginUI extends BaseUI{
-
-    public PreloginUI(ServerFacade serverFacade){};
+    public PreloginUI(ServerFacade serverFacade){
+        super(serverFacade);
+    }
     public void help(){
         printHelpStatement("register, <USERNAME> <PASSWORD> <EMAIL>", "to create an new user");
         printHelpStatement("login <USERNAME> <PASSWORD>", "login a registered user");
@@ -11,13 +12,12 @@ public class PreloginUI extends BaseUI{
     }
 
     public void login(String [] parameters){
-        String username = parameters[0];
-        String password = parameters[1];
+        //verify that we have 2 strings?
+        String response = serverFacade.login(parameters);
     }
 
     public void register(String[] parameters){
-        String username = parameters[0];
-        String password = parameters[1];
-        String email = parameters[2];
+        //verify that we have 3 strings?
+        String response = serverFacade.register(parameters);
     }
 }

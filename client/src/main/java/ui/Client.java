@@ -15,7 +15,6 @@ public class Client {
     public Client (){
         this.preloginUI = new PreloginUI(serverFacade);
         this.postloginUI = new PostloginUI(serverFacade);
-
     };
 
     public UIStatusType getClientStatus() {
