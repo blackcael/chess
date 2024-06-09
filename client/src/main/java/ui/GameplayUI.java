@@ -85,22 +85,31 @@ public class GameplayUI {
         return null;
     }
 
-    private final static String[] COLUMN_INDEX_STRINGS= {EscapeSequences.EMPTY, "a", "b", "c", "d", "e", "f", "g", "h", EscapeSequences.EMPTY};
+    private final static String[] COLUMN_INDEX_STRINGS= {"a", "b", "c", "d", "e", "f", "g", "h"};
 
     private static void drawColumnIndices(){
-        for(int i = 0; i < 10; i++){
+
+        for(int i = 0; i < 8; i++){
             drawBorderSquare(COLUMN_INDEX_STRINGS[i]);
         }
+        System.out.println(EscapeSequences.RESET_BG_COLOR);
     }
 
     private static void drawReverseColumnIndices(){
-        for(int i = 9; i >= 0; i--){
+
+        for(int i = 7; i >= 0; i--){
             drawBorderSquare(COLUMN_INDEX_STRINGS[i]);
         }
+        System.out.println(EscapeSequences.RESET_BG_COLOR);
     }
 
     private static void drawBorderSquare(String singleChar){
-        System.out.print(SET_BORDER_COLOR + singleChar);
+        if (singleChar.equals(EscapeSequences.EMPTY)){
+            System.out.print(SET_BORDER_COLOR + singleChar);
+        }else{
+            System.out.print(SET_BORDER_COLOR + "   " + singleChar);
+
+        }
     }
 
 

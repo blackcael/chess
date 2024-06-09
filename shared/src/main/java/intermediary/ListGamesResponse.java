@@ -1,6 +1,6 @@
 package intermediary;
 
-import dataaccess.MemoryGameDAO;
+import dataaccess.MemoryGameDAO; //note of caution: circular dependency?
 
 import java.util.ArrayList;
 
