@@ -51,9 +51,9 @@ public class ServerFacade {
         return response;
     }
 
-    public String listGames(){
+    public ResponseCodeAndObject listGames(){
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("GET", "/game", null, authToken, ListGamesResponse.class);
-        return "list of games:";
+        return response;
     }
 
     public void clear(){

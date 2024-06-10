@@ -27,7 +27,7 @@ public class PreloginUI extends BaseUI{
         }
     }
 
-    public boolean login(String [] parameters){
+    public boolean login(String[] parameters){
         //verify that we have 2 strings?
         ResponseCodeAndObject response = serverFacade.login(parameters);
         if (response.responseCode() == 200){

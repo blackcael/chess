@@ -17,8 +17,8 @@ public class ServerFacadeTests {
     private final String[] loginParameters = {registerParameters[0], registerParameters[1]};
     private final String[] createGameParameters = {"1v1MeBro"};
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+    public void init() {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
@@ -26,8 +26,8 @@ public class ServerFacadeTests {
         serverFacade.clear();
     }
 
-    @AfterAll
-    static void stopServer() {
+    @AfterEach
+    public void stopServer() {
         server.stop();
     }
 
@@ -98,33 +98,55 @@ public class ServerFacadeTests {
         generateValidAuthToken();
         ResponseCodeAndObject prcao = serverFacade.createGame(createGameParameters);
         CreateGameResponse createGameResponse = (CreateGameResponse) prcao.responseObject();
-        int gameID = createGameResponse.gameID();
+        String gameID = Integer.toString(createGameResponse.gameID());
 
-        ResponseCodeAndObject rcao = serverFacade.joinGame(createGameParameters);
+        String[] joinGameParameters = {"WHITE", gameID};
+        ResponseCodeAndObject rcao = serverFacade.joinGame(joinGameParameters);
+        System.out.println(rcao.toString());
+        assertEquals(200, rcao.responseCode());
 
     }
 
     @Test
     public void joinGameNegative(){
+        //setup
+        generateValidAuthToken();
+        ResponseCodeAndObject prcao = serverFacade.createGame(createGameParameters);
+        CreateGameResponse createGameResponse = (CreateGameResponse) prcao.responseObject();
+        String gameID = Integer.toString(createGameResponse.gameID());
+
+        String[] joinGameParameters = {"WHITE", "91"};
+        ResponseCodeAndObject rcao = serverFacade.joinGame(joinGameParameters);
+        assertEquals(400, rcao.responseCode());
 
     }
 
     @Test
     public void listGamesPositive(){
-
+        generateListOfValidGames();
+        ResponseCodeAndObject rcao = serverFacade.listGames();
+        System.out.println(rcao.toString());
+        assertEquals(200, rcao.responseCode());
     }
 
     @Test
     public void listGamesNegative(){
-
+        //? not really possible to create a good test for this...
     }
 
-    private static String generateValidAuthToken(){
+    private static void generateValidAuthToken(){
         String[] parameters = {"validUsername", "p@ssword", "cail@mail.com"};
         ResponseCodeAndObject rcao = serverFacade.register(parameters);
         RegisterResponse registerResponse = (RegisterResponse) rcao.responseObject();
-        return registerResponse.authToken();
     }
 
+    private static void generateListOfValidGames(){
+        generateValidAuthToken();
+        String[] gameNames = {"game1", "game2", "game3"};
+        for (String gameName : gameNames){
+            String [] gameNameParameter = {gameName};
+            serverFacade.createGame(gameNameParameter);
+        }
+    }
 
 }
