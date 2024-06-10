@@ -35,29 +35,25 @@ public class ServerFacade {
 
 
     public ResponseCodeAndObject logout(){
-        ResponseCodeAndObject response = httpCommunicator.executeHTTP("DELETE", "/session", null, authToken, null);
-        return response;
+        return httpCommunicator.executeHTTP("DELETE", "/session", null, authToken, null);
     }
 
     public ResponseCodeAndObject createGame(String[] parameters){
         String body = new Gson().toJson(new CreateGameRequest(parameters[0]));
-        ResponseCodeAndObject response = httpCommunicator.executeHTTP("POST", "/game", body, authToken, CreateGameResponse.class);
-        return response;
+        return httpCommunicator.executeHTTP("POST", "/game", body, authToken, CreateGameResponse.class);
     }
 
     public ResponseCodeAndObject joinGame(String[] parameters){
         String body = new Gson().toJson(new JoinGameRequest(parameters[0], Integer.valueOf(parameters[1])));
-        ResponseCodeAndObject response = httpCommunicator.executeHTTP("PUT", "/game", body, authToken, null);
-        return response;
+        return httpCommunicator.executeHTTP("PUT", "/game", body, authToken, null);
     }
 
     public ResponseCodeAndObject listGames(){
-        ResponseCodeAndObject response = httpCommunicator.executeHTTP("GET", "/game", null, authToken, ListGamesResponse.class);
-        return response;
+        return httpCommunicator.executeHTTP("GET", "/game", null, authToken, ListGamesResponse.class);
     }
 
     public void clear(){
-        ResponseCodeAndObject response = httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);
+        httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);
     }
 
 }

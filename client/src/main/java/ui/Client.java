@@ -21,33 +21,26 @@ public class Client {
         return clientStatus;
     }
 
-    public void setClientStatus(UIStatusType clientStatus) {
-        this.clientStatus = clientStatus;
-    }
-
     public void processArguments(String[] arguments){
         String command = arguments[0];
-        boolean loginSuccess = false; //0 is failure, 1 is success
         String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
         if(clientStatus == UIStatusType.PRELOGIN) { //right type of equals?
-            loginSuccess = switch(command){
+            clientStatus = switch(command){
                 case "login" -> preloginUI.login(parameters);
                 case "register" -> preloginUI.register(parameters);
                 default -> preloginUI.help();
             };
-            if(loginSuccess){
-                clientStatus = UIStatusType.POSTLOGIN;
-            }
+
         }
         if(clientStatus == UIStatusType.POSTLOGIN){
-            switch(command){
+            clientStatus = switch(command){
                 case "create" -> postloginUI.createGame(parameters);
                 case "list" -> postloginUI.listGames();
                 case "join" -> postloginUI.joinGame(parameters);
                 case "observe" -> postloginUI.observeGame(parameters);
                 case "logout" -> postloginUI.logout();
                 default -> postloginUI.help();
-            }
+            };
         }
     }
 }
