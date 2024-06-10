@@ -2,6 +2,6 @@ package ui;
 
 public class InvalidIndexError extends Exception{
     public InvalidIndexError() {
-        super("Error: invalidIndex");
+        super("Error: invalid index");
     }
 }

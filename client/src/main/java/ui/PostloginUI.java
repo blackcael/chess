@@ -35,6 +35,9 @@ public class PostloginUI extends BaseUI{
     }
 
     public Client.UIStatusType createGame(String[] params){
+        if(invalidArgumentCount(params, 1)){
+            return Client.UIStatusType.POSTLOGIN;
+        }
         ResponseCodeAndObject response = serverFacade.createGame(params);
         if(response.responseCode() == 200){
             CreateGameResponse createGameResponse = (CreateGameResponse) response.responseObject();
@@ -64,7 +67,7 @@ public class PostloginUI extends BaseUI{
                 }
                 System.out.print("  " + Integer.toString(gameListIndex++));
                 System.out.print(".  GameID: " + gameSubData.gameID());
-                System.out.print(", GameName:" + gameSubData.gameName());
+                System.out.print(", GameName: " + gameSubData.gameName());
                 System.out.print(", WhiteUsername: " + whiteUsername);
                 System.out.println(", BlackUsername: " + blackUsername);
             }
@@ -76,12 +79,13 @@ public class PostloginUI extends BaseUI{
     }
 
     public Client.UIStatusType joinGame(String[] params){
+        if(invalidArgumentCount(params, 2)){
+            return Client.UIStatusType.POSTLOGIN;
+        }
         try {
             ResponseCodeAndObject response = serverFacade.joinGame(paramsIndexToID(params));
             if(response.responseCode() == 200){
                 System.out.println("Successfully joined game as " + params[0]);
-                ChessGame chessGame = new ChessGame();
-                GameplayUI.drawBoards(chessGame.getBoard());
                 return Client.UIStatusType.GAMEPLAY;
             }
             else{
@@ -95,16 +99,22 @@ public class PostloginUI extends BaseUI{
     }
 
     public Client.UIStatusType observeGame(String[] params){
-        //implement in Phase 6
+        if(invalidArgumentCount(params, 1)){
+            return Client.UIStatusType.POSTLOGIN;
+        }
+        ChessGame chessGame = new ChessGame();
+        GameplayUI.drawBoards(chessGame.getBoard());
         return Client.UIStatusType.POSTLOGIN;
     }
 
     private String[] paramsIndexToID(String[] inputParams) throws InvalidIndexError {
-        int index = Integer.valueOf(inputParams[1]) - 1;
+        int index = Integer.valueOf(inputParams[0]) - 1;
         if (index >= gameList.size()){
             throw new InvalidIndexError();
         }
-        return new String[] {inputParams[0], Integer.toString(gameList.get(index).gameID())};
+        return new String[] {inputParams[1], Integer.toString(gameList.get(index).gameID())};
     }
+
+
 
 }

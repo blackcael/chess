@@ -134,6 +134,11 @@ public class ServerFacadeTests {
         //? not really possible to create a good test for this...
     }
 
+    @Test
+    public void clearDataBase(){
+        serverFacade.clear();
+    }
+
     private static void generateValidAuthToken(){
         String[] parameters = {"validUsername", "p@ssword", "cail@mail.com"};
         ResponseCodeAndObject rcao = serverFacade.register(parameters);

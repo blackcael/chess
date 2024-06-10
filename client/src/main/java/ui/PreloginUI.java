@@ -16,6 +16,9 @@ public class PreloginUI extends BaseUI{
 
     public Client.UIStatusType register(String[] parameters){
         //verify that we have 3 strings?
+        if(invalidArgumentCount(parameters, 3)){
+            return Client.UIStatusType.PRELOGIN;
+        }
         ResponseCodeAndObject response = serverFacade.register(parameters);
         if (response.responseCode() == 200){
             System.out.println("Registration Accepted");
@@ -28,7 +31,9 @@ public class PreloginUI extends BaseUI{
     }
 
     public Client.UIStatusType login(String[] parameters){
-        //verify that we have 2 strings?
+        if(invalidArgumentCount(parameters, 2)){
+            return Client.UIStatusType.PRELOGIN;
+        }
         ResponseCodeAndObject response = serverFacade.login(parameters);
         if (response.responseCode() == 200){
             System.out.println("Login Information Accepted");

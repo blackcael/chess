@@ -11,7 +11,7 @@ public class Client {
     private UIStatusType clientStatus = UIStatusType.PRELOGIN;
     private PostloginUI postloginUI;
     private PreloginUI preloginUI;
-    private ServerFacade serverFacade;
+    private ServerFacade serverFacade = new ServerFacade(8080);
     public Client (){
         this.preloginUI = new PreloginUI(serverFacade);
         this.postloginUI = new PostloginUI(serverFacade);

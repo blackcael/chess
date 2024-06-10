@@ -5,7 +5,6 @@ import chess.*;
 public class GameplayUI {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_CHARS = 1;
     private static final String SET_LIGHT_COLOR = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
     private static final String SET_DARK_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
     private static final String SET_BORDER_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREY;
@@ -19,12 +18,12 @@ public class GameplayUI {
     private static void drawWhitePerspectiveBoard(ChessBoard board){
         drawColumnIndices();
         for(int rowIter = 0; rowIter < BOARD_SIZE_IN_SQUARES; rowIter ++){
-            drawBorderSquare(Integer.toString(rowIter));
+            drawBorderRowIndex(Integer.toString(rowIter));
             for(int colIter = 0; colIter < BOARD_SIZE_IN_SQUARES; colIter ++){
                 ChessPosition position = new ChessPosition(rowIter + 1, colIter + 1);
                 drawBoardSquare(getSquareColor(rowIter, colIter), board.getPiece(position));
             }
-            drawBorderSquare(Integer.toString(rowIter));
+            drawBorderRowIndex(Integer.toString(rowIter));
 
             System.out.println(EscapeSequences.RESET_BG_COLOR);
         }
@@ -34,12 +33,12 @@ public class GameplayUI {
     private static void drawBlackPerspectiveBoard(ChessBoard board){
         drawReverseColumnIndices();
         for(int rowIter = BOARD_SIZE_IN_SQUARES-1; rowIter >= 0; rowIter --){
-            drawBorderSquare(Integer.toString(rowIter));
+            drawBorderRowIndex(Integer.toString(rowIter));
             for(int colIter = BOARD_SIZE_IN_SQUARES-1; colIter >= 0; colIter --){
                 ChessPosition position = new ChessPosition(rowIter + 1, colIter + 1);
                 drawBoardSquare(getSquareColor(rowIter, colIter), board.getPiece(position));
             }
-            drawBorderSquare(Integer.toString(rowIter));
+            drawBorderRowIndex(Integer.toString(rowIter));
             System.out.println(EscapeSequences.RESET_BG_COLOR);
         }
         drawReverseColumnIndices();
@@ -85,7 +84,10 @@ public class GameplayUI {
         return null;
     }
 
-    private final static String[] COLUMN_INDEX_STRINGS= {"a", "b", "c", "d", "e", "f", "g", "h"};
+    private final static String[] COLUMN_INDEX_STRINGS=
+            {"    a", "   b", "   c", "  d ", "  e", "  f", "   g", "   h    "};
+    private final static String[] REVERSE_COLUMN_INDEX_STRINGS =
+            {"    h", "   g", "   f", "  e ", "  d", "  c", "   b", "   a    "};
 
     private static void drawColumnIndices(){
 
@@ -97,8 +99,8 @@ public class GameplayUI {
 
     private static void drawReverseColumnIndices(){
 
-        for(int i = 7; i >= 0; i--){
-            drawBorderSquare(COLUMN_INDEX_STRINGS[i]);
+        for(int i = 0; i < 8; i++){
+            drawBorderSquare(REVERSE_COLUMN_INDEX_STRINGS[i]);
         }
         System.out.println(EscapeSequences.RESET_BG_COLOR);
     }
@@ -107,13 +109,12 @@ public class GameplayUI {
         if (singleChar.equals(EscapeSequences.EMPTY)){
             System.out.print(SET_BORDER_COLOR + singleChar);
         }else{
-            System.out.print(SET_BORDER_COLOR + "   " + singleChar);
-
+            System.out.print(SET_BORDER_COLOR + singleChar);
         }
     }
 
     private static void drawBorderRowIndex(String singleChar){
-
+        drawBorderSquare(" " + singleChar + " ");
     }
 
 
