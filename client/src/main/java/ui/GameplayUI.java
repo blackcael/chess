@@ -112,6 +112,10 @@ public class GameplayUI {
         }
     }
 
+    private static void drawBorderRowIndex(String singleChar){
+
+    }
+
 
 
 }
