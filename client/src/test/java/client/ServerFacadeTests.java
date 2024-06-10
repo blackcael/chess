@@ -15,6 +15,7 @@ public class ServerFacadeTests {
     private static Server server;
     private final String[] registerParameters = {"cblack1", "p@ssword", "cail@mail.com"};
     private final String[] loginParameters = {registerParameters[0], registerParameters[1]};
+    private final String[] createGameParameters = {"1v1MeBro"};
 
     @BeforeAll
     public static void init() {
@@ -61,16 +62,21 @@ public class ServerFacadeTests {
 
     @Test
     public void logoutTestPositive(){
-
+        generateValidAuthToken();
+        ResponseCodeAndObject rcao = serverFacade.logout();
+        assertEquals(rcao.responseCode(), 200);
     }
 
     @Test
     public void logoutTestNegative(){
-
+        ResponseCodeAndObject rcao = serverFacade.logout();
+        assertTrue(rcao.responseCode() != 200);
     }
 
     @Test
     public void createGamePositive(){
+        generateValidAuthToken();
+        ResponseCodeAndObject rcao = serverFacade.createGame(createGameParameters);
 
     }
 
@@ -97,6 +103,13 @@ public class ServerFacadeTests {
     @Test
     public void listGamesNegative(){
 
+    }
+
+    private static String generateValidAuthToken(){
+        String[] parameters = {"validUsername", "p@ssword", "cail@mail.com"};
+        ResponseCodeAndObject rcao = serverFacade.register(parameters);
+        RegisterResponse registerResponse = (RegisterResponse) rcao.responseObject();
+        return registerResponse.authToken();
     }
 
 

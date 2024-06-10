@@ -34,9 +34,9 @@ public class ServerFacade {
     }
 
 
-    public String logout(){
+    public ResponseCodeAndObject logout(){
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("DELETE", "/session", null, authToken, null);
-        return response.toString();
+        return response;
     }
 
     public String createGame(String[] parameters){
