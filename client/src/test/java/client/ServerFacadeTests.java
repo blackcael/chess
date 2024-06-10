@@ -23,11 +23,11 @@ public class ServerFacadeTests {
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
         serverFacade = new ServerFacade(port);
+        serverFacade.clear();
     }
 
     @AfterAll
     static void stopServer() {
-        serverFacade.clear();
         server.stop();
     }
 
@@ -36,13 +36,15 @@ public class ServerFacadeTests {
         ResponseCodeAndObject rcao = serverFacade.register(registerParameters);
         RegisterResponse registerResponse = (RegisterResponse) rcao.responseObject();
         assertEquals(registerResponse.username(), registerParameters[0]);
+        assertEquals(200, rcao.responseCode());
+
     }
 
     @Test
     public void registerTestNegative() {
         ResponseCodeAndObject rcao = serverFacade.register(registerParameters);
         ResponseCodeAndObject rcao2 = serverFacade.register(registerParameters);
-        assertTrue(rcao2.responseCode() != 200);
+        assertEquals(403, rcao2.responseCode());
     }
 
     @Test
@@ -51,42 +53,54 @@ public class ServerFacadeTests {
         ResponseCodeAndObject rcao = serverFacade.login(registerParameters);
         LoginResponse loginResponse = (LoginResponse) rcao.responseObject();
         assertEquals(loginResponse.username(), loginParameters[0]);
-        assertEquals(rcao.responseCode(), 200);
+        assertEquals(200, rcao.responseCode());
     }
 
     @Test
     public void loginTestNegative(){
         ResponseCodeAndObject rcao = serverFacade.login(registerParameters);
-        assertTrue(rcao.responseCode() != 200);
+        assertEquals(401, rcao.responseCode());
     }
 
     @Test
     public void logoutTestPositive(){
         generateValidAuthToken();
         ResponseCodeAndObject rcao = serverFacade.logout();
-        assertEquals(rcao.responseCode(), 200);
+        assertEquals(200, rcao.responseCode());
     }
 
     @Test
     public void logoutTestNegative(){
         ResponseCodeAndObject rcao = serverFacade.logout();
-        assertTrue(rcao.responseCode() != 200);
+        assertEquals(401, rcao.responseCode());
     }
 
     @Test
     public void createGamePositive(){
         generateValidAuthToken();
         ResponseCodeAndObject rcao = serverFacade.createGame(createGameParameters);
-
+        assertEquals(200, rcao.responseCode());
     }
 
     @Test
     public void createGameNegative(){
-
+        ResponseCodeAndObject rcao = serverFacade.createGame(createGameParameters);
+        assertEquals(401, rcao.responseCode());
+        generateValidAuthToken();
+        ResponseCodeAndObject rcao1 = serverFacade.createGame(createGameParameters);
+        ResponseCodeAndObject rcao2 = serverFacade.createGame(createGameParameters);
+        assertEquals(400, rcao2.responseCode());
     }
 
     @Test
     public void joinGamePositive(){
+        //setup
+        generateValidAuthToken();
+        ResponseCodeAndObject prcao = serverFacade.createGame(createGameParameters);
+        CreateGameResponse createGameResponse = (CreateGameResponse) prcao.responseObject();
+        int gameID = createGameResponse.gameID();
+
+        ResponseCodeAndObject rcao = serverFacade.joinGame(createGameParameters);
 
     }
 

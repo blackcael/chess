@@ -39,16 +39,16 @@ public class ServerFacade {
         return response;
     }
 
-    public String createGame(String[] parameters){
+    public ResponseCodeAndObject createGame(String[] parameters){
         String body = new Gson().toJson(new CreateGameRequest(parameters[0]));
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("POST", "/game", body, authToken, CreateGameResponse.class);
-        return "gameCreated dawg";
+        return response;
     }
 
-    public String joinGame(String[] parameters){
+    public ResponseCodeAndObject joinGame(String[] parameters){
         String body = new Gson().toJson(new JoinGameRequest(parameters[0], Integer.valueOf(parameters[1])));
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("PUT", "/game", body, authToken, null);
-        return "if no errors, we playin chess, dawg";
+        return response;
     }
 
     public String listGames(){
