@@ -13,25 +13,29 @@ public class ServerFacade {
         this.httpCommunicator = new HTTPCommunicator(port);
     }
 
-    public String register(String[] parameters){
+    public ResponseCodeAndObject register(String[] parameters){
         String body = new Gson().toJson(new RegisterRequest(parameters[0], parameters[1], parameters[2]));
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("POST", "/user", body, null, RegisterResponse.class);
-        RegisterResponse registerResponse = (RegisterResponse) response.responseObject();
-        authToken = registerResponse.authToken();
-        return response.toString();
+        if(response.responseCode() == 200) {
+            RegisterResponse registerResponse = (RegisterResponse) response.responseObject();
+            authToken = registerResponse.authToken();
+        }
+        return response;
     }
 
-    public String login(String[] parameters){
+    public ResponseCodeAndObject login(String[] parameters){
         String body = new Gson().toJson(new LoginRequest(parameters[0], parameters[1]));
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("POST", "/session", body, null, LoginResponse.class);
-        LoginResponse loginResponse = (LoginResponse) response.responseObject();
-        authToken = loginResponse.authToken();
-        return response.toString();
+        if(response.responseCode() == 200) {
+            LoginResponse loginResponse = (LoginResponse) response.responseObject();
+            authToken = loginResponse.authToken();
+        }
+        return response;
     }
 
 
     public String logout(){
-        ResponseCodeAndObject response = httpCommunicator.executeHTTP("DELETE", "/session", null, authToken, LogoutResponse.class);
+        ResponseCodeAndObject response = httpCommunicator.executeHTTP("DELETE", "/session", null, authToken, null);
         return response.toString();
     }
 
@@ -50,6 +54,10 @@ public class ServerFacade {
     public String listGames(){
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("GET", "/game", null, authToken, ListGamesResponse.class);
         return "list of games:";
+    }
+
+    public void clear(){
+        ResponseCodeAndObject response = httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);
     }
 
 }

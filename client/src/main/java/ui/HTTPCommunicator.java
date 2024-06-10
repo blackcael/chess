@@ -54,6 +54,7 @@ public class HTTPCommunicator {
 
     }
     private Object getRespBody(HttpURLConnection connection, Class clazz) throws Exception{
+        if(clazz == null) return null;
         return new Gson().fromJson(readRespBody(connection), clazz);
     }
 

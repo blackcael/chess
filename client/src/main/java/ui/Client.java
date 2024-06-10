@@ -27,12 +27,16 @@ public class Client {
 
     public void processArguments(String[] arguments){
         String command = arguments[0];
+        boolean loginSuccess = false; //0 is failure, 1 is success
         String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
         if(clientStatus == UIStatusType.PRELOGIN) { //right type of equals?
-            switch(command){
+            loginSuccess = switch(command){
                 case "login" -> preloginUI.login(parameters);
                 case "register" -> preloginUI.register(parameters);
                 default -> preloginUI.help();
+            };
+            if(loginSuccess){
+                clientStatus = UIStatusType.POSTLOGIN;
             }
         }
         if(clientStatus == UIStatusType.POSTLOGIN){
