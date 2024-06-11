@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import intermediary.ListGamesSubData;
 import model.*;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +23,10 @@ public class TestBase {
     protected final GameData invalidGameData = new GameData(9, "tim", "tom", "invalidGame", new ChessGame());
     protected final GameData updatedGameData = new GameData(1, "newWhite", "newBlack", "updatedGameName", new ChessGame());
 
-    protected final GameDAO.ListGamesSubData lgsd1 = new GameDAO.ListGamesSubData(sampleGameData.gameID(), sampleGameData.whiteUsername(), sampleGameData.blackUsername(), sampleGameData.gameName());
-    protected final GameDAO.ListGamesSubData lgsd2 = new GameDAO.ListGamesSubData(sampleGameData2.gameID(), sampleGameData2.whiteUsername(), sampleGameData2.blackUsername(), sampleGameData2.gameName());
-    protected final GameDAO.ListGamesSubData lgsd3 = new GameDAO.ListGamesSubData(sampleGameData3.gameID(), sampleGameData3.whiteUsername(), sampleGameData3.blackUsername(), sampleGameData3.gameName());
+    protected final ListGamesSubData lgsd1 = new ListGamesSubData(sampleGameData.gameID(), sampleGameData.whiteUsername(), sampleGameData.blackUsername(), sampleGameData.gameName());
+    protected final ListGamesSubData lgsd2 = new ListGamesSubData(sampleGameData2.gameID(), sampleGameData2.whiteUsername(), sampleGameData2.blackUsername(), sampleGameData2.gameName());
+    protected final ListGamesSubData lgsd3 = new ListGamesSubData(sampleGameData3.gameID(), sampleGameData3.whiteUsername(), sampleGameData3.blackUsername(), sampleGameData3.gameName());
 
-    protected ArrayList<GameDAO.ListGamesSubData> gameList = new ArrayList<>();
+    protected ArrayList<ListGamesSubData> gameList = new ArrayList<>();
 }
 

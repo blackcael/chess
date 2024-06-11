@@ -1,4 +1,5 @@
 package dataaccess;
+import intermediary.ListGamesSubData;
 import model.GameData;
 
 import java.util.ArrayList;

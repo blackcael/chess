@@ -3,10 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
 import dataaccess.GameDAO;
-import intermediary.BadRequestException;
-import intermediary.CreateGameRequest;
-import intermediary.CreateGameResponse;
-import intermediary.InvalidAuthException;
+import intermediary.*;
 import model.GameData;
 import chess.ChessGame;
 
@@ -27,7 +24,7 @@ public class CreateGameService extends BaseService{
     }
 
     private boolean isDuplicateName(String gameName) throws DataAccessException {
-        for(GameDAO.ListGamesSubData game: gameDataBase.getGameList()){
+        for(ListGamesSubData game: gameDataBase.getGameList()){
             String testName = game.gameName();
             if(testName.equals(gameName)){
                 return true;

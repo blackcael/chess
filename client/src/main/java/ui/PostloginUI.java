@@ -1,7 +1,6 @@
 package ui;
 
-import dataaccess.GameDAO;
-import dataaccess.MemoryGameDAO;
+
 import intermediary.*;
 import intermediary.ResponseCodeAndObject;
 import chess.*;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostloginUI extends BaseUI{
-    ArrayList<GameDAO.ListGamesSubData> gameList = new ArrayList<>();
+    ArrayList<ListGamesSubData> gameList = new ArrayList<>();
     public PostloginUI(ServerFacade serverFacade){
         super(serverFacade);
     };
@@ -56,7 +55,7 @@ public class PostloginUI extends BaseUI{
             System.out.println("Games List:");
             gameList = listGamesResponse.games();
             int gameListIndex = 1;
-            for(MemoryGameDAO.ListGamesSubData gameSubData : gameList){
+            for(ListGamesSubData gameSubData : gameList){
                 String whiteUsername = "null";
                 if (gameSubData.whiteUsername() != null){
                     whiteUsername = gameSubData.whiteUsername();

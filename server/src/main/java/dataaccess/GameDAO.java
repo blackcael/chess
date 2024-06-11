@@ -1,5 +1,6 @@
 package dataaccess;
 
+import intermediary.ListGamesSubData;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -18,5 +19,4 @@ public interface GameDAO {
 
     boolean isEmpty();
 
-    public static record ListGamesSubData(int gameID, String whiteUsername, String blackUsername, String gameName) {}
 }

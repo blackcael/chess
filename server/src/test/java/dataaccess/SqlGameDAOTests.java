@@ -1,5 +1,6 @@
 package dataaccess;
 
+import intermediary.ListGamesSubData;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +53,7 @@ public class SqlGameDAOTests extends TestBase{
         database.gameDataBase.createGame(sampleGameData);
         database.gameDataBase.createGame(sampleGameData2);
         database.gameDataBase.createGame(sampleGameData3);
-        ArrayList<GameDAO.ListGamesSubData> resultList = database.gameDataBase.getGameList();
+        ArrayList<ListGamesSubData> resultList = database.gameDataBase.getGameList();
         System.out.println(resultList.toString());
     }
 

@@ -29,7 +29,7 @@ public class ListGamesTests extends ServiceTestBase {
         createGameService.createGame(authToken, new CreateGameRequest("RevengeOfTheSith"));
         ListGamesService listGamesService = new ListGamesService(database);
         ListGamesResponse listGamesResponse = listGamesService.listGames(authToken);
-        for(GameDAO.ListGamesSubData game : listGamesResponse.games()){
+        for(ListGamesSubData game : listGamesResponse.games()){
             System.out.println(game.gameName() +" "+ game.gameID());
         }
         assertNotNull(listGamesResponse);
