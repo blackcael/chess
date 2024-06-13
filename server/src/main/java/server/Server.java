@@ -13,6 +13,8 @@ import spark.Spark;
 @WebSocket
 public class Server {
 
+    private Database database;
+
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
@@ -21,7 +23,7 @@ public class Server {
         // Register your endpoints and handle exceptions here.
 
         //Initialize Databases
-        Database database = new Database();
+        database = new Database();
 
         //Initialize Handlers (potential idea: make the handlers static? eliminate need for instantiation)
         RegisterHandler registerHandler = new RegisterHandler(database);
@@ -56,7 +58,7 @@ public class Server {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception{
         System.out.printf("received: %s", message);
-        Object response = WebSocketMessageHandler.handleMessage(message);
+        String response = WebSocketMessageHandler.handleMessage(database, message);
         session.getRemote().sendString("WebSocket response: " + response);
     }
 }

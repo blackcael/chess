@@ -20,8 +20,8 @@ public class WebsocketCommunicator extends Endpoint{
         });
     }
 
-    public void send(String msg) throws Exception{
-        this.session.getBasicRemote().sendText(msg);
+    public void send(String message) throws Exception{
+        this.session.getBasicRemote().sendText(message);
     }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
