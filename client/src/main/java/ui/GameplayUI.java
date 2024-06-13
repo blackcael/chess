@@ -2,18 +2,48 @@ package ui;
 
 import chess.*;
 
-public class GameplayUI {
+public class GameplayUI extends BaseUI{
 
-    private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final String SET_LIGHT_COLOR = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
-    private static final String SET_DARK_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
-    private static final String SET_BORDER_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREY;
+    public GameplayUI(ServerFacade serverFacade) {
+        super(serverFacade);
+    }
 
-    public static void drawBoards(ChessBoard board){
+    public static void drawBoards(ChessBoard board){  //TODO : REMOVE : DEPRECATED
         BoardPrinter.drawBoard(board, ChessGame.TeamColor.WHITE, null, null);
         System.out.println(); //draws blank line
         BoardPrinter.drawBoard(board, ChessGame.TeamColor.BLACK, null, null);
     }
+
+    public Client.UIStatusType help(){
+
+        return Client.UIStatusType.GAMEPLAY;
+    }
+
+    public Client.UIStatusType redrawChessBoard(){
+
+        return Client.UIStatusType.GAMEPLAY;
+    }
+
+    public Client.UIStatusType leave(){
+
+        return Client.UIStatusType.POSTLOGIN;
+    }
+
+    public Client.UIStatusType makeMove(String[] params){
+
+        return Client.UIStatusType.GAMEPLAY;
+    }
+
+    public Client.UIStatusType resign(){
+
+        return Client.UIStatusType.GAMEPLAY;
+    }
+
+    public Client.UIStatusType highlightLegalMoves(){
+
+        return Client.UIStatusType.GAMEPLAY;
+    }
+
 
 
 

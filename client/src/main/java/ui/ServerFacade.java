@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import intermediary.*;
 
@@ -9,6 +10,7 @@ public class ServerFacade {
     //will perform any logic / packaging for ClientToHttp calls
     private String authToken;
     private final HTTPCommunicator httpCommunicator;
+    private ChessGame.TeamColor color = null;
     public ServerFacade(int port){
         this.httpCommunicator = new HTTPCommunicator(port);
     }
@@ -45,7 +47,16 @@ public class ServerFacade {
 
     public ResponseCodeAndObject joinGame(String[] parameters){
         String body = new Gson().toJson(new JoinGameRequest(parameters[0], Integer.valueOf(parameters[1])));
-        return httpCommunicator.executeHTTP("PUT", "/game", body, authToken, null);
+        ResponseCodeAndObject response = httpCommunicator.executeHTTP("PUT", "/game", body, authToken, null);
+        if(response.responseCode() == 200){
+            if(parameters[0].equals("WHITE")){
+                color = ChessGame.TeamColor.WHITE;
+            }
+            if(parameters[0].equals("BLACK")){
+                color = ChessGame.TeamColor.BLACK;
+            }
+        }
+        return response;
     }
 
     public ResponseCodeAndObject listGames(){
@@ -54,6 +65,13 @@ public class ServerFacade {
 
     public void clear(){
         httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);
+    }
+
+    public ChessGame.TeamColor getColor(){
+        if (color == null){
+            throw new RuntimeException("Cannot getColor if color is not assigned");
+        }
+        return color;
     }
 
 }
