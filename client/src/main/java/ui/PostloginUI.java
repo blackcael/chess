@@ -65,7 +65,6 @@ public class PostloginUI extends BaseUI{
                     blackUsername = gameSubData.blackUsername();
                 }
                 System.out.print("  " + Integer.toString(gameListIndex++));
-                System.out.print(".  GameID: " + gameSubData.gameID());
                 System.out.print(", GameName: " + gameSubData.gameName());
                 System.out.print(", WhiteUsername: " + whiteUsername);
                 System.out.println(", BlackUsername: " + blackUsername);
