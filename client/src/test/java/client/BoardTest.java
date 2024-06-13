@@ -2,6 +2,7 @@ package client;
 
 import chess.ChessGame;
 import org.junit.jupiter.api.Test;
+import ui.BoardPrinter;
 import ui.GameplayUI;
 
 public class BoardTest {
@@ -9,6 +10,6 @@ public class BoardTest {
     @Test
     public void printBoardTest(){
         ChessGame chessGame = new ChessGame();
-        GameplayUI.drawBoards(chessGame.getBoard());
+        BoardPrinter.drawBoards(chessGame.getBoard());
     }
 }

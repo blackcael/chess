@@ -6,8 +6,11 @@ import intermediary.CreateGameRequest;
 import intermediary.JoinGameRequest;
 import intermediary.LoginRequest;
 import intermediary.RegisterRequest;
-import spark.*;
+import org.eclipse.jetty.websocket.api.annotations.*;
+import org.eclipse.jetty.websocket.api.*;
+import spark.Spark;
 
+@WebSocket
 public class Server {
 
     public int run(int desiredPort) {
@@ -29,8 +32,7 @@ public class Server {
         JoinGameHandler joinGameHandler = new JoinGameHandler(database);
         ClearHandler clearHandler = new ClearHandler(database);
 
-        //Spark -> handleRequest?  ***Note, is run always looping? If so, that will create a problem with database...
-        //note, i believe this initializes the "routes".
+        //Spark Vanilla HTTP
         Spark.post("/user", (req, res) -> registerHandler.handleRequest(req, res, RegisterRequest.class));
         Spark.post("/session", (req, res) -> loginHandler.handleRequest(req, res, LoginRequest.class));
         Spark.delete("/session", (req, res) -> logoutHandler.handleRequest(req, res, Object.class));
@@ -39,6 +41,9 @@ public class Server {
         Spark.put("/game", (req, res) -> joinGameHandler.handleRequest(req, res, JoinGameRequest.class));
         Spark.delete("/db", clearHandler::handleRequest);
 
+        //Spark Websocketing
+        Spark.webSocket("/ws", Server.class);
+
         Spark.awaitInitialization();
         return Spark.port();
     }
@@ -46,5 +51,12 @@ public class Server {
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
+    }
+
+    @OnWebSocketMessage
+    public void onMessage(Session session, String message) throws Exception{
+        System.out.printf("received: %s", message);
+        Object response = WebSocketMessageHandler.handleMessage(message);
+        session.getRemote().sendString("WebSocket response: " + response);
     }
 }
