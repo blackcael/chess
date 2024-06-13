@@ -4,6 +4,7 @@ import chess.*;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class BoardPrinter {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
@@ -15,8 +16,15 @@ public class BoardPrinter {
 
     private static final String SET_BORDER_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREY;
 
-    public static void drawBoard(ChessBoard board, ChessGame.TeamColor color, ArrayList<ChessMove> potentialMoves, ChessPosition currentPosition){
-        SquareType[][] squareTypeMatrix = generateSquareTypeMatrix(potentialMoves, currentPosition); //TODO null-handling
+    public static void drawBoards(ChessBoard board){
+        BoardPrinter.drawBoard(board, ChessGame.TeamColor.WHITE, null, null);
+        System.out.println(); //draws blank line
+        BoardPrinter.drawBoard(board, ChessGame.TeamColor.BLACK, null, null);
+    }
+
+
+    public static void drawBoard(ChessBoard board, ChessGame.TeamColor color, Collection<ChessMove> potentialMoves, ChessPosition currentPosition){
+        SquareType[][] squareTypeMatrix = generateSquareTypeMatrix(potentialMoves, currentPosition); //TODO null-handling?
         int startIndex = (color.equals(ChessGame.TeamColor.WHITE))? 0 : BOARD_SIZE_IN_SQUARES-1;
         drawColumnIndices(color);
 
@@ -52,7 +60,7 @@ public class BoardPrinter {
         CURRENT_POSITION;
     };
 
-    private static SquareType[][] generateSquareTypeMatrix(ArrayList<ChessMove> potentialMoves, ChessPosition currentPosition){
+    private static SquareType[][] generateSquareTypeMatrix(Collection<ChessMove> potentialMoves, ChessPosition currentPosition){
         SquareType[][] squareTypes = new SquareType[BOARD_SIZE_IN_SQUARES][BOARD_SIZE_IN_SQUARES];
         ArrayList<ChessPosition> potentialPositions = potentialMovesToPotentialPositions(potentialMoves);
         for(int rowIter = 0; rowIter < BOARD_SIZE_IN_SQUARES; rowIter ++) {
@@ -70,7 +78,7 @@ public class BoardPrinter {
         return squareTypes;
     }
 
-    private static ArrayList<ChessPosition> potentialMovesToPotentialPositions(ArrayList<ChessMove> potentialMoves){
+    private static ArrayList<ChessPosition> potentialMovesToPotentialPositions(Collection<ChessMove> potentialMoves){
         ArrayList<ChessPosition> potentialPositions = new ArrayList<>();
         for(ChessMove move : potentialMoves){
             potentialPositions.add(move.getEndPosition());

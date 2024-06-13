@@ -101,7 +101,7 @@ public class PostloginUI extends BaseUI{
             return Client.UIStatusType.POSTLOGIN;
         }
         ChessGame chessGame = new ChessGame();
-        GameplayUI.drawBoards(chessGame.getBoard());
+        BoardPrinter.drawBoards(chessGame.getBoard());
         return Client.UIStatusType.POSTLOGIN;
     }
 

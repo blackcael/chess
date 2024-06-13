@@ -15,6 +15,7 @@ public class ServerFacade {
         this.httpCommunicator = new HTTPCommunicator(port);
     }
 
+    //PRELOGIN
     public ResponseCodeAndObject register(String[] parameters){
         String body = new Gson().toJson(new RegisterRequest(parameters[0], parameters[1], parameters[2]));
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("POST", "/user", body, null, RegisterResponse.class);
@@ -35,7 +36,7 @@ public class ServerFacade {
         return response;
     }
 
-
+    //POSTLOGIN
     public ResponseCodeAndObject logout(){
         return httpCommunicator.executeHTTP("DELETE", "/session", null, authToken, null);
     }
@@ -62,6 +63,11 @@ public class ServerFacade {
     public ResponseCodeAndObject listGames(){
         return httpCommunicator.executeHTTP("GET", "/game", null, authToken, ListGamesResponse.class);
     }
+
+    //GAMEPLAY
+
+
+
 
     public void clear(){
         httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);

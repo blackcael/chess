@@ -51,7 +51,7 @@ public class Client {
                 case "leave" -> gameplayUI.leave();
                 case "makeMove" -> gameplayUI.makeMove(parameters);
                 case "resign" -> gameplayUI.resign();
-                case "highlightLegalMoves" -> gameplayUI.highlightLegalMoves();
+                case "highlightLegalMoves" -> gameplayUI.highlightLegalMoves(parameters);
                 default -> gameplayUI.help();
             };
         }
