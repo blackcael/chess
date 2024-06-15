@@ -65,10 +65,22 @@ public class ServerFacade {
     }
 
     //GAMEPLAY
+    public void resign(){
+        //TODO implement
+    }
+
+    public void makeMove(){
+        //TODO implement
+    }
+
+    public void leave(){
+        //TODO implement
+    }
 
 
 
 
+    //misc methods
     public void clear(){
         httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);
     }

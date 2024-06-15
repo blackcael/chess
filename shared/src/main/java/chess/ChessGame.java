@@ -12,8 +12,17 @@ import java.util.Collection;
 public class ChessGame {
     private ChessBoard board = new ChessBoard();
     private TeamColor teamTurn = TeamColor.WHITE;
+    private boolean finished = false;
     public ChessGame() {
         board.resetBoard();
+    }
+
+    public void finishGame(){
+        finished = true;
+    }
+
+    public boolean isFinished(){
+        return finished;
     }
 
     /**

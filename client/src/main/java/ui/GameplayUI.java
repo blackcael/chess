@@ -2,6 +2,8 @@ package ui;
 
 import chess.*;
 
+import java.util.Scanner;
+
 public class GameplayUI extends BaseUI{
 
     private ChessGame chessGame;
@@ -40,7 +42,12 @@ public class GameplayUI extends BaseUI{
     }
 
     public Client.UIStatusType resign(){
-        //send resignation Notice
+        System.out.print("Are you sure you want to resign? (yes/no): ");
+        Scanner scanner = new Scanner(System.in);
+        String response = scanner.nextLine().trim().toLowerCase();
+        if(response.equals("yes")){
+            serverFacade.resign();
+        }
         return Client.UIStatusType.GAMEPLAY;
     }
 
