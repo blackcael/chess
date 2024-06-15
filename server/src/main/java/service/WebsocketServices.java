@@ -44,8 +44,9 @@ public class WebsocketServices extends BaseService{
         }
     }
 
-    private void connect(ConnectCommand command){
+    private void connect(ConnectCommand command) throws DataAccessException {
         database.connectPlayerToGameSession(username, command.getGameID());
+        notificationService.alertSender( new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(command.getGameID()).game()));
         notificationService.alertEveryone(new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has connected to the game. Welcome!"));
     }
 
@@ -73,7 +74,7 @@ public class WebsocketServices extends BaseService{
         GameData gameData = gameDataBase.getGame(makeMoveCommand.getGameID());
         ChessGame updatedGame = gameData.game();
         updatedGame.makeMove(makeMoveCommand.getMove());
-        GameData updatedGameData =new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
+        GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
         gameDataBase.updateGame(updatedGameData);
         String gameStatusMessage = "";
         if(updatedGame.isInCheckmate(ChessGame.TeamColor.WHITE)){
