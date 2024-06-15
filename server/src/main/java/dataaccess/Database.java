@@ -1,4 +1,6 @@
 package dataaccess;
+import handler.WebSocketConnection;
+
 import java.sql.*;
 import java.util.*;
 
@@ -7,7 +9,7 @@ public class Database {
     public GameDAO gameDataBase;
     public UserDAO userDataBase;
     private int gameIDCounter = 1;
-    private Map<Integer, HashSet<String>> gameSessionMap;
+    private Map<Integer, HashSet<WebSocketConnection>> gameSessionMap;
     boolean dataBaseSimulation = false;
     public Database(){
         if(dataBaseSimulation){
@@ -35,20 +37,20 @@ public class Database {
         return(authDataBase.isEmpty() && gameDataBase.isEmpty() && userDataBase.isEmpty());
     }
 
-    public void connectPlayerToGameSession(String username, int gameID){
+    public void connectPlayerToGameSession(WebSocketConnection connection, int gameID){
         if(gameSessionMap.containsKey(gameID)){
-            HashSet<String> gameSession = gameSessionMap.get(gameID);
-            gameSession.add(username);
+            HashSet<WebSocketConnection> gameSession = gameSessionMap.get(gameID);
+            gameSession.add(connection);
         }else{
-            gameSessionMap.put(gameID, new HashSet<String>(Collections.singletonList(username)));
+            gameSessionMap.put(gameID, new HashSet<>(Collections.singletonList(connection)));
         }
     }
 
-    public void disconnectPlayerFromGameSession(String username, int gameID){
-        gameSessionMap.get(gameID).remove(username);
+    public void disconnectPlayerFromGameSession(WebSocketConnection connection, int gameID){
+        gameSessionMap.get(gameID).remove(connection);
     }
 
-    public HashSet<String> getGameParticipants(int gameID){
+    public HashSet<WebSocketConnection> getGameParticipants(int gameID){
         return gameSessionMap.get(gameID);
     }
 }

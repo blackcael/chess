@@ -10,10 +10,10 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.*;
 import spark.Spark;
 
-@WebSocket
 public class Server {
 
     private Database database;
+    private WebSocketHandler webSocketHandler;
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -24,6 +24,7 @@ public class Server {
 
         //Initialize Databases
         database = new Database();
+        webSocketHandler = new WebSocketHandler(database);
 
         //Initialize Handlers (potential idea: make the handlers static? eliminate need for instantiation)
         RegisterHandler registerHandler = new RegisterHandler(database);
@@ -44,7 +45,7 @@ public class Server {
         Spark.delete("/db", clearHandler::handleRequest);
 
         //Spark Websocketing
-        Spark.webSocket("/ws", Server.class);
+        Spark.webSocket("/ws", webSocketHandler);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -55,10 +56,5 @@ public class Server {
         Spark.awaitStop();
     }
 
-    @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws Exception{
-        System.out.printf("received: %s", message);
-        String response = WebSocketMessageHandler.handleMessage(database, message);
-        session.getRemote().sendString("WebSocket response: " + response);
-    }
+
 }

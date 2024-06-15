@@ -2,37 +2,41 @@ package service;
 
 import chess.ChessGame;
 import chess.InvalidMoveException;
-import com.mysql.cj.protocol.x.Notice;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
+import handler.WebSocketConnection;
 import intermediary.GameOverException;
 import intermediary.InvalidAuthException;
 import model.GameData;
-import server.Server;
 import websocket.commands.*;
-import websocket.messages.ErrorMessage;
-import websocket.messages.LoadGameMessage;
-import websocket.messages.NotificationMessage;
-import websocket.messages.ServerMessage;
+import websocket.messages.*;
+import org.eclipse.jetty.websocket.api.Session;
 
-public class WebsocketServices extends BaseService{
+import java.io.IOException;
+
+
+public class WebSocketServices extends BaseService{
+    private WebSocketNotificationService notificationService;
+    private final Session session;
+    private WebSocketConnection connection;
     private String username;
-    private NotificationService notificationService;
-    public WebsocketServices(Database database) {
+    public WebSocketServices(Database database, Session session) {
         super(database);
+        this.session = session;
     }
 
-    public void service(UserGameCommand command){
+    public void service(UserGameCommand command) throws IOException {
         try {
             username = authDataBase.getAuth(command.getAuthString()).username();
-            notificationService = new NotificationService(database.getGameParticipants(command.getGameID()), username);
+            connection = new WebSocketConnection(username, session);
+            notificationService = new WebSocketNotificationService(database.getGameParticipants(command.getGameID()), connection);
             validateAuthToken(command.getAuthString());
             switch (command.getCommandType()) {
                 case CONNECT -> connect((ConnectCommand) command);
                 case LEAVE -> leave((LeaveCommand) command);
                 case MAKE_MOVE -> makeMove((MakeMoveCommand) command);
                 case RESIGN -> resign((ResignCommand) command);
-            };
+            }
         }catch (InvalidAuthException e) {
             notificationService.alertSender(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid AuthToken"));
         } catch (DataAccessException e) {
@@ -44,13 +48,13 @@ public class WebsocketServices extends BaseService{
         }
     }
 
-    private void connect(ConnectCommand command) throws DataAccessException {
-        database.connectPlayerToGameSession(username, command.getGameID());
+    private void connect(ConnectCommand command) throws DataAccessException, IOException {
+        database.connectPlayerToGameSession(connection, command.getGameID());
         notificationService.alertSender( new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(command.getGameID()).game()));
         notificationService.alertEveryone(new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has connected to the game. Welcome!"));
     }
 
-    private void leave(LeaveCommand leaveCommand) throws DataAccessException {
+    private void leave(LeaveCommand leaveCommand) throws DataAccessException, IOException {
         //SQL interactions
         GameData gameData = gameDataBase.getGame(leaveCommand.getGameID());
         String updatedWhiteUsername = gameData.whiteUsername();
@@ -64,11 +68,11 @@ public class WebsocketServices extends BaseService{
         GameData updatedGameData =new GameData(gameData.gameID(), updatedWhiteUsername, updatedBlackUsername, gameData.gameName(), gameData.game());
         gameDataBase.updateGame(updatedGameData);
         //gameSessionInteraction
-        database.disconnectPlayerFromGameSession(username, leaveCommand.getGameID());
+        database.disconnectPlayerFromGameSession(connection, leaveCommand.getGameID());
         notificationService.alertEveryone( new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has left the game. Adios!"));
     }
 
-    private void makeMove(MakeMoveCommand makeMoveCommand) throws DataAccessException, InvalidMoveException, GameOverException {
+    private void makeMove(MakeMoveCommand makeMoveCommand) throws DataAccessException, InvalidMoveException, GameOverException, IOException {
         //color issues?
         validateGameIsNotOver(makeMoveCommand.getGameID());
         GameData gameData = gameDataBase.getGame(makeMoveCommand.getGameID());
@@ -93,11 +97,12 @@ public class WebsocketServices extends BaseService{
         notificationService.alertEveryone( new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has moved." + gameStatusMessage));
     }
 
-    private void resign(ResignCommand command) throws GameOverException, DataAccessException {
+    private void resign(ResignCommand command) throws GameOverException, DataAccessException, IOException {
         validateGameIsNotOver(command.getGameID());
         notificationService.alertEveryone( new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has resigned. Game over man!"));
-        //not sure if this return statement is right...
     }
+
+    //supporting Functions
 
     private void updateGameAsFinished(int gameID) throws DataAccessException {
         GameData gameData = gameDataBase.getGame(gameID);
