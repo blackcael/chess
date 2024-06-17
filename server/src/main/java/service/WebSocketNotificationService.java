@@ -1,6 +1,7 @@
 package service;
 
 import handler.WebSocketConnection;
+import websocket.WebSocketSerializer;
 import websocket.messages.ServerMessage;
 
 
@@ -9,25 +10,21 @@ import java.util.Set;
 
 public class WebSocketNotificationService {
     private Set<WebSocketConnection> connectionList;
-    private final WebSocketConnection connection;
-    WebSocketNotificationService(Set<WebSocketConnection> playerList, WebSocketConnection connection){
+    private final WebSocketConnection senderConnection;
+    WebSocketNotificationService(Set<WebSocketConnection> playerList, WebSocketConnection senderConnection){
         this.connectionList = playerList;
-        this.connection = connection;
+        this.senderConnection = senderConnection;
     }
     public void alertEveryone(ServerMessage servermessage) throws IOException {
-        for(WebSocketConnection iterPlayer: connectionList){
-            iterPlayer.send(serverMessageToJson(servermessage));
+        for(WebSocketConnection connection: connectionList){
+            connection.send(WebSocketSerializer.serverMessageToJson(servermessage));
         }
     }
 
     public void alertSender(ServerMessage servermessage) throws IOException {
-        connection.send(serverMessageToJson(servermessage));
+        senderConnection.send(WebSocketSerializer.serverMessageToJson(servermessage));
     }
 
-
-    private String serverMessageToJson(ServerMessage serverMessage){
-        return "peepee";
-    }
 
 
 }

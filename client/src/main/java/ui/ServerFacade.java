@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import intermediary.*;
 
@@ -10,9 +11,11 @@ public class ServerFacade {
     //will perform any logic / packaging for ClientToHttp calls
     private String authToken;
     private final HTTPCommunicator httpCommunicator;
+    private final WebSocketCommunicator webSocketCommunicator;
     private ChessGame.TeamColor color = null;
     public ServerFacade(int port){
         this.httpCommunicator = new HTTPCommunicator(port);
+        this.webSocketCommunicator = new WebSocketCommunicator(port);
     }
 
     //PRELOGIN
@@ -64,12 +67,12 @@ public class ServerFacade {
         return httpCommunicator.executeHTTP("GET", "/game", null, authToken, ListGamesResponse.class);
     }
 
-    //GAMEPLAY
+    //GAMEPLAY (no cool response types because it interacts utilizes the WebSocketNotifier on its response path)
     public void resign(){
         //TODO implement
     }
 
-    public void makeMove(){
+    public void makeMove(ChessMove chessMove){
         //TODO implement
     }
 

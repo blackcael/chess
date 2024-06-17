@@ -5,9 +5,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import service.WebSocketServices;
+import websocket.WebSocketSerializer;
 import websocket.commands.UserGameCommand;
-
-import java.io.IOException;
 
 @WebSocket
 public class WebSocketHandler {
@@ -20,13 +19,8 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception{
         System.out.printf("received: %s", message);
-        UserGameCommand userGameCommand = messageToCommand(message);
+        UserGameCommand userGameCommand = WebSocketSerializer.jsonToUserCommand(message);
         WebSocketServices websocketService = new WebSocketServices(database, session);
         websocketService.service(userGameCommand);
-    }
-
-
-    private static UserGameCommand messageToCommand(String message){
-        return new UserGameCommand("peepee");
     }
 }

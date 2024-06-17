@@ -37,7 +37,18 @@ public class GameplayUI extends BaseUI{
     }
 
     public Client.UIStatusType makeMove(String[] params){
-        //send <StartPos> <EndPos>
+        ChessPiece.PieceType promotionPiece = null;
+        if(params.length == 3){
+            promotionPiece = stringToPieceType(params[2]);
+        }else if (invalidArgumentCount(params, 2)){
+            return Client.UIStatusType.GAMEPLAY;
+        }
+        ChessPosition startPosition = coordsToPosition(params[0]);
+        ChessPosition endPosition = coordsToPosition(params[1]);
+        ChessMove chessMove = new ChessMove(startPosition, endPosition, promotionPiece);
+
+        serverFacade.makeMove(chessMove);
+
         return Client.UIStatusType.GAMEPLAY;
     }
 
@@ -52,11 +63,15 @@ public class GameplayUI extends BaseUI{
     }
 
     public Client.UIStatusType highlightLegalMoves(String[] params){
+        if (invalidArgumentCount(params, 1)){
+            return Client.UIStatusType.GAMEPLAY;
+        }
         ChessPosition currentPosition = coordsToPosition(params[0]);
         BoardPrinter.drawBoard(chessGame.getBoard(), serverFacade.getColor(), chessGame.validMoves(currentPosition), currentPosition);
         return Client.UIStatusType.GAMEPLAY;
     }
 
+    //helpers
     private final String[] COLUMN_INDICES = {"a","b","c","d","e","f","g","h"};
     private final String[] ROW_INDICES  = {"1","2","3","4","5","6","7","8"};
     private ChessPosition coordsToPosition(String stringPos){
@@ -71,6 +86,16 @@ public class GameplayUI extends BaseUI{
             }
         }
         return new ChessPosition(row, column);
+    }
+
+    private ChessPiece.PieceType stringToPieceType(String inputString){
+        return switch(inputString.toLowerCase()){
+            case "knight" -> ChessPiece.PieceType.KNIGHT;
+            case "queen" -> ChessPiece.PieceType.QUEEN;
+            case "rook" -> ChessPiece.PieceType.ROOK;
+            case "bishop" -> ChessPiece.PieceType.BISHOP;
+            default -> throw new IllegalStateException("Unexpected value: " + inputString);
+        };
     }
 
 
