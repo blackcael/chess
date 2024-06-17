@@ -11,11 +11,12 @@ public class ServerFacade {
     //will perform any logic / packaging for ClientToHttp calls
     private String authToken;
     private final HTTPCommunicator httpCommunicator;
-    private final WebSocketCommunicator webSocketCommunicator;
+    private WebSocketCommunicator webSocketCommunicator = null;
     private ChessGame.TeamColor color = null;
+    private final int port;
     public ServerFacade(int port){
+        this.port = port;
         this.httpCommunicator = new HTTPCommunicator(port);
-        this.webSocketCommunicator = new WebSocketCommunicator(port);
     }
 
     //PRELOGIN
@@ -50,7 +51,8 @@ public class ServerFacade {
     }
 
     public ResponseCodeAndObject joinGame(String[] parameters){
-        String body = new Gson().toJson(new JoinGameRequest(parameters[0], Integer.valueOf(parameters[1])));
+        int gameID = Integer.valueOf(parameters[1]);
+        String body = new Gson().toJson(new JoinGameRequest(parameters[0], gameID));
         ResponseCodeAndObject response = httpCommunicator.executeHTTP("PUT", "/game", body, authToken, null);
         if(response.responseCode() == 200){
             if(parameters[0].equals("WHITE")){
@@ -59,8 +61,14 @@ public class ServerFacade {
             if(parameters[0].equals("BLACK")){
                 color = ChessGame.TeamColor.BLACK;
             }
+            connectThroughWebSocket(gameID);
         }
         return response;
+    }
+
+    public void observeGame(String[] parameters){
+        int gameID = Integer.valueOf(parameters[1]);
+        connectThroughWebSocket(gameID);
     }
 
     public ResponseCodeAndObject listGames(){
@@ -68,24 +76,31 @@ public class ServerFacade {
     }
 
     //GAMEPLAY (no cool response types because it interacts utilizes the WebSocketNotifier on its response path)
+    private void connectThroughWebSocket(int gameID){
+        webSocketCommunicator = new WebSocketCommunicator(port, authToken, gameID);
+        webSocketCommunicator.connect();
+    }
+
     public void resign(){
-        //TODO implement
+        webSocketCommunicator.resign();
     }
 
     public void makeMove(ChessMove chessMove){
-        //TODO implement
+        webSocketCommunicator.makeMove(chessMove);
     }
 
     public void leave(){
-        //TODO implement
+        webSocketCommunicator.leave();
+        webSocketCommunicator = null;
     }
-
-
-
 
     //misc methods
     public void clear(){
         httpCommunicator.executeHTTP("DELETE", "/db", null, null, null);
+    }
+
+    public ChessGame getUpdatedGame(){
+        return webSocketCommunicator.getUpdatedGame();
     }
 
     public ChessGame.TeamColor getColor(){

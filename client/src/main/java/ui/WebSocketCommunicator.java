@@ -1,7 +1,9 @@
 package ui;
 
+import chess.ChessGame;
+import chess.ChessMove;
 import websocket.WebSocketSerializer;
-import websocket.commands.UserGameCommand;
+import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
@@ -12,8 +14,15 @@ import java.net.URISyntaxException;
 public class WebSocketCommunicator extends Endpoint{
 
     public Session session;
+    private final ChessGame.TeamColor teamColor = null;
+    private int gameID;
+    private String authToken;
+    private ChessGame game;
 
-    public WebSocketCommunicator(int port){
+    public WebSocketCommunicator(int port, String authToken, int gameID){
+        this.authToken = authToken;
+        this.gameID = gameID;
+
         URI uri = null;
         try {
             uri = new URI("ws://localhost:" + Integer.toString(port) + "/ws");
@@ -29,21 +38,61 @@ public class WebSocketCommunicator extends Endpoint{
             throw new RuntimeException(e);
         }
 
+
         //declare receiver
+        WebSocketCommunicator parent = this;
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message){
                 ServerMessage serverMessage = WebSocketSerializer.jsonToServerMessage(message);
-                WebSocketNotifier.notify(serverMessage);
+                WebSocketNotifier.notify(serverMessage, teamColor, parent);
             }
         });
     }
-
-    private void send(UserGameCommand userGameCommand) throws Exception{
-        this.session.getBasicRemote().sendText(WebSocketSerializer.userGameCommandToJson(userGameCommand));
+    public ChessGame getUpdatedGame(){
+        return game;
     }
+    public void setUpdatedGame(ChessGame game){
+        this.game = game;
+    }
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+    }
+
+//    //getters/setters
+//    public void setAuthToken(String inputAuthToken){
+//        this.authToken = inputAuthToken;
+//    }
+//
+//    public void setGameID(int inputGameID){
+//        this.gameID = inputGameID;
+//    }
+
+    //executables
+    public void makeMove(ChessMove chessMove){
+        send(new MakeMoveCommand(authToken, gameID, chessMove));
+    }
+
+    public void leave(){
+        send(new LeaveCommand(authToken, gameID));
+    }
+
+    public void resign(){
+        send(new ResignCommand(authToken, gameID));
+    }
+
+    public void connect(){
+        send(new ConnectCommand(authToken, gameID));
+    }
+
+
+    private void send(UserGameCommand userGameCommand){
+        try {
+            this.session.getBasicRemote().sendText(WebSocketSerializer.userGameCommandToJson(userGameCommand));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

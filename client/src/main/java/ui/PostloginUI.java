@@ -83,7 +83,7 @@ public class PostloginUI extends BaseUI{
         try {
             ResponseCodeAndObject response = serverFacade.joinGame(paramsIndexToID(params));
             if(response.responseCode() == 200){
-                System.out.println("Successfully joined game as " + params[0]);
+                System.out.println("PLUI: Successfully joined game as " + params[0]);
                 return Client.UIStatusType.GAMEPLAY;
             }
             else{
@@ -100,9 +100,13 @@ public class PostloginUI extends BaseUI{
         if(invalidArgumentCount(params, 1)){
             return Client.UIStatusType.POSTLOGIN;
         }
-        ChessGame chessGame = new ChessGame();
-        BoardPrinter.drawBoards(chessGame.getBoard());
-        return Client.UIStatusType.POSTLOGIN;
+        try {
+            serverFacade.observeGame(paramsIndexToID(params));
+        } catch (InvalidIndexError e) {
+            System.out.println(e.getMessage());
+            return Client.UIStatusType.POSTLOGIN;
+        }
+        return Client.UIStatusType.GAMEPLAY;
     }
 
     private String[] paramsIndexToID(String[] inputParams) throws InvalidIndexError {

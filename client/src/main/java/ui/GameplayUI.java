@@ -15,16 +15,14 @@ public class GameplayUI extends BaseUI{
 //
 
     public Client.UIStatusType help(){
-        printHelpStatement("redrawChessBoard, <USERNAME> <PASSWORD> <EMAIL>", "redraws the chess board in the current game state");
-        printHelpStatement("leave <USERNAME> <PASSWORD>", "leave the game");
+        printHelpStatement("redrawChessBoard", "redraws the chess board in the current game state");
+        printHelpStatement("leave", "leave the game");
         printHelpStatement("makeMove <START_ROW><START_COL> <END_ROW><END_COL> <PROMOTION_PIECE>", "makes a move from start to end, if no promotion, do not specify a promotion piece");
-        printHelpStatement("resign", "resign to your opponent, ends the game");
+        printHelpStatement("resign", "resign to your opponent, ends the game (will ask for confirmation)");
         printHelpStatement("highlightLegalMoves <ROW><COL>", "highlights the legal moves given a board position");
         printHelpStatement("help", "list commands and their descriptions");
         return Client.UIStatusType.GAMEPLAY;
     }
-    public void startWebsocketConnection(){};
-
 
     public Client.UIStatusType redrawChessBoard(){
         BoardPrinter.drawBoard(chessGame.getBoard(), serverFacade.getColor(), null, null);
@@ -32,7 +30,7 @@ public class GameplayUI extends BaseUI{
     }
 
     public Client.UIStatusType leave(){
-        //remove self from <COLOR>username
+        serverFacade.leave();
         return Client.UIStatusType.POSTLOGIN;
     }
 
@@ -97,6 +95,11 @@ public class GameplayUI extends BaseUI{
             default -> throw new IllegalStateException("Unexpected value: " + inputString);
         };
     }
+
+    private void updateGame(){
+        chessGame = serverFacade.getUpdatedGame();
+    }
+
 
 
 
