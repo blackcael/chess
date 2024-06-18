@@ -1,12 +1,16 @@
 package service;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
 import chess.InvalidMoveException;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
 import handler.WebSocketConnection;
 import intermediary.GameOverException;
 import intermediary.InvalidAuthException;
+import intermediary.ObserverException;
+import intermediary.WrongTurnException;
 import model.GameData;
 import websocket.commands.*;
 import websocket.messages.*;
@@ -29,7 +33,7 @@ public class WebSocketServices extends BaseService{
         try {
             username = authDataBase.getAuth(command.getAuthString()).username();
             connection = new WebSocketConnection(username, session);
-            notificationService = new WebSocketNotificationService(database.getGameParticipants(command.getGameID()), connection);
+            notificationService = new WebSocketNotificationService(database, connection);
             validateAuthToken(command.getAuthString());
             switch (command.getCommandType()) {
                 case CONNECT -> connect((ConnectCommand) command);
@@ -45,13 +49,19 @@ public class WebSocketServices extends BaseService{
             notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid Move!"));
         } catch (GameOverException e) {
             notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is already over!"));
+        } catch (ObserverException e){
+            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: This action cannot be executed as an Observer!"));
+        }
+        catch (WrongTurnException e){
+            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: It is not your turn!"));
         }
     }
 
     private void connect(ConnectCommand command) throws DataAccessException, IOException {
         database.connectPlayerToGameSession(connection, command.getGameID());
+        int gameID = command.getGameID();
         notificationService.alertSender( new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(command.getGameID()).game()));
-        notificationService.alertEveryone(new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has connected to the game. Welcome!"));
+        notificationService.alertOthers(command.getGameID(), new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has connected to the game as "+ getJoinType(command.getGameID())+". Welcome!"));
     }
 
     private void leave(LeaveCommand leaveCommand) throws DataAccessException, IOException {
@@ -59,47 +69,75 @@ public class WebSocketServices extends BaseService{
         GameData gameData = gameDataBase.getGame(leaveCommand.getGameID());
         String updatedWhiteUsername = gameData.whiteUsername();
         String updatedBlackUsername = gameData.blackUsername();
-        if(updatedWhiteUsername.equals(username)){
-            updatedWhiteUsername = null; //null instead of "null" could cause issue
+        if(updatedWhiteUsername != null){
+            if(updatedWhiteUsername.equals(username)){
+                updatedWhiteUsername = null;
+            }
         }
-        if(updatedBlackUsername.equals(username)){
-            updatedBlackUsername = null;
+        if(updatedBlackUsername != null ){
+            if(updatedBlackUsername.equals(username)){
+                updatedBlackUsername = null;
+            }
         }
         GameData updatedGameData =new GameData(gameData.gameID(), updatedWhiteUsername, updatedBlackUsername, gameData.gameName(), gameData.game());
         gameDataBase.updateGame(updatedGameData);
+
         //gameSessionInteraction
+
+        notificationService.alertOthers(leaveCommand.getGameID(), new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has left the game. Adios!"));
         database.disconnectPlayerFromGameSession(connection, leaveCommand.getGameID());
-        notificationService.alertEveryone( new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has left the game. Adios!"));
     }
 
-    private void makeMove(MakeMoveCommand makeMoveCommand) throws DataAccessException, InvalidMoveException, GameOverException, IOException {
+    private void makeMove(MakeMoveCommand makeMoveCommand) throws DataAccessException, InvalidMoveException, GameOverException, IOException, ObserverException, WrongTurnException {
         //color issues?
         validateGameIsNotOver(makeMoveCommand.getGameID());
+        validateCallerIsPlayer(makeMoveCommand.getGameID());
+        validateCorrectTurn(makeMoveCommand.getGameID());
+
         GameData gameData = gameDataBase.getGame(makeMoveCommand.getGameID());
         ChessGame updatedGame = gameData.game();
         updatedGame.makeMove(makeMoveCommand.getMove());
         GameData updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), updatedGame);
         gameDataBase.updateGame(updatedGameData);
-        String gameStatusMessage = "";
+
+        String gameStatusMessage = null;
         if(updatedGame.isInCheckmate(ChessGame.TeamColor.WHITE)){
             updateGameAsFinished(makeMoveCommand.getGameID());
-            gameStatusMessage = "\nWhite is in Checkmate! Game Over!";
+            gameStatusMessage = "White ("+ gameData.whiteUsername() +") is in Checkmate! Game Over!";
         }else if (updatedGame.isInCheckmate(ChessGame.TeamColor.BLACK)){
             updateGameAsFinished(makeMoveCommand.getGameID());
-            gameStatusMessage = "\nWhite is in Checkmate! Game Over!";
+            gameStatusMessage = "Black ("+ gameData.blackUsername() +") is in Checkmate! Game Over!";
         }else if (updatedGame.isInStalemate(ChessGame.TeamColor.WHITE) || updatedGame.isInStalemate(ChessGame.TeamColor.BLACK)){
             updateGameAsFinished(makeMoveCommand.getGameID());
-            gameStatusMessage = "\nStalemate! Game Over!";
-        }else if (updatedGame.isInCheck(ChessGame.TeamColor.WHITE) || updatedGame.isInCheck(ChessGame.TeamColor.BLACK)){
-            gameStatusMessage = "\nCheck!";
+            gameStatusMessage = "Wicked Stalemate! Game Over!";
+        }else if (updatedGame.isInCheck(ChessGame.TeamColor.WHITE)){
+            gameStatusMessage = "White ("+ updatedGameData.whiteUsername()+") is in Check!";
+        }else if (updatedGame.isInCheck(ChessGame.TeamColor.BLACK)){
+            gameStatusMessage = "Black ("+ updatedGameData.blackUsername()+") is in Check!";
         }
-        notificationService.alertEveryone( new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(makeMoveCommand.getGameID()).game()));
-        notificationService.alertEveryone( new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has moved." + gameStatusMessage));
+
+        notificationService.alertEveryone(makeMoveCommand.getGameID(), new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(makeMoveCommand.getGameID()).game()));
+        notificationService.alertOthers(makeMoveCommand.getGameID(), new NotificationMessage(
+                ServerMessage.ServerMessageType.NOTIFICATION,
+                username + " has moved a" +
+                        getPieceFromMove(gameDataBase.getGame(makeMoveCommand.getGameID()).game(), makeMoveCommand.getMove()).toString() +
+                        "from" + makeMoveCommand.getMove().getStartPosition().toString() +
+                        "to" + makeMoveCommand.getMove().getEndPosition().toString()
+                )
+        );
+        if(gameStatusMessage != null){
+            notificationService.alertEveryone(makeMoveCommand.getGameID(), new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, gameStatusMessage));
+        }
+        else{
+            notificationService.alertSender(new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, ""));
+        }
     }
 
-    private void resign(ResignCommand command) throws GameOverException, DataAccessException, IOException {
+    private void resign(ResignCommand command) throws GameOverException, DataAccessException, IOException, ObserverException {
         validateGameIsNotOver(command.getGameID());
-        notificationService.alertEveryone( new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + "has resigned. Game over man!"));
+        validateCallerIsPlayer(command.getGameID());
+        updateGameAsFinished(command.getGameID());
+        notificationService.alertEveryone(command.getGameID(), new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned. Game over man!"));
     }
 
     //supporting Functions
@@ -117,5 +155,64 @@ public class WebSocketServices extends BaseService{
         if (gameData.game().isFinished()) {
             throw new GameOverException();
         }
+    }
+
+    private void validateCallerIsPlayer(int gameID) throws DataAccessException, ObserverException {
+        boolean isPlayer = false;
+        GameData gameData = gameDataBase.getGame(gameID);
+        if(gameData.whiteUsername() != null) {
+            if (gameData.whiteUsername().equals(username)) {
+                isPlayer = true;
+            }
+        }
+        if(gameData.blackUsername() != null){
+            if(gameData.blackUsername().equals(username)){
+                isPlayer = true;
+            }
+        }
+        if(!isPlayer){
+            throw new ObserverException();
+        }
+    }
+
+    private void validateCorrectTurn(int gameID) throws DataAccessException, WrongTurnException {
+        boolean isMyTurn = false;
+        GameData gameData = gameDataBase.getGame(gameID);
+        if(gameData.whiteUsername() != null) {
+            if (gameData.whiteUsername().equals(username)) {
+                if(gameData.game().getTeamTurn() == ChessGame.TeamColor.WHITE){
+                    isMyTurn = true;
+                }
+            }
+        }
+        if(gameData.blackUsername() != null){
+            if(gameData.blackUsername().equals(username)){
+                if(gameData.game().getTeamTurn() == ChessGame.TeamColor.BLACK){
+                    isMyTurn = true;
+                }
+            }
+        }
+        if(!isMyTurn){
+            throw new WrongTurnException();
+        }
+    }
+
+    private String getJoinType(int gameID) throws DataAccessException {
+        GameData gameData = gameDataBase.getGame(gameID);
+        if(gameData.whiteUsername() != null) {
+            if (gameData.whiteUsername().equals(username)) {
+                return "WHITE";
+            }
+        }
+        if(gameData.blackUsername() != null){
+            if(gameData.blackUsername().equals(username)){
+                return "BLACK";
+            }
+        }
+        return "an OBSERVER";
+    }
+
+    private ChessPiece.PieceType getPieceFromMove(ChessGame game, ChessMove move){
+        return game.getBoard().getPiece(move.getEndPosition()).getPieceType();
     }
 }

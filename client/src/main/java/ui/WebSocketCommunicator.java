@@ -11,6 +11,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static ui.Client.awaitingLoadGameResponse;
+import static ui.Client.awaitingNotificationResponse;
+
+
+
+
 public class WebSocketCommunicator extends Endpoint{
 
     public Session session;
@@ -18,10 +24,12 @@ public class WebSocketCommunicator extends Endpoint{
     private int gameID;
     private String authToken;
     private ChessGame game;
+    private ChessGame.TeamColor color;
 
-    public WebSocketCommunicator(int port, String authToken, int gameID){
+    public WebSocketCommunicator(int port, String authToken, int gameID, ChessGame.TeamColor color){
         this.authToken = authToken;
         this.gameID = gameID;
+        this.color = color;
 
         URI uri = null;
         try {
@@ -45,7 +53,7 @@ public class WebSocketCommunicator extends Endpoint{
             @Override
             public void onMessage(String message){
                 ServerMessage serverMessage = WebSocketSerializer.jsonToServerMessage(message);
-                WebSocketNotifier.notify(serverMessage, teamColor, parent);
+                WebSocketNotifier.notify(serverMessage, parent, color);
             }
         });
     }
@@ -60,17 +68,10 @@ public class WebSocketCommunicator extends Endpoint{
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-//    //getters/setters
-//    public void setAuthToken(String inputAuthToken){
-//        this.authToken = inputAuthToken;
-//    }
-//
-//    public void setGameID(int inputGameID){
-//        this.gameID = inputGameID;
-//    }
-
     //executables
     public void makeMove(ChessMove chessMove){
+        awaitingLoadGameResponse = true;
+        awaitingNotificationResponse = true;
         send(new MakeMoveCommand(authToken, gameID, chessMove));
     }
 
@@ -79,10 +80,12 @@ public class WebSocketCommunicator extends Endpoint{
     }
 
     public void resign(){
+        awaitingNotificationResponse = true;
         send(new ResignCommand(authToken, gameID));
     }
 
     public void connect(){
+        awaitingLoadGameResponse = true;
         send(new ConnectCommand(authToken, gameID));
     }
 
@@ -94,5 +97,6 @@ public class WebSocketCommunicator extends Endpoint{
             throw new RuntimeException(e);
         }
     }
+
 
 }

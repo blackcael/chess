@@ -3,6 +3,10 @@ package ui;
 import java.util.Arrays;
 
 public class Client {
+
+    static volatile boolean awaitingLoadGameResponse = false;
+    static volatile boolean awaitingNotificationResponse = false;
+
     public enum UIStatusType{
         PRELOGIN,
         POSTLOGIN,
@@ -53,6 +57,9 @@ public class Client {
                 case "resign" -> gameplayUI.resign();
                 case "highlightLegalMoves" -> gameplayUI.highlightLegalMoves(parameters);
                 default -> gameplayUI.help();
+            };
+            while (awaitingLoadGameResponse | awaitingNotificationResponse) {
+                Thread.onSpinWait();
             };
         }
     }

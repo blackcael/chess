@@ -5,8 +5,6 @@ import chess.ChessMove;
 import com.google.gson.Gson;
 import intermediary.*;
 
-import java.lang.reflect.Type;
-
 public class ServerFacade {
     //will perform any logic / packaging for ClientToHttp calls
     private String authToken;
@@ -66,8 +64,7 @@ public class ServerFacade {
         return response;
     }
 
-    public void observeGame(String[] parameters){
-        int gameID = Integer.valueOf(parameters[1]);
+    public void observeGame(int gameID){
         connectThroughWebSocket(gameID);
     }
 
@@ -77,7 +74,7 @@ public class ServerFacade {
 
     //GAMEPLAY (no cool response types because it interacts utilizes the WebSocketNotifier on its response path)
     private void connectThroughWebSocket(int gameID){
-        webSocketCommunicator = new WebSocketCommunicator(port, authToken, gameID);
+        webSocketCommunicator = new WebSocketCommunicator(port, authToken, gameID, color);
         webSocketCommunicator.connect();
     }
 
@@ -92,6 +89,7 @@ public class ServerFacade {
     public void leave(){
         webSocketCommunicator.leave();
         webSocketCommunicator = null;
+        color = null;
     }
 
     //misc methods
@@ -103,9 +101,9 @@ public class ServerFacade {
         return webSocketCommunicator.getUpdatedGame();
     }
 
-    public ChessGame.TeamColor getColor(){
+    public ChessGame.TeamColor getColor() throws ObserverException {
         if (color == null){
-            throw new RuntimeException("Cannot getColor if color is not assigned");
+            throw new ObserverException();
         }
         return color;
     }

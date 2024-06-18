@@ -11,7 +11,7 @@ public class BoardPrinter {
     private static final String SET_LIGHT_COLOR = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
     private static final String SET_DARK_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
     private static final String SET_LIGHT_HIGHLIGHT_COLOR = EscapeSequences.SET_BG_COLOR_YELLOW;
-    private static final String SET_DARK_HIGHLIGHT_COLOR = EscapeSequences.SET_BG_COLOR_YELLOW;
+    private static final String SET_DARK_HIGHLIGHT_COLOR = EscapeSequences.SET_BG_COLOR_DARK_YELLOW;
     private static final String SET_CURRENT_SQUARE_COLOR = EscapeSequences.SET_BG_COLOR_BLUE;
 
     private static final String SET_BORDER_COLOR = EscapeSequences.SET_BG_COLOR_DARK_GREY;
@@ -24,30 +24,43 @@ public class BoardPrinter {
 
 
     public static void drawBoard(ChessBoard board, ChessGame.TeamColor color, Collection<ChessMove> potentialMoves, ChessPosition currentPosition){
-        SquareType[][] squareTypeMatrix = generateSquareTypeMatrix(potentialMoves, currentPosition); //TODO null-handling?
-        int startIndex = (color.equals(ChessGame.TeamColor.WHITE))? 0 : BOARD_SIZE_IN_SQUARES-1;
+        SquareType[][] squareTypeMatrix = generateSquareTypeMatrix(potentialMoves, currentPosition);
+        int rowStartIndex = (color.equals(ChessGame.TeamColor.BLACK))? 0 : BOARD_SIZE_IN_SQUARES-1;
+        int colStartIndex = (color.equals(ChessGame.TeamColor.WHITE))? 0 : BOARD_SIZE_IN_SQUARES-1;
         drawColumnIndices(color);
-
-        for(int rowIter = startIndex; endCondition(color, rowIter); rowIter = increment(color, rowIter)){
-            drawBorderRowIndex(Integer.toString(rowIter));
-            for(int colIter = startIndex; endCondition(color, colIter); colIter = increment(color, colIter)){
+        for(int rowIter = rowStartIndex; rowEndCondition(color, rowIter); rowIter = rowIncrement(color, rowIter)){
+            drawBorderRowIndex(Integer.toString(rowIter + 1));
+            for(int colIter = colStartIndex; colEndCondition(color, colIter); colIter = colIncrement(color, colIter)){
                 ChessPosition position = new ChessPosition(rowIter + 1, colIter + 1);
                 drawBoardSquare(getSquareColor(rowIter, colIter, squareTypeMatrix), board.getPiece(position));
             }
-            drawBorderRowIndex(Integer.toString(rowIter));
+            drawBorderRowIndex(Integer.toString(rowIter + 1));
             System.out.println(EscapeSequences.RESET_BG_COLOR);
         }
         drawColumnIndices(color);
     }
 
-    private static boolean endCondition(ChessGame.TeamColor color, int iter){
+    private static boolean rowEndCondition(ChessGame.TeamColor color, int iter){
+        if (color == ChessGame.TeamColor.BLACK){
+            return (iter < BOARD_SIZE_IN_SQUARES);
+        }
+        return (iter >= 0);
+    }
+
+    private static boolean colEndCondition(ChessGame.TeamColor color, int iter){
         if (color == ChessGame.TeamColor.WHITE){
             return (iter < BOARD_SIZE_IN_SQUARES);
         }
         return (iter >= 0);
     }
 
-    private static int increment(ChessGame.TeamColor color, int iter){
+    private static int rowIncrement(ChessGame.TeamColor color, int iter){
+        if (color == ChessGame.TeamColor.BLACK){
+            return iter + 1;
+        }
+        return iter -1;
+    }
+    private static int colIncrement(ChessGame.TeamColor color, int iter){
         if (color == ChessGame.TeamColor.WHITE){
             return iter + 1;
         }
@@ -80,6 +93,7 @@ public class BoardPrinter {
 
     private static ArrayList<ChessPosition> potentialMovesToPotentialPositions(Collection<ChessMove> potentialMoves){
         ArrayList<ChessPosition> potentialPositions = new ArrayList<>();
+        if(potentialMoves == null) return potentialPositions;
         for(ChessMove move : potentialMoves){
             potentialPositions.add(move.getEndPosition());
         }
@@ -101,7 +115,7 @@ public class BoardPrinter {
 
     private static String darkOrLight(int row, int col){
         int sum = row + col;
-        if(sum % 2 == 0){
+        if(sum % 2 != 0){
             return SET_LIGHT_COLOR;
         }else{
             return SET_DARK_COLOR;
@@ -118,22 +132,22 @@ public class BoardPrinter {
         }
         if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
             return switch(piece.getPieceType()){
-                case KING -> EscapeSequences.WHITE_KING;
-                case QUEEN -> EscapeSequences.WHITE_QUEEN;
-                case BISHOP -> EscapeSequences.WHITE_BISHOP;
-                case KNIGHT -> EscapeSequences.WHITE_KNIGHT;
-                case ROOK -> EscapeSequences.WHITE_ROOK;
-                case PAWN -> EscapeSequences.WHITE_PAWN;
+                case KING -> EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.WHITE_KING;
+                case QUEEN -> EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.WHITE_QUEEN;
+                case BISHOP -> EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.WHITE_BISHOP;
+                case KNIGHT -> EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.WHITE_KNIGHT;
+                case ROOK -> EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.WHITE_ROOK;
+                case PAWN -> EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.WHITE_PAWN;
             };
         }
         if(piece.getTeamColor() == ChessGame.TeamColor.BLACK){
             return switch(piece.getPieceType()){
-                case KING -> EscapeSequences.BLACK_KING;
-                case QUEEN -> EscapeSequences.BLACK_QUEEN;
-                case BISHOP -> EscapeSequences.BLACK_BISHOP;
-                case KNIGHT -> EscapeSequences.BLACK_KNIGHT;
-                case ROOK -> EscapeSequences.BLACK_ROOK;
-                case PAWN -> EscapeSequences.BLACK_PAWN;
+                case KING -> EscapeSequences.SET_TEXT_COLOR_BLACK + EscapeSequences.BLACK_KING;
+                case QUEEN -> EscapeSequences.SET_TEXT_COLOR_BLACK +EscapeSequences.BLACK_QUEEN;
+                case BISHOP -> EscapeSequences.SET_TEXT_COLOR_BLACK +EscapeSequences.BLACK_BISHOP;
+                case KNIGHT -> EscapeSequences.SET_TEXT_COLOR_BLACK +EscapeSequences.BLACK_KNIGHT;
+                case ROOK -> EscapeSequences.SET_TEXT_COLOR_BLACK +EscapeSequences.BLACK_ROOK;
+                case PAWN -> EscapeSequences.SET_TEXT_COLOR_BLACK +EscapeSequences.BLACK_PAWN;
             };
         }
         return null;
@@ -171,9 +185,9 @@ public class BoardPrinter {
 
     private static void drawBorderSquare(String singleChar){
         if (singleChar.equals(EscapeSequences.EMPTY)){
-            System.out.print(SET_BORDER_COLOR + singleChar);
+            System.out.print(SET_BORDER_COLOR + EscapeSequences.SET_TEXT_COLOR_WHITE +  singleChar);
         }else{
-            System.out.print(SET_BORDER_COLOR + singleChar);
+            System.out.print(SET_BORDER_COLOR + EscapeSequences.SET_TEXT_COLOR_WHITE +  singleChar);
         }
     }
 

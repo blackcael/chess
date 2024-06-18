@@ -15,16 +15,15 @@ public class Server {
     private Database database;
     private WebSocketHandler webSocketHandler;
 
+
     public int run(int desiredPort) {
-        Spark.port(desiredPort);
-
-        Spark.staticFiles.location("web");
-
-        // Register your endpoints and handle exceptions here.
-
         //Initialize Databases
         database = new Database();
         webSocketHandler = new WebSocketHandler(database);
+
+        Spark.port(desiredPort);
+
+        Spark.staticFiles.location("web");
 
         //Initialize Handlers (potential idea: make the handlers static? eliminate need for instantiation)
         RegisterHandler registerHandler = new RegisterHandler(database);
@@ -35,6 +34,9 @@ public class Server {
         JoinGameHandler joinGameHandler = new JoinGameHandler(database);
         ClearHandler clearHandler = new ClearHandler(database);
 
+        //Spark Websocketing
+        Spark.webSocket("/ws", webSocketHandler);
+
         //Spark Vanilla HTTP
         Spark.post("/user", (req, res) -> registerHandler.handleRequest(req, res, RegisterRequest.class));
         Spark.post("/session", (req, res) -> loginHandler.handleRequest(req, res, LoginRequest.class));
@@ -43,9 +45,6 @@ public class Server {
         Spark.post("/game", (req, res) -> createGameHandler.handleRequest(req, res, CreateGameRequest.class));
         Spark.put("/game", (req, res) -> joinGameHandler.handleRequest(req, res, JoinGameRequest.class));
         Spark.delete("/db", clearHandler::handleRequest);
-
-        //Spark Websocketing
-        Spark.webSocket("/ws", webSocketHandler);
 
         Spark.awaitInitialization();
         return Spark.port();

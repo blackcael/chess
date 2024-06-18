@@ -90,7 +90,7 @@ public class PostloginUI extends BaseUI{
                 System.out.println(response.responseObject());
                 return Client.UIStatusType.POSTLOGIN;
             }
-        } catch (InvalidIndexError e) {
+        } catch (InvalidIndexError e ) {
             System.out.println(e.getMessage());
             return Client.UIStatusType.POSTLOGIN;
         }
@@ -101,7 +101,7 @@ public class PostloginUI extends BaseUI{
             return Client.UIStatusType.POSTLOGIN;
         }
         try {
-            serverFacade.observeGame(paramsIndexToID(params));
+            serverFacade.observeGame(stringToIndexID(params[0]));
         } catch (InvalidIndexError e) {
             System.out.println(e.getMessage());
             return Client.UIStatusType.POSTLOGIN;
@@ -110,11 +110,20 @@ public class PostloginUI extends BaseUI{
     }
 
     private String[] paramsIndexToID(String[] inputParams) throws InvalidIndexError {
-        int index = Integer.valueOf(inputParams[0]) - 1;
-        if (index >= gameList.size()){
+        int ID = stringToIndexID(inputParams[0]);
+        return new String[] {inputParams[1], Integer.toString(ID)};
+    }
+
+    private int stringToIndexID(String inputString) throws InvalidIndexError {
+        try {
+            int index = Integer.valueOf(inputString) - 1;
+            if (index >= gameList.size()) {
+                throw new InvalidIndexError();
+            }
+            return gameList.get(index).gameID();
+        }catch(NumberFormatException e){
             throw new InvalidIndexError();
         }
-        return new String[] {inputParams[1], Integer.toString(gameList.get(index).gameID())};
     }
 
 

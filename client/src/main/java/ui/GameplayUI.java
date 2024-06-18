@@ -1,12 +1,11 @@
 package ui;
 
 import chess.*;
+import intermediary.ObserverException;
 
 import java.util.Scanner;
 
 public class GameplayUI extends BaseUI{
-
-    private ChessGame chessGame;
 
     public GameplayUI(ServerFacade serverFacade) {
         super(serverFacade);
@@ -25,7 +24,11 @@ public class GameplayUI extends BaseUI{
     }
 
     public Client.UIStatusType redrawChessBoard(){
-        BoardPrinter.drawBoard(chessGame.getBoard(), serverFacade.getColor(), null, null);
+        try {
+            BoardPrinter.drawBoard(getUpdatedGame().getBoard(), serverFacade.getColor(), null, null);
+        }
+        catch(ObserverException e){
+            BoardPrinter.drawBoard(getUpdatedGame().getBoard(), ChessGame.TeamColor.WHITE, null, null);        }
         return Client.UIStatusType.GAMEPLAY;
     }
 
@@ -65,7 +68,12 @@ public class GameplayUI extends BaseUI{
             return Client.UIStatusType.GAMEPLAY;
         }
         ChessPosition currentPosition = coordsToPosition(params[0]);
-        BoardPrinter.drawBoard(chessGame.getBoard(), serverFacade.getColor(), chessGame.validMoves(currentPosition), currentPosition);
+        try {
+            BoardPrinter.drawBoard(getUpdatedGame().getBoard(), serverFacade.getColor(), getUpdatedGame().validMoves(currentPosition), currentPosition);
+        }
+        catch (ObserverException e) {
+            BoardPrinter.drawBoard(getUpdatedGame().getBoard(), ChessGame.TeamColor.WHITE, getUpdatedGame().validMoves(currentPosition), currentPosition);
+        }
         return Client.UIStatusType.GAMEPLAY;
     }
 
@@ -77,7 +85,7 @@ public class GameplayUI extends BaseUI{
         int row = 0;
         for(int i = 0; i < 8; i ++){
             if(stringPos.contains(COLUMN_INDICES[i])){
-                column = i + 1;
+                column = i +1;
             }
             if(stringPos.contains(ROW_INDICES[i])){
                 row = i+1;
@@ -96,14 +104,8 @@ public class GameplayUI extends BaseUI{
         };
     }
 
-    private void updateGame(){
-        chessGame = serverFacade.getUpdatedGame();
+    private ChessGame getUpdatedGame(){
+        return serverFacade.getUpdatedGame();
     }
-
-
-
-
-
-
 
 }

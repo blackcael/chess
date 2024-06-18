@@ -3,13 +3,16 @@ package ui;
 import chess.ChessGame;
 import websocket.messages.*;
 
+import static ui.Client.awaitingLoadGameResponse;
+import static ui.Client.awaitingNotificationResponse;
+
 public class WebSocketNotifier {
 
-    public static void notify(ServerMessage serverMessage, ChessGame.TeamColor teamColor, WebSocketCommunicator parent){
+    public synchronized static void notify(ServerMessage serverMessage, WebSocketCommunicator parent, ChessGame.TeamColor color){
         switch(serverMessage.getServerMessageType()){
             case ServerMessage.ServerMessageType.NOTIFICATION -> printNotification((NotificationMessage)serverMessage);
             case ServerMessage.ServerMessageType.ERROR -> printError((ErrorMessage)serverMessage);
-            case ServerMessage.ServerMessageType.LOAD_GAME -> loadGame((LoadGameMessage)serverMessage, teamColor, parent);
+            case ServerMessage.ServerMessageType.LOAD_GAME -> loadGame((LoadGameMessage)serverMessage, color, parent);
         }
     }
 
@@ -21,13 +24,17 @@ public class WebSocketNotifier {
         }
         parent.setUpdatedGame(message.getGame());
         BoardPrinter.drawBoard(message.getGame().getBoard(), teamColor, null, null);
+        awaitingLoadGameResponse = false;
     }
 
     private static void printNotification(NotificationMessage message){
         System.out.println(message.getMessage());
+        awaitingNotificationResponse = false;
     }
 
     private static void printError(ErrorMessage message){
         System.out.println(message.getErrorMessage());
+        awaitingLoadGameResponse = false;
+        awaitingNotificationResponse = false;
     }
 }

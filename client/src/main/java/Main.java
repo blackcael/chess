@@ -13,7 +13,7 @@ public class Main {
         clientLoop();
     }
 
-    private static void clientLoop(){
+    private synchronized static void clientLoop(){
         Client client = new Client();
         while (true){
             System.out.print(SET_PROMPT_COLOR + client.getClientStatus().toString() + ">>>");
@@ -25,7 +25,6 @@ public class Main {
                 break;
             }
             client.processArguments(arguments);
-
         }
         System.out.println("Program Terminated");
     }
