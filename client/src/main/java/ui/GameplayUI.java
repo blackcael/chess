@@ -68,6 +68,11 @@ public class GameplayUI extends BaseUI{
             return Client.UIStatusType.GAMEPLAY;
         }
         ChessPosition currentPosition = coordsToPosition(params[0]);
+        if(getUpdatedGame().isFinished()){
+            System.out.println("No Valid Moves! Game Over!");
+            return Client.UIStatusType.GAMEPLAY;
+        }
+
         try {
             BoardPrinter.drawBoard(getUpdatedGame().getBoard(), serverFacade.getColor(), getUpdatedGame().validMoves(currentPosition), currentPosition);
         }

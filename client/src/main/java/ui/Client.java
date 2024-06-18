@@ -43,7 +43,7 @@ public class Client {
                 case "create" -> postloginUI.createGame(parameters);
                 case "list" -> postloginUI.listGames();
                 case "join" -> postloginUI.joinGame(parameters);
-                case "observe" -> postloginUI.observeGame(parameters);
+                case "observe", "o" -> postloginUI.observeGame(parameters);
                 case "logout" -> postloginUI.logout();
                 default -> postloginUI.help();
             };
@@ -51,11 +51,11 @@ public class Client {
 
         if(clientStatus == UIStatusType.GAMEPLAY){
             clientStatus = switch(command){
-                case "redrawChessBoard" -> gameplayUI.redrawChessBoard();
+                case "redrawChessBoard", "r" -> gameplayUI.redrawChessBoard();
                 case "leave" -> gameplayUI.leave();
-                case "makeMove" -> gameplayUI.makeMove(parameters);
+                case "makeMove", "mm" -> gameplayUI.makeMove(parameters);
                 case "resign" -> gameplayUI.resign();
-                case "highlightLegalMoves" -> gameplayUI.highlightLegalMoves(parameters);
+                case "highlightLegalMoves", "h" -> gameplayUI.highlightLegalMoves(parameters);
                 default -> gameplayUI.help();
             };
             while (awaitingLoadGameResponse | awaitingNotificationResponse) {
