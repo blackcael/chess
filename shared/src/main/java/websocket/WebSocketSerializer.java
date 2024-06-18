@@ -15,9 +15,6 @@ public class WebSocketSerializer {
     }
 
     static public String userGameCommandToJson(UserGameCommand userGameCommand) {
-//        String serializedObject = new Gson().toJson(userGameCommand);
-//        UserGameCommandIntermediary ugci = new UserGameCommandIntermediary(userGameCommand.getCommandType(), serializedObject);
-//        return new Gson().toJson(ugci);
         return new Gson().toJson(userGameCommand);
     }
 
@@ -32,9 +29,6 @@ public class WebSocketSerializer {
     }
 
     static public String serverMessageToJson(ServerMessage serverMessage) {
-//        String serializedObject = new Gson().toJson(serverMessage);
-//        ServerMessageIntermediary smi = new ServerMessageIntermediary(serverMessage.getServerMessageType(), serializedObject);
-//        return new Gson().toJson(smi);
         return new Gson().toJson(serverMessage);
     }
 

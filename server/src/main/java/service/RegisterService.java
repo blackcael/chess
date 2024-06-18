@@ -1,7 +1,7 @@
 package service;
 
-import intermediary.AlreadyTakenException;
-import intermediary.BadRequestException;
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
 import intermediary.RegisterRequest;
 import intermediary.RegisterResponse;
 import dataaccess.*;

@@ -1,7 +1,7 @@
 package ui;
 
 import chess.*;
-import intermediary.ObserverException;
+import exceptions.ObserverException;
 
 import java.util.Scanner;
 
@@ -83,8 +83,8 @@ public class GameplayUI extends BaseUI{
     }
 
     //helpers
-    private final String[] COLUMN_INDICES = {"a","b","c","d","e","f","g","h"};
-    private final String[] ROW_INDICES  = {"1","2","3","4","5","6","7","8"};
+    private static final String[] COLUMN_INDICES = {"a","b","c","d","e","f","g","h"};
+    private static final String[] ROW_INDICES  = {"1","2","3","4","5","6","7","8"};
     private ChessPosition coordsToPosition(String stringPos){
         int column = 0;
         int row = 0;

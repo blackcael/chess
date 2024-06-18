@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import intermediary.InvalidAuthException;
+import exceptions.InvalidAuthException;
 import intermediary.LoginResponse;
 import intermediary.LoginRequest;
 import model.AuthData;

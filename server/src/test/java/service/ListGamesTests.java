@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.*;
+import exceptions.InvalidAuthException;
 import intermediary.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

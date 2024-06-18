@@ -1,4 +1,4 @@
-package intermediary;
+package exceptions;
 
 public class CaelsHandyCompilationError extends Exception{
     public CaelsHandyCompilationError(String message) {

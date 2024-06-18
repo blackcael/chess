@@ -1,4 +1,4 @@
-package intermediary;
+package exceptions;
 
 public class InvalidAuthException extends Exception{
     public  InvalidAuthException() {

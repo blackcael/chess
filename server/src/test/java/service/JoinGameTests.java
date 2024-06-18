@@ -1,5 +1,7 @@
 package service;
 
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
 import intermediary.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

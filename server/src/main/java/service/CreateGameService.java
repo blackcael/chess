@@ -2,7 +2,8 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import dataaccess.GameDAO;
+import exceptions.BadRequestException;
+import exceptions.InvalidAuthException;
 import intermediary.*;
 import model.GameData;
 import chess.ChessGame;

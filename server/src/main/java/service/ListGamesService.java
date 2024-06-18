@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import intermediary.InvalidAuthException;
+import exceptions.InvalidAuthException;
 import intermediary.ListGamesResponse;
 
 public class ListGamesService extends BaseService{

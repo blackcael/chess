@@ -110,8 +110,8 @@ public class PostloginUI extends BaseUI{
     }
 
     private String[] paramsIndexToID(String[] inputParams) throws InvalidIndexError {
-        int ID = stringToIndexID(inputParams[0]);
-        return new String[] {inputParams[1], Integer.toString(ID)};
+        int id = stringToIndexID(inputParams[0]);
+        return new String[] {inputParams[1], Integer.toString(id)};
     }
 
     private int stringToIndexID(String inputString) throws InvalidIndexError {

@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import intermediary.InvalidAuthException;
+import exceptions.InvalidAuthException;
 
 public class LogoutService extends BaseService{
     public LogoutService(Database database) {

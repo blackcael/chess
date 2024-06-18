@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.*;
-import intermediary.InvalidAuthException;
+import exceptions.InvalidAuthException;
 
 public class BaseService {
     Database database;

@@ -3,6 +3,7 @@ package ui;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
+import exceptions.ObserverException;
 import intermediary.*;
 
 public class ServerFacade {

@@ -2,6 +2,10 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.*;
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.CaelsHandyCompilationError;
+import exceptions.InvalidAuthException;
 import intermediary.*;
 import spark.Request;
 import spark.Response;
