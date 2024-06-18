@@ -23,7 +23,9 @@ public class WebSocketConnection {
     }
 
     public void send(String msg) throws IOException {
-        session.getRemote().sendString(msg);
+        if(session.isOpen()) {
+            session.getRemote().sendString(msg);
+        }
     }
 
 }

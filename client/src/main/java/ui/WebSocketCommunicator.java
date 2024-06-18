@@ -71,7 +71,6 @@ public class WebSocketCommunicator extends Endpoint{
     //executables
     public void makeMove(ChessMove chessMove){
         awaitingLoadGameResponse = true;
-        awaitingNotificationResponse = true;
         send(new MakeMoveCommand(authToken, gameID, chessMove));
     }
 

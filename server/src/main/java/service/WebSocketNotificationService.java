@@ -23,7 +23,7 @@ public class WebSocketNotificationService {
         }
     }
 
-    public void alertSender(ServerMessage servermessage) throws IOException {
+    public void alertRoot(ServerMessage servermessage) throws IOException {
         senderConnection.send(WebSocketSerializer.serverMessageToJson(servermessage));
     }
 

@@ -27,6 +27,8 @@ public class WebSocketServices extends BaseService{
     public WebSocketServices(Database database, Session session) {
         super(database);
         this.session = session;
+        this.connection = new WebSocketConnection("null", session);
+        this.notificationService =  new WebSocketNotificationService(database, connection);
     }
 
     public void service(UserGameCommand command) throws IOException {
@@ -42,25 +44,28 @@ public class WebSocketServices extends BaseService{
                 case RESIGN -> resign((ResignCommand) command);
             }
         }catch (InvalidAuthException e) {
-            notificationService.alertSender(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid AuthToken"));
+            notificationService.alertRoot(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid AuthToken"));
         } catch (DataAccessException e) {
-            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Data Access Exception"));
+            notificationService.alertRoot( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Data Access Exception"));
         } catch (InvalidMoveException e) {
-            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid Move!"));
+            notificationService.alertRoot( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid Move!"));
         } catch (GameOverException e) {
-            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is already over!"));
+            notificationService.alertRoot( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is already over!"));
         } catch (ObserverException e){
-            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: This action cannot be executed as an Observer!"));
+            notificationService.alertRoot( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: This action cannot be executed as an Observer!"));
         }
         catch (WrongTurnException e){
-            notificationService.alertSender( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: It is not your turn!"));
+            notificationService.alertRoot( new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: It is not your turn!"));
+        }
+        catch(NullPointerException e){
+            notificationService.alertRoot(new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Invalid Game ID!"));
         }
     }
 
     private void connect(ConnectCommand command) throws DataAccessException, IOException {
         database.connectPlayerToGameSession(connection, command.getGameID());
         int gameID = command.getGameID();
-        notificationService.alertSender( new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(command.getGameID()).game()));
+        notificationService.alertRoot( new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(command.getGameID()).game()));
         notificationService.alertOthers(command.getGameID(), new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has connected to the game as "+ getJoinType(command.getGameID())+". Welcome!"));
     }
 
@@ -119,17 +124,14 @@ public class WebSocketServices extends BaseService{
         notificationService.alertEveryone(makeMoveCommand.getGameID(), new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameDataBase.getGame(makeMoveCommand.getGameID()).game()));
         notificationService.alertOthers(makeMoveCommand.getGameID(), new NotificationMessage(
                 ServerMessage.ServerMessageType.NOTIFICATION,
-                username + " has moved a" +
+                username + " has moved a " +
                         getPieceFromMove(gameDataBase.getGame(makeMoveCommand.getGameID()).game(), makeMoveCommand.getMove()).toString() +
-                        "from" + makeMoveCommand.getMove().getStartPosition().toString() +
-                        "to" + makeMoveCommand.getMove().getEndPosition().toString()
+                        " from " + makeMoveCommand.getMove().getStartPosition().toString() +
+                        " to " + makeMoveCommand.getMove().getEndPosition().toString()
                 )
         );
         if(gameStatusMessage != null){
             notificationService.alertEveryone(makeMoveCommand.getGameID(), new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, gameStatusMessage));
-        }
-        else{
-            notificationService.alertSender(new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, ""));
         }
     }
 

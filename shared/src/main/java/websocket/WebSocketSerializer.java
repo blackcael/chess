@@ -15,33 +15,35 @@ public class WebSocketSerializer {
     }
 
     static public String userGameCommandToJson(UserGameCommand userGameCommand) {
-        String serializedObject = new Gson().toJson(userGameCommand);
-        UserGameCommandIntermediary ugci = new UserGameCommandIntermediary(userGameCommand.getCommandType(), serializedObject);
-        return new Gson().toJson(ugci);
+//        String serializedObject = new Gson().toJson(userGameCommand);
+//        UserGameCommandIntermediary ugci = new UserGameCommandIntermediary(userGameCommand.getCommandType(), serializedObject);
+//        return new Gson().toJson(ugci);
+        return new Gson().toJson(userGameCommand);
     }
 
     static public UserGameCommand jsonToUserCommand(String jsonString) {
         UserGameCommandIntermediary ugci = new Gson().fromJson(jsonString, UserGameCommandIntermediary.class);
         return switch (ugci.commandType()) {
-            case UserGameCommand.CommandType.CONNECT -> new Gson().fromJson(ugci.jsonString(), ConnectCommand.class);
-            case UserGameCommand.CommandType.LEAVE -> new Gson().fromJson(ugci.jsonString(), LeaveCommand.class);
-            case UserGameCommand.CommandType.MAKE_MOVE -> new Gson().fromJson(ugci.jsonString(), MakeMoveCommand.class);
-            case UserGameCommand.CommandType.RESIGN -> new Gson().fromJson(ugci.jsonString(), ResignCommand.class);
+            case UserGameCommand.CommandType.CONNECT -> new Gson().fromJson(jsonString, ConnectCommand.class);
+            case UserGameCommand.CommandType.LEAVE -> new Gson().fromJson(jsonString, LeaveCommand.class);
+            case UserGameCommand.CommandType.MAKE_MOVE -> new Gson().fromJson(jsonString, MakeMoveCommand.class);
+            case UserGameCommand.CommandType.RESIGN -> new Gson().fromJson(jsonString, ResignCommand.class);
         };
     }
 
     static public String serverMessageToJson(ServerMessage serverMessage) {
-        String serializedObject = new Gson().toJson(serverMessage);
-        ServerMessageIntermediary smi = new ServerMessageIntermediary(serverMessage.getServerMessageType(), serializedObject);
-        return new Gson().toJson(smi);
+//        String serializedObject = new Gson().toJson(serverMessage);
+//        ServerMessageIntermediary smi = new ServerMessageIntermediary(serverMessage.getServerMessageType(), serializedObject);
+//        return new Gson().toJson(smi);
+        return new Gson().toJson(serverMessage);
     }
 
     static public ServerMessage jsonToServerMessage(String jsonString) {
         ServerMessageIntermediary smi = new Gson().fromJson(jsonString, ServerMessageIntermediary.class);
         return switch (smi.messageType()) {
-            case ServerMessage.ServerMessageType.ERROR -> new Gson().fromJson(smi.jsonString(), ErrorMessage.class);
-            case ServerMessage.ServerMessageType.LOAD_GAME -> new Gson().fromJson(smi.jsonString(), LoadGameMessage.class);
-            case ServerMessage.ServerMessageType.NOTIFICATION -> new Gson().fromJson(smi.jsonString(), NotificationMessage.class);
+            case ServerMessage.ServerMessageType.ERROR -> new Gson().fromJson(jsonString, ErrorMessage.class);
+            case ServerMessage.ServerMessageType.LOAD_GAME -> new Gson().fromJson(jsonString, LoadGameMessage.class);
+            case ServerMessage.ServerMessageType.NOTIFICATION -> new Gson().fromJson(jsonString, NotificationMessage.class);
         };
     }
 }
